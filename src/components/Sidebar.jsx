@@ -3,9 +3,12 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import logo from "../assets/logo.png";
 import { Icon } from "@iconify-icon/react";
 import { SidebarData } from "../utils/SidebarData";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Sidebar() {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <>
@@ -24,8 +27,18 @@ function Sidebar() {
           </div>
           <div className="p-3">
             {SidebarData.map((item, index) => (
-              <div className="flex items-center justify-center p-3.5 hover:text-[#D10505] hover:bg-[#ff6d6d33] hover:rounded-full cursor-pointer">
-                <Icon icon={item.icon} width="20" height="20" key={index} />
+              <div
+                key={index}
+                onClick={() => {
+                  navigate(item.path);
+                }}
+                className={`${
+                  location.pathname.includes(item.path)
+                    ? "text-[#D10505] bg-[#ff6d6d33] rounded-full"
+                    : "hover:text-[#D10505] hover:bg-[#ff6d6d33] hover:rounded-full"
+                } ${"flex items-center justify-center p-3.5 cursor-pointer"}`}
+              >
+                <Icon icon={item.icon} width="20" height="20" />
               </div>
             ))}
           </div>
@@ -48,7 +61,14 @@ function Sidebar() {
           {SidebarData.map((item, index) => (
             <div
               key={index}
-              className="flex items-center gap-3 hover:text-[#D10505] cursor-pointer hover:rounded-e-full px-3 py-2.5 hover:bg-[#ff6d6d33]"
+              onClick={() => {
+                navigate(item.path);
+              }}
+              className={`${
+                location.pathname.includes(item.path)
+                  ? "text-[#D10505] bg-[#ff6d6d33] rounded-e-full"
+                  : "hover:text-[#D10505] hover:bg-[#ff6d6d33] hover:rounded-e-full"
+              } ${"flex items-center gap-3 cursor-pointer px-3 py-2.5"}`}
             >
               <Icon icon={item.icon} width="20" height="20" />
               <p className="mb-0 font-semibold">{item.key}</p>

@@ -72,7 +72,7 @@ export const styles = {
     display: "flex",
     flexDirection: "column",
     borderRadius: "8px",
-    boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+    boxShadow: "15px 15px 15px rgba(0, 0, 0, 0.1)",
     backgroundColor: "white",
   },
 };

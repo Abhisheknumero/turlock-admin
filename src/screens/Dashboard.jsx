@@ -5,6 +5,7 @@ import DashboardCard from "../components/DashboardCard";
 import { Col, Row } from "react-bootstrap";
 import DashboardUser from "../components/DashboardUser";
 import ArticleBox from "../components/ArticleBox";
+import { DashboardStatic } from "../utils/StaticsData";
 
 function Dashboard() {
   return (
@@ -23,9 +24,9 @@ function Dashboard() {
               </p>
             </div>
             <Row className="m-0 p-0 gap-3 pb-4">
-              {[1, 2, 3, 4, 5].map(() => (
-                <Col xl={2} className="p-0">
-                  <DashboardCard />
+              {DashboardStatic.map((item, index) => (
+                <Col xl={2} className="p-0" key={index}>
+                  <DashboardCard item={item} />
                 </Col>
               ))}
             </Row>

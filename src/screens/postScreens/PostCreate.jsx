@@ -2,11 +2,17 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import Sidebar from "../../components/SideBar";
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import CreateCategory from "../../components/CreateCategory";
+import { Loader } from "../../utils/Loader";
+import SublyApi from "../../HelperApis";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 function PostCreate() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { token } = useSelector((state) => state.user.userdetail);
   const [showDropdown, setShowDropdown] = useState({
     type: false,
     subscription: false,
@@ -14,6 +20,9 @@ function PostCreate() {
   });
   const [fileValue, setFileValue] = useState("");
   const [mediaPreview, setMediaPreview] = useState("");
+  const [categoryModal, setCategoryModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [categoryList, setCategoryList] = useState("");
 
   // =================================Media handler======================================\
 
@@ -65,8 +74,6 @@ function PostCreate() {
     }
   };
 
-  console.log(fileValue);
-
   // ==============================Function for handling removing image===================================
   async function onImageRemove(index) {
     let profileimages = [...fileValue];
@@ -78,9 +85,6 @@ function PostCreate() {
   }
 
   // ======================================generating video thumbnail==========================================
-
-  // convert image to object part instead of base64 for better performance
-  // https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL
   const importFileandPreview = (file, revoke) => {
     return new Promise((resolve, reject) => {
       window.URL = window.URL || window.webkitURL;
@@ -206,8 +210,30 @@ function PostCreate() {
 
   // =============================================================================================
 
+  useEffect(() => {
+    async function getCategory() {
+      await SublyApi.fetchCategory(token)
+        .then((response) => {
+          if (response.status == "success") {
+            setCategoryList(response.data);
+          } else {
+            toast.error(response.data.error);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+    getCategory();
+  }, []);
+
   return (
     <section className="h-screen ">
+      {loading ? <Loader /> : ""}
+      <CreateCategory
+        setShow={setCategoryModal}
+        show={categoryModal}
+        topMargin={"marginClass"}
+        setLoading={setLoading}
+      />
       <div className="flex">
         <Sidebar />
         <div className="w-full">
@@ -362,16 +388,18 @@ function PostCreate() {
                 </div>
               </div>
               <div className="flex items-center gap-3 max-lg:flex-wrap">
-                <div className="w-full max-xl:w-full relative">
+                <div
+                  onClick={() => {
+                    setShowDropdown({
+                      ...showDropdown,
+                      category: !showDropdown.category,
+                    });
+                  }}
+                  className="w-full max-xl:w-full relative"
+                >
                   <label
                     htmlFor="category"
                     className="text-sm font-normal w-full"
-                    onClick={() => {
-                      setShowDropdown({
-                        ...showDropdown,
-                        category: !showDropdown.category,
-                      });
-                    }}
                   >
                     Category
                     <input
@@ -391,8 +419,20 @@ function PostCreate() {
                     width="30"
                     height="30"
                     style={{ color: "#4b5563" }}
-                    className="absolute right-1 top-6"
+                    className="absolute right-1 top-6 cursor-pointer"
+                    onClick={() => {
+                      setShowDropdown({
+                        ...showDropdown,
+                        category: !showDropdown.category,
+                      });
+                    }}
                   />
+                  {showDropdown.category && (
+                    <CategoryType
+                      setShow={setCategoryModal}
+                      categoryList={categoryList}
+                    />
+                  )}
                 </div>
                 <div className="w-full max-xl:w-full relative"></div>
               </div>
@@ -473,3 +513,28 @@ function PostCreate() {
 }
 
 export default PostCreate;
+
+function CategoryType({ setShow, categoryList }) {
+  return (
+    <div className="rounded-md shadow-2xl absolute w-full top-15 bg-white py-2 z-50 max-h-48 overflow-auto">
+      <p
+        onClick={() => {
+          setShow(true);
+        }}
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer flex items-center gap-2"
+      >
+        <Icon icon="fluent:add-20-regular" width="22" height="22" />
+        Create Category
+      </p>
+      {categoryList &&
+        categoryList?.map((item, index) => (
+          <p
+            className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+            key={index}
+          >
+            {item.categoryName}
+          </p>
+        ))}
+    </div>
+  );
+}

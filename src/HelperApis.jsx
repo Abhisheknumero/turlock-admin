@@ -24,6 +24,22 @@ class SublyApi {
     let res = await this.request(`auth/signin`, data, "post", undefined);
     return res;
   }
+
+  /* ------CREATE CATEGORY API-----*/
+
+  static async createCategory(data, token) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(`post/addcategories`, data, "post", header);
+    return res;
+  }
+
+  /* ------GET CATEGORY API-----*/
+
+  static async fetchCategory(token) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(`post/cateogries`, undefined, "get", header);
+    return res;
+  }
 }
 
 export default SublyApi;

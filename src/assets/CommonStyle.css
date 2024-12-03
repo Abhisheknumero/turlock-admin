@@ -169,6 +169,10 @@
   transform: scale(1) translate(-10px, -70px);
 }
 
+.marginClass.modal.show .modal-dialog{
+  margin-top: 120px;
+}
+
 /* .buttonClass {
   --clr-font-main: hsla(0 0% 20% / 100);
   --btn-bg-1: hsla(194 100% 90% / 1);

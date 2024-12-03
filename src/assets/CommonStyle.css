@@ -20,7 +20,7 @@
   border-radius: 100%;
   transform-origin: top left;
   transform: scale(0) rotate(0deg) translate(-50%, -50%);
-  animation: cube 12s ease-in forwards infinite;
+  animation: cube 5s ease-in forwards infinite;
 }
 .cube:nth-child(2n) {
   border-color: #fff;
@@ -61,7 +61,7 @@
   top: 80vh;
 }
 .cube:nth-child(9) {
-  animation-delay: 10s;
+  animation-delay: 0.5s;
   left: 10vw;
   top: 20vh;
 }
@@ -71,7 +71,7 @@
   top: 60vh;
 }
 .cube:nth-child(11) {
-  animation-delay: 13s;
+  animation-delay: 0s;
   left: 60vw;
   top: 60vh;
 }
@@ -124,11 +124,11 @@
   overflow: hidden;
   box-shadow: none;
   transition: background-color 0.3s;
+  border-style: none;
 }
 
 .buttonClass:hover {
   color: white;
-  border: none !important;
   background-color: transparent;
 }
 
@@ -150,7 +150,7 @@
 .buttonClass::after {
   content: "";
   position: absolute;
-  top: 50;
+  top: 0px;
   left: 0;
   width: 200px;
   height: 200px;
@@ -210,4 +210,3 @@
     transition: linear;
   }
 } */
-

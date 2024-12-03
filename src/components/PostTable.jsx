@@ -4,7 +4,7 @@ import { Table } from "react-bootstrap";
 function PostTable() {
   return (
     <div>
-      <Table bordered className="!border-gray-500">
+      <Table bordered responsive className="!border-gray-500">
         <thead>
           <tr>
             <th className="!pl-5 text-sm font-bold !text-gray-600 !bg-gray-300 w-[35%]">

@@ -14,8 +14,8 @@ function Dashboard() {
         <Sidebar />
         <div className="w-full">
           <Header />
-          <div className="px-9">
-            <div className="flex items-center justify-between pt-10 pb-3">
+          <div className="px-9 max-xl:px-2">
+            <div className="flex items-center justify-between pt-10 pb-3 flex-wrap gap-x-3 gap-y-1">
               <h3 className="mb-0 text-lg font-semibold">Dashboard</h3>
               <p className="mb-0 flex items-center gap-2 text-sm">
                 Dashboard{" "}

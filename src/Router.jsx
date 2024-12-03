@@ -11,7 +11,7 @@ function Router() {
         <Route path="/" element={<Login />} />
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Post" element={<Post />} />
-        <Route path="/Post/Create" element={<PostCreate />} />
+        <Route path="/Create" element={<PostCreate />} />
       </Routes>
     </BrowserRouter>
   );

@@ -7,14 +7,20 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 function Sidebar() {
   const [show, setShow] = useState(false);
+  const [ShowSidebar, setShowSidebar] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   return (
     <>
+      {/* Working on fixing responsive managing toggle and trying to apply hide property on scroll */}
       {!show && (
-        <div className="bg-white h-screen">
-          <div className="p-4 border-b-2 flex items-center justify-center">
+        <div
+          className={`${
+            ShowSidebar ? "" : "bg-white"
+          } ${" xl:h-screen z-50  max-xl:fixed"}`}
+        >
+          <div className="p-4 border-b-2 flex items-center justify-center max-xl:hidden">
             <Icon
               icon="gg:menu"
               width="40"
@@ -25,7 +31,35 @@ function Sidebar() {
               className="hover:text-[#D10505] cursor-pointer"
             />
           </div>
-          <div className="p-3">
+          <div className="p-4 border-b-2 flex items-center justify-center xl:hidden max-xl:sticky">
+            <Icon
+              icon="gg:menu"
+              width="40"
+              height="40"
+              onClick={() => {
+                setShowSidebar(true);
+              }}
+              className="hover:text-[#D10505] cursor-pointer"
+            />
+          </div>
+          <div className="p-3 max-xl:bg-white max-xl:hidden">
+            {SidebarData.map((item, index) => (
+              <div
+                key={index}
+                onClick={() => {
+                  navigate(item.path);
+                }}
+                className={`${
+                  location.pathname.includes(item.path)
+                    ? "text-[#D10505] bg-[#ff6d6d33] rounded-full"
+                    : "hover:text-[#D10505] hover:bg-[#ff6d6d33] hover:rounded-full"
+                } ${"flex items-center justify-center p-3.5 cursor-pointer"}`}
+              >
+                <Icon icon={item.icon} width="20" height="20" />
+              </div>
+            ))}
+          </div>
+          <div className="p-3 max-xl:bg-white xl:hidden">
             {SidebarData.map((item, index) => (
               <div
                 key={index}

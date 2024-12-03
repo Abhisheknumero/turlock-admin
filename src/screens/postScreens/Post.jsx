@@ -17,14 +17,14 @@ function Post() {
 
   return (
     <section className="h-screen ">
-      <div className="flex">
+      <div className="xl:flex">
         <Sidebar />
-        <div className="w-full">
+        <div className="w-full z-0">
           <Header />
-          <div className="px-9">
-            <div className="flex items-center justify-between pt-10 pb-3">
+          <div className="px-9 max-xl:px-2">
+            <div className="flex items-center justify-between pt-10 pb-3 flex-wrap">
               <h3 className="mb-0 text-lg font-semibold">Post</h3>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <button
                   onClick={() => {
                     navigate("/Post");
@@ -37,7 +37,7 @@ function Post() {
                 >
                   Post
                 </button>
-                <button className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none">
+                {/* <button className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none">
                   Post Category
                 </button>
                 <button className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none">
@@ -51,14 +51,15 @@ function Post() {
                 </button>
                 <button className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none">
                   Tag Type
-                </button>
+                </button> */}
                 <button
                   onClick={() => {
-                    navigate("/Post/Create");
+                    navigate("/Create");
                   }}
-                  className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none"
+                  className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none flex items-center gap-2"
                 >
-                  Add New
+                  <Icon icon="ion:add-outline" width="25" height="22" />
+                  Create
                 </button>
               </div>
             </div>

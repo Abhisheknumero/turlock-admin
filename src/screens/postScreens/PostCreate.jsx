@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
-import Sidebar from "../../components/SideBar";
+import Sidebar from "../../components/Sidebar";
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import { useEffect, useState } from "react";
 import CreateCategory from "../../components/CreateCategory";
@@ -228,23 +228,23 @@ function PostCreate() {
   return (
     <section className="h-screen ">
       {loading ? <Loader /> : ""}
-      <CreateCategory
+      {/* <CreateCategory
         setShow={setCategoryModal}
         show={categoryModal}
         topMargin={"marginClass"}
         setLoading={setLoading}
-      />
+      /> */}
       <div className="flex">
         <Sidebar />
         <div className="w-full">
           <Header />
-          <div className="px-9">
-            <div className="flex items-center justify-between pt-10 pb-4">
+          <div className="px-9 max-xl:px-2">
+            <div className="flex items-center justify-between pt-10 pb-5">
               <h3 className="mb-0 text-2xl font-semibold">Create Post</h3>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => {
-                    navigate("/Post");
+                    navigate("/Post/Post-List");
                   }}
                   className={`${
                     location.pathname.includes("/Post")
@@ -255,18 +255,16 @@ function PostCreate() {
                   Post
                 </button>
                 <button
-                  className={`${
-                    location.pathname.includes("/Create")
-                      ? "bg-[#D10505] text-white"
-                      : "buttonClass"
-                  } ${"w-28 text-sm rounded-md px-2 py-2 relative font-medium border-none flex items-center gap-2"}`}
+                  onClick={() => {
+                    navigate("/Post/Category");
+                  }}
+                  className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none"
                 >
-                  <Icon icon="ion:add-outline" width="25" height="22" />
-                  Create
+                  Post Category
                 </button>
               </div>
             </div>
-            <div className="w-3/5 m-auto">
+            <div className="w-3/5 max-lg:w-full m-auto">
               <div className="flex items-center gap-3 max-lg:flex-wrap">
                 <div className="w-full max-xl:w-full">
                   <label htmlFor="title" className="text-sm font-normal w-full">

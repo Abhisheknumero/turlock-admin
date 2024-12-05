@@ -40,6 +40,45 @@ class SublyApi {
     let res = await this.request(`post/cateogries`, undefined, "get", header);
     return res;
   }
+
+  /* ------DELETE CATEGORY API-----*/
+
+  static async deleteCategory(token, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/categories/delete/${id}`,
+      undefined,
+      "delete",
+      header
+    );
+    return res;
+  }
+
+  /* ------CATEGORY DETAIL API-----*/
+
+  static async detailCategory(token, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/categories/${id}`,
+      undefined,
+      "get",
+      header
+    );
+    return res;
+  }
+
+  /* ------UPDATE CATEGORY API-----*/
+
+  static async updateCategory(token, data, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/updatecategories/${id}`,
+      data,
+      "put",
+      header
+    );
+    return res;
+  }
 }
 
 export default SublyApi;

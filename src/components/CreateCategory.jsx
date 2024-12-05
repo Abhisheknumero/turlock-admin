@@ -61,8 +61,6 @@ function CreateCategory({ show, setShow, topMargin, setLoading }) {
 
   //   =======================================Create Category API handling===========================================
   async function categoryHandler() {
-    console.log("Abhishek");
-
     setLoading(true);
     const requestData = new FormData();
     requestData.append("categoryName", title);

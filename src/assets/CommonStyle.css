@@ -169,8 +169,46 @@
   transform: scale(1) translate(-10px, -70px);
 }
 
-.marginClass.modal.show .modal-dialog{
+.marginClass.modal.show .modal-dialog {
   margin-top: 120px;
+}
+
+.widthClass.modal.show .modal-dialog {
+  max-width: 60% !important;
+}
+
+@media (max-width: 1200px) {
+  .widthClass.modal.show .modal-dialog {
+    max-width: 80% !important;
+  }
+}
+
+@media (max-width: 800px) {
+  .widthClass.modal.show .modal-dialog {
+    max-width: 90% !important;
+  }
+}
+
+.createBtn {
+  position: relative;
+}
+
+.createBtn:after {
+  content: "";
+  position: absolute;
+  width: 85%;
+  transform: scaleX(0);
+  height: 3px;
+  bottom: 0;
+  right: 5px;
+  background-color: #d10505;
+  transform-origin: bottom right;
+  transition: transform 0.5s ease-out;
+}
+
+.createBtn:hover:after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
 }
 
 /* .buttonClass {

@@ -1,36 +1,84 @@
-import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
-import Header from "../../components/Header";
-import PostTable from "../../components/PostTable";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { FilterDropdown } from "./Post";
+import { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
+import Header from "../../components/Header";
+import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
+import SublyApi from "../../HelperApis";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { Loader } from "../../utils/Loader";
+import CategoryTable from "../../components/CategoryTable";
+import CategoryDetail from "../../components/CategoryDetail";
 
-function Post() {
+function Category() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { token } = useSelector((state) => state.user.userdetail);
   const [showDropdown, setShowDropdown] = useState({
     type: false,
     category: false,
     subscription: false,
     status: false,
   });
+  const [loading, setLoading] = useState(false);
+  const [categoryList, setCategoryList] = useState("");
+  const [categoryDetail, setCategoryDetail] = useState(false);
+  const [chategoryId, setCategoryId] = useState("");
+  //   ====================================Calling API for fetching Category list========================================
+  useEffect(() => {
+    getCategory();
+  }, []);
+  async function getCategory() {
+    setLoading(true);
+    await SublyApi.fetchCategory(token)
+      .then((response) => {
+        setLoading(false);
+        if (response.status == "success") {
+          setCategoryList(response.data);
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+
+  //   ====================Delete category API=============================
+  async function deleteHandler(id) {
+    await SublyApi.deleteCategory(token, id).then((res) => {
+      if (res.status == "success") {
+        toast.success(res.message);
+        getCategory();
+      } else {
+        toast.error(res.data.error);
+      }
+    });
+  }
 
   return (
     <section className="h-screen ">
+      {loading ? <Loader /> : ""}
+      <CategoryDetail
+        topMargin={"marginClass"}
+        setShow={setCategoryDetail}
+        show={categoryDetail}
+        id={chategoryId}
+        setLoading={setLoading}
+      />
       <div className="xl:flex">
         <Sidebar />
         <div className="w-full z-0">
           <Header />
           <div className="px-9 max-xl:px-2">
             <div className="flex items-center justify-between pt-10 pb-4 flex-wrap border-b-2">
-              <h3 className="mb-0 text-lg font-semibold">Post</h3>
+              <h3 className="mb-0 text-lg font-semibold"> Post Category</h3>
               <div className="flex items-center gap-2 flex-wrap">
                 <button
                   onClick={() => {
                     navigate("/Post/Post-List");
                   }}
                   className={`${
-                    location.pathname.includes("/Post-List")
+                    location.pathname.includes("/Post/Post-List")
                       ? "bg-[#D10505] text-white"
                       : "buttonClass"
                   } ${"w-28 text-sm rounded-md px-2 py-2 font-medium hover:border-[#D10505] relative"}`}
@@ -41,7 +89,11 @@ function Post() {
                   onClick={() => {
                     navigate("/Post/Category");
                   }}
-                  className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none"
+                  className={`${
+                    location.pathname.includes("/Category")
+                      ? "bg-[#D10505] text-white"
+                      : "buttonClass"
+                  } ${"w-28 text-sm rounded-md px-2 py-2 font-medium hover:border-[#D10505] relative"}`}
                 >
                   Post Category
                 </button>
@@ -59,19 +111,19 @@ function Post() {
                 </button> */}
               </div>
             </div>
-            <div className="flex items-center justify-end w-full my-2">
+            <div className="flex items-center justify-end w-full mt-2">
               <button
                 onClick={() => {
-                  navigate("/Post/Create");
+                  navigate("/Post/Category/Create");
                 }}
                 className="w-38 text-base rounded-md px-2 py-2 relative font-medium hover:border-none border-none flex items-center gap-2 hover:text-[#D10505] createBtn"
               >
                 <Icon icon="ion:add-outline" width="30" height="27" />
-                Create Post
+                Create Category
               </button>
             </div>
             <div className="mb-3">
-              <h3 className="text-gray-600 font-bold text-base my-3">
+              <h3 className="text-gray-600 font-bold text-base mb-3">
                 Advanced Search
               </h3>
               <div className="flex items-center gap-3 max-lg:flex-wrap">
@@ -202,9 +254,14 @@ function Post() {
             </div>
             <div>
               <h3 className="text-gray-600 font-bold text-base my-3">
-                Post Count {"(0)"}
+                Category Count {"(0)"}
               </h3>
-              <PostTable />
+              <CategoryTable
+                list={categoryList}
+                deleteHandler={deleteHandler}
+                setCategoryId={setCategoryId}
+                setCategoryDetail={setCategoryDetail}
+              />
             </div>
           </div>
         </div>
@@ -213,23 +270,4 @@ function Post() {
   );
 }
 
-export default Post;
-
-export function FilterDropdown() {
-  return (
-    <div className="rounded-md shadow-xl absolute w-full top-10 bg-white py-2">
-      <p className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3">
-        Demo1
-      </p>
-      <p className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3">
-        Demo2
-      </p>
-      <p className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3">
-        Demo3
-      </p>
-      <p className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3">
-        Demo4
-      </p>
-    </div>
-  );
-}
+export default Category;

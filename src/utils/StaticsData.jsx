@@ -31,3 +31,5 @@ export const categoryType = [
   { id: "obituaries", key: "Obituaries" },
   { id: "shop", key: "Shop" },
 ];
+
+export const imgBaseURL = "http://192.168.29.114:3000/";

@@ -1,13 +1,23 @@
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
-import { categoryType } from "../utils/StaticsData";
+import { categoryType, imgBaseURL } from "../utils/StaticsData";
 import Switch from "react-switch";
 import SublyApi from "../HelperApis";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { useLocation, useNavigate } from "react-router-dom";
 
-function CreateCategory({ show, setShow, topMargin, setLoading }) {
+function CreateCategory({
+  show,
+  setShow,
+  topMargin,
+  setLoading,
+  preFieldData,
+  setPreFieldData,
+}) {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { token } = useSelector((state) => state.user.userdetail);
   const [showDropdown, setShowDropdown] = useState({
     type: false,
@@ -19,28 +29,36 @@ function CreateCategory({ show, setShow, topMargin, setLoading }) {
   const [description, setDescription] = useState("");
   const [categoryType, setCategoryType] = useState({ id: "", key: "" });
 
+  useEffect(() => {
+    if (preFieldData) {
+      setIsActive(
+        preFieldData && preFieldData?.categoryStatus == "Active" ? true : false
+      );
+      setTitle(preFieldData?.categoryName);
+      setCategoryType({
+        id: preFieldData?.categoryCreatedBy,
+        key: preFieldData?.categoryType,
+      });
+      setDescription(preFieldData?.categoryDescription);
+      setFileValue(`${imgBaseURL}${preFieldData?.categoryThumbnail}`);
+      setMediaPreview(`${imgBaseURL}${preFieldData?.categoryThumbnail}`);
+    }
+  }, [preFieldData]);
+
   // =================================Media handler======================================\
   const mediaHandler = async (e) => {
-    let profileImageData = [...mediaPreview];
-    let profileViewData = [...fileValue];
     let fileReader,
       isCancel = false;
     if (e.target.files && e.target.files.length > 0) {
       const file = [e.target.files];
-      Object.values(file[0]).map((item, index) => {
-        profileImageData.push(item);
-      });
-      setMediaPreview(profileImageData);
+      setMediaPreview(e.target.files[0]);
       await Object.values(file[0]).map(async (item, index) => {
         if (e.target.files && e.target.files.length > 0) {
           fileReader = new FileReader();
           fileReader.onload = async (e) => {
             const { result } = e.target;
-            if (item.type.includes("image")) {
-              if (result && !isCancel) {
-                await profileViewData.push({ url: result, type: "image" });
-                await setFileValue(profileViewData);
-              }
+            if (result && !isCancel) {
+              await setFileValue(result);
             }
           };
           fileReader.readAsDataURL(item);
@@ -50,13 +68,9 @@ function CreateCategory({ show, setShow, topMargin, setLoading }) {
   };
 
   // ==============================Function for handling removing image===================================
-  async function onImageRemove(index) {
-    let profileimages = [...fileValue];
-    profileimages.splice(index, 1);
-    setFileValue(profileimages);
-    let profileImageData = [...mediaPreview];
-    profileImageData.splice(index, 1);
-    setMediaPreview(profileImageData);
+  async function onImageRemove() {
+    setFileValue("");
+    setMediaPreview("");
   }
 
   //   =======================================Create Category API handling===========================================
@@ -64,19 +78,58 @@ function CreateCategory({ show, setShow, topMargin, setLoading }) {
     setLoading(true);
     const requestData = new FormData();
     requestData.append("categoryName", title);
-    requestData.append("categoryType", categoryType.id);
-    requestData.append("categoryDescription", description);
-    requestData.append("categoryStatus", isActive);
+    requestData.append("categoryType", title.toLowerCase());
+    requestData.append("categoryStatus", isActive ? "Active" : "Inactive");
     requestData.append("uploadImage", mediaPreview);
     await SublyApi.createCategory(requestData, token)
       .then((response) => {
         if (response.status == "success") {
           toast.success(response.status);
+          setTitle("");
+          setDescription("");
+          setCategoryType({});
+          setFileValue("");
+          setMediaPreview("");
+          setIsActive(false);
           setShow(false);
+          if (location.pathname.includes("Category")) {
+            navigate("/Post/Category");
+          }
         } else {
-          toast.error(response.data.status);
+          toast.error(response.data.error);
         }
-        console.log("response", response);
+        setLoading(false);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  //   =======================Category update API================
+  async function updateHandler() {
+    setLoading(true);
+    const requestData = new FormData();
+    requestData.append("categoryName", title);
+    requestData.append("categoryType", title.toLowerCase());
+    requestData.append("categoryStatus", isActive ? "Active" : "Inactive");
+    requestData.append("uploadImage", mediaPreview);
+    await SublyApi.updateCategory(token, requestData, preFieldData?._id)
+      .then((response) => {
+        setLoading(false);
+        if (response.status == "success") {
+          toast.success(response.status);
+          setTitle("");
+          setDescription("");
+          setCategoryType({});
+          setFileValue("");
+          setMediaPreview("");
+          setIsActive(false);
+          if (location.pathname.includes("Category")) {
+            navigate("/Post/Category");
+          }
+          setShow(false);
+          setPreFieldData("");
+        } else {
+          toast.error(response.data.error);
+        }
         setLoading(false);
       })
       .catch((err) => console.log(err));
@@ -95,6 +148,7 @@ function CreateCategory({ show, setShow, topMargin, setLoading }) {
           setFileValue("");
           setMediaPreview("");
           setIsActive(false);
+          setPreFieldData("");
         }}
       >
         <Modal.Header closeButton>
@@ -118,7 +172,7 @@ function CreateCategory({ show, setShow, topMargin, setLoading }) {
                   />
                 </label>
               </div>
-              <div
+              {/* <div
                 onClick={() => {
                   setShowDropdown({
                     ...showDropdown,
@@ -152,9 +206,9 @@ function CreateCategory({ show, setShow, topMargin, setLoading }) {
                 {showDropdown.type && (
                   <CategoryType setCategoryType={setCategoryType} />
                 )}
-              </div>
+              </div> */}
             </div>
-            <div className="flex items-center gap-3 max-lg:flex-wrap my-2.5">
+            <div className="flex items-center gap-3 max-lg:flex-wrap my-3 mb-5">
               <div className="w-full max-xl:w-full ml-2">
                 <label
                   htmlFor="post-tag"
@@ -178,7 +232,7 @@ function CreateCategory({ show, setShow, topMargin, setLoading }) {
                 </label>
               </div>
             </div>
-            <div className="w-full mb-3">
+            {/* <div className="w-full mb-3">
               <textarea
                 placeholder="Write Content..."
                 className="resize-none placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full h-[140px] rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
@@ -187,8 +241,8 @@ function CreateCategory({ show, setShow, topMargin, setLoading }) {
                   setDescription(e.target.value);
                 }}
               />
-            </div>{" "}
-            {!fileValue.length > 0 && (
+            </div>{" "} */}
+            {!fileValue && (
               <div className="flex items-center justify-center">
                 <label
                   htmlFor="uploadCategory"
@@ -207,26 +261,20 @@ function CreateCategory({ show, setShow, topMargin, setLoading }) {
                 </label>
               </div>
             )}
-            {fileValue.length > 0 && (
+            {fileValue && (
               <div className="flex items-center gap-2">
-                {fileValue.length > 0 &&
-                  fileValue.map((item, index) => (
-                    <div
-                      key={index}
-                      className="border rounded-md flex items-center justify-center w-[140px] h-[140px] object-cover bg-gray-100 relative overflow-hidden"
-                    >
-                      <img src={item.url} alt="img" />
-                      <Icon
-                        icon="si:close-duotone"
-                        width="35"
-                        height="35"
-                        className="absolute top-0 right-0 cursor-pointer"
-                        onClick={() => {
-                          onImageRemove(index);
-                        }}
-                      />
-                    </div>
-                  ))}
+                <div className="border rounded-md flex items-center justify-center w-[140px] h-[140px] object-cover bg-gray-100 relative overflow-hidden">
+                  <img src={fileValue} alt="img" />
+                  <Icon
+                    icon="si:close-duotone"
+                    width="35"
+                    height="35"
+                    className="absolute top-0 right-0 cursor-pointer"
+                    onClick={() => {
+                      onImageRemove();
+                    }}
+                  />
+                </div>
               </div>
             )}
             <div className="flex items-center justify-center mt-7 mb-1 gap-3">
@@ -239,26 +287,39 @@ function CreateCategory({ show, setShow, topMargin, setLoading }) {
                   setFileValue("");
                   setMediaPreview("");
                   setIsActive(false);
+                  setPreFieldData("");
                 }}
                 style={{ border: "1px solid #D10505" }}
                 className="px-3 py-1.5 rounded-3xl font-normal text-md text-black bg-gray-100 w-[120px]"
               >
                 Cancel
               </button>
-              <button
-                onClick={() => {
-                  categoryHandler();
-                }}
-                style={{ border: "1px solid #D10505" }}
-                className="px-3 py-1.5 rounded-3xl font-normal text-md text-white bg-[#D10505] w-[120px]"
-              >
-                Create
-              </button>
+              {preFieldData ? (
+                <button
+                  onClick={() => {
+                    updateHandler();
+                  }}
+                  style={{ border: "1px solid #D10505" }}
+                  className="px-3 py-1.5 rounded-3xl font-normal text-md text-white bg-[#D10505] w-[120px]"
+                >
+                  Update
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    categoryHandler();
+                  }}
+                  style={{ border: "1px solid #D10505" }}
+                  className="px-3 py-1.5 rounded-3xl font-normal text-md text-white bg-[#D10505] w-[120px]"
+                >
+                  Create
+                </button>
+              )}
             </div>
             <input
               type="file"
               id="uploadCategory"
-              accept="image/*"
+              accept=".jpg, .png, .webp, .jpeg, .gif"
               className="hidden"
               onChange={(e) => {
                 mediaHandler(e);

@@ -223,20 +223,20 @@ function PostCreate() {
         .catch((err) => console.log(err));
     }
     getCategory();
-  }, []);
+  }, [categoryModal ]);
 
   return (
     <section className="h-screen ">
       {loading ? <Loader /> : ""}
-      {/* <CreateCategory
+      <CreateCategory
         setShow={setCategoryModal}
         show={categoryModal}
         topMargin={"marginClass"}
         setLoading={setLoading}
-      /> */}
+      />
       <div className="flex">
         <Sidebar />
-        <div className="w-full">
+        <div className="w-full h-screen overflow-auto">
           <Header />
           <div className="px-9 max-xl:px-2">
             <div className="flex items-center justify-between pt-10 pb-5">
@@ -294,6 +294,7 @@ function PostCreate() {
                       placeholder="Select Type"
                       id="type"
                       value={""}
+                      autoComplete="off"
                       className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
                     />
                   </label>

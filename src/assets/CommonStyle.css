@@ -174,17 +174,29 @@
 }
 
 .widthClass.modal.show .modal-dialog {
+  max-width: 40% !important;
+}
+
+.widthClassMid.modal.show .modal-dialog {
   max-width: 60% !important;
 }
 
 @media (max-width: 1200px) {
   .widthClass.modal.show .modal-dialog {
-    max-width: 80% !important;
+    max-width: 60% !important;
+  }
+
+  .widthClassMid.modal.show .modal-dialog {
+    max-width: 75% !important;
   }
 }
 
 @media (max-width: 800px) {
   .widthClass.modal.show .modal-dialog {
+    max-width: 80% !important;
+  }
+
+  .widthClassMid.modal.show .modal-dialog {
     max-width: 90% !important;
   }
 }

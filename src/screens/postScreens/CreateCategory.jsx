@@ -39,7 +39,7 @@ function CreateCategory() {
       });
       setDescription(location.state.categoryDescription);
       setFileValue(`${imgBaseURL}${location.state.categoryThumbnail}`);
-      setMediaPreview(location.state);
+      setMediaPreview(`${imgBaseURL}${location.state.categoryThumbnail}`);
     }
   }, []);
 
@@ -66,7 +66,7 @@ function CreateCategory() {
   };
 
   // ==============================Function for handling removing image===================================
-  async function onImageRemove(index) {
+  async function onImageRemove() {
     // let profileimages = [...fileValue];
     // profileimages.splice(index, 1);
     setFileValue("");
@@ -82,7 +82,7 @@ function CreateCategory() {
     requestData.append("categoryName", title);
     requestData.append("categoryType", categoryType.key);
     requestData.append("categoryDescription", description);
-    requestData.append("categoryStatus", isActive);
+    requestData.append("categoryStatus", isActive ? "Active" : "Inactive");
     requestData.append("uploadImage", mediaPreview);
     await SublyApi.createCategory(requestData, token)
       .then((response) => {
@@ -109,7 +109,7 @@ function CreateCategory() {
     requestData.append("categoryName", title);
     requestData.append("categoryType", categoryType.key);
     requestData.append("categoryDescription", description);
-    requestData.append("categoryStatus", isActive);
+    requestData.append("categoryStatus", isActive ? "Active" : "Inactive");
     requestData.append("uploadImage", mediaPreview);
     await SublyApi.updateCategory(token, requestData, location.state._id)
       .then((response) => {

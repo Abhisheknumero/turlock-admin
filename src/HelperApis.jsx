@@ -79,6 +79,40 @@ class SublyApi {
     );
     return res;
   }
+
+  /* ------FETCH POST LIST API-----*/
+
+  static async fetchPostList(token) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(`post/getpost`, undefined, "get", header);
+    return res;
+  }
+
+  /* ------FETCH POST DETAIL API-----*/
+
+  static async fetchPostDetail(token, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/getpost/${id}`,
+      undefined,
+      "get",
+      header
+    );
+    return res;
+  }
+
+  /* ------DELETE POST API-----*/
+
+  static async deletePost(token, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/deletePost/${id}`,
+      undefined,
+      "delete",
+      header
+    );
+    return res;
+  }
 }
 
 export default SublyApi;

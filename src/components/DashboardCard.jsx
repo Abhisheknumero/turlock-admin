@@ -1,3 +1,4 @@
+import { LineChart } from "@mui/x-charts";
 import { AgCharts } from "ag-charts-react";
 import { useState } from "react";
 
@@ -21,11 +22,22 @@ function DashboardCard({ item }) {
   return (
     <div className="bg-white p-3 shadow-md rounded-lg border">
       <p className="mb-0 text-xs">Total Subscriptions</p>
-      <div className="flex items-center gap-1 jus">
+      <div className="flex items-center gap-1 h-[70px]">
         <p className="font-bold my-2.5">
           {item.key == 1 ? `$${item.count}` : item.count}
         </p>
-        {/* <AgCharts options={options} /> */}
+        <LineChart
+          leftAxis={null}
+          bottomAxis={null}
+          series={[
+            {
+              data: [2, 3, 5.5, 8.5, 1.5, 5, 1, 4, 3, 8],
+              color: "#D10505",
+            },
+          ]}
+          width={500}
+          height={200}
+        />{" "}
       </div>
       <div className="flex items-center gap-1 text-sm">
         <span

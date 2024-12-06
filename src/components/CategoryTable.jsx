@@ -8,6 +8,8 @@ function CategoryTable({
   deleteHandler,
   setCategoryId,
   setCategoryDetail,
+  setEdit,
+  setPreFieldData,
 }) {
   const navigate = useNavigate();
   return (
@@ -15,18 +17,18 @@ function CategoryTable({
       <Table bordered responsive className="!border-gray-500">
         <thead>
           <tr>
-            <th className=" text-sm font-bold !text-gray-600 !bg-gray-300 w-[35%]">
+            {/* <th className=" text-sm font-bold !text-gray-600 !bg-gray-300 w-[35%]">
               Description
-            </th>
+            </th> */}
             <th className=" text-sm font-bold !text-gray-600 !bg-gray-300 w-[15%]">
               Category Name
             </th>
             <th className=" text-sm font-bold !text-gray-600 !bg-gray-300 w-[8%] text-center">
               Date
             </th>
-            <th className=" text-sm font-bold !text-gray-600 !bg-gray-300 w-[10%]">
+            {/* <th className=" text-sm font-bold !text-gray-600 !bg-gray-300 w-[10%]">
               Category Type
-            </th>
+            </th> */}
             <th className=" text-sm font-bold !text-gray-600 !bg-gray-300 w-[5%] text-center">
               Status
             </th>
@@ -39,9 +41,9 @@ function CategoryTable({
           {list.length > 0 &&
             list.map((item, index) => (
               <tr key={index}>
-                <td className="text-sm font-medium !text-gray-700">
+                {/* <td className="text-sm font-medium !text-gray-700">
                   {item.categoryDescription}
-                </td>
+                </td> */}
                 <td
                   align="start"
                   className="text-sm font-medium !text-gray-700"
@@ -54,12 +56,12 @@ function CategoryTable({
                 >
                   {moment(new Date(item?.createdAt)).format("MMM DD, YYYY")}
                 </td>
-                <td
+                {/* <td
                   align="start"
                   className="text-sm font-medium !text-gray-700"
                 >
                   {item?.categoryType.toUpperCase()}
-                </td>
+                </td> */}
                 <td
                   align="center"
                   className="text-sm font-medium !text-gray-700"
@@ -79,7 +81,8 @@ function CategoryTable({
                     </span>
                     <span
                       onClick={() => {
-                        navigate("/Post/Category/Create", { state: item });
+                        setEdit(true);
+                        setPreFieldData(item);
                       }}
                       className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal"
                     >

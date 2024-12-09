@@ -8,6 +8,7 @@ import { Loader } from "../../utils/Loader";
 import SublyApi from "../../HelperApis";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import RichTextEditor from "react-rte";
 
 function PostCreate() {
   const navigate = useNavigate();
@@ -23,6 +24,11 @@ function PostCreate() {
   const [categoryModal, setCategoryModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [categoryList, setCategoryList] = useState("");
+  const [description, setDescription] = useState("");
+  const [categoryValue, setCategoryValue] = useState("");
+  const [postTitle, setPostTitle] = useState("");
+  const [linkTitle, setLinkTitle] = useState("");
+  const [subValue, setSubValue] = useState("");
 
   // =================================Media handler======================================\
 
@@ -223,7 +229,53 @@ function PostCreate() {
         .catch((err) => console.log(err));
     }
     getCategory();
-  }, [categoryModal ]);
+  }, [categoryModal]);
+
+  useEffect(() => {
+    const importModule = async () => {
+      //import module on the client-side to get `createEmptyValue` instead of a component
+      const module = await import("react-rte");
+      setDescription(module.createEmptyValue());
+    };
+    importModule();
+  }, [location.pathname]);
+
+  const handleOnChange = (value) => {
+    setDescription(value);
+  };
+
+  //if `value` from react-rte is not generated yet, you should not render `RichTextEditor`
+  if (!description) {
+    return null;
+  }
+
+  // =================================Create post API handler===================================
+  async function createPostHandle() {
+    setLoading(true);
+    const requestData = new FormData();
+    requestData.append("categories", categoryValue.id);
+    requestData.append("postType", categoryValue.key);
+    requestData.append("postTitle", postTitle);
+    requestData.append("postContent", description);
+    requestData.append("commonUpload", mediaPreview);
+    requestData.append("subscription");
+    requestData.append("postTag");
+    requestData.append("title", linkTitle);
+    requestData.append("link");
+    requestData.append("postCategory", categoryValue.key);
+    await SublyApi.createPost(token, requestData)
+      .then((response) => {
+        setLoading(false);
+        if (response.status == "success") {
+          toast.success(response.status);
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   return (
     <section className="h-screen ">
@@ -273,11 +325,62 @@ function PostCreate() {
                       type="text"
                       placeholder="Post Title"
                       id="title"
+                      value={postTitle}
+                      onChange={(e) => {
+                        setPostTitle(e.target.value);
+                      }}
                       className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
                     />
                   </label>
                 </div>
-                <div className="w-full max-xl:w-full relative">
+                <div
+                  onClick={() => {
+                    setShowDropdown({
+                      ...showDropdown,
+                      category: !showDropdown.category,
+                    });
+                  }}
+                  className="w-full max-xl:w-full relative"
+                >
+                  <label
+                    htmlFor="category"
+                    className="text-sm font-normal w-full"
+                  >
+                    Category
+                    <input
+                      type="text"
+                      placeholder="Select Category"
+                      id="category"
+                      value={categoryValue.key}
+                      className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
+                    />
+                  </label>
+                  <Icon
+                    icon={`${
+                      showDropdown.category
+                        ? "majesticons:chevron-up-line"
+                        : "majesticons:chevron-down-line"
+                    }`}
+                    width="30"
+                    height="30"
+                    style={{ color: "#4b5563" }}
+                    className="absolute right-1 top-6 cursor-pointer"
+                    onClick={() => {
+                      setShowDropdown({
+                        ...showDropdown,
+                        category: !showDropdown.category,
+                      });
+                    }}
+                  />
+                  {showDropdown.category && (
+                    <CategoryType
+                      setShow={setCategoryModal}
+                      categoryList={categoryList}
+                      setCategoryValue={setCategoryValue}
+                    />
+                  )}
+                </div>
+                {/* <div className="w-full max-xl:w-full relative">
                   <label
                     htmlFor="type"
                     className="text-sm font-normal w-full"
@@ -309,7 +412,7 @@ function PostCreate() {
                     style={{ color: "#4b5563" }}
                     className="absolute right-1 top-6"
                   />
-                </div>
+                </div> */}
               </div>
               <div className="flex items-center gap-3 max-lg:flex-wrap my-3">
                 <div className="w-full max-xl:w-full">
@@ -326,14 +429,16 @@ function PostCreate() {
                     />
                   </label>
                 </div>
-                <div className="w-full max-xl:w-full relative">
+                <div
+                  onClick={() => {
+                    setShowDropdown({
+                      ...showDropdown,
+                      subscription: !showDropdown.subscription,
+                    });
+                  }}
+                  className="w-full max-xl:w-full relative"
+                >
                   <label
-                    onClick={() => {
-                      setShowDropdown({
-                        ...showDropdown,
-                        subscription: !showDropdown.subscription,
-                      });
-                    }}
                     htmlFor="subscription"
                     className="text-sm font-normal w-full"
                   >
@@ -342,7 +447,7 @@ function PostCreate() {
                       type="text"
                       placeholder="Subscription"
                       id="subscription"
-                      value={""}
+                      value={subValue.subValue}
                       className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
                     />
                   </label>
@@ -357,6 +462,12 @@ function PostCreate() {
                     style={{ color: "#4b5563" }}
                     className="absolute right-1 top-6"
                   />
+                  {showDropdown.subscription && (
+                    <FilterDropdown
+                      setFilterValue={setSubValue}
+                      filterValue={subValue}
+                    />
+                  )}
                 </div>
               </div>
               <div className="flex items-center gap-3 max-lg:flex-wrap my-3">
@@ -370,6 +481,10 @@ function PostCreate() {
                       type="text"
                       placeholder="Link Title"
                       id="link-title"
+                      value={linkTitle}
+                      onChange={(e) => {
+                        setLinkTitle(e.target.value);
+                      }}
                       className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
                     />
                   </label>
@@ -386,59 +501,15 @@ function PostCreate() {
                   </label>
                 </div>
               </div>
-              <div className="flex items-center gap-3 max-lg:flex-wrap">
-                <div
-                  onClick={() => {
-                    setShowDropdown({
-                      ...showDropdown,
-                      category: !showDropdown.category,
-                    });
-                  }}
-                  className="w-full max-xl:w-full relative"
-                >
-                  <label
-                    htmlFor="category"
-                    className="text-sm font-normal w-full"
-                  >
-                    Category
-                    <input
-                      type="text"
-                      placeholder="Select Category"
-                      id="category"
-                      value={""}
-                      className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
-                    />
-                  </label>
-                  <Icon
-                    icon={`${
-                      showDropdown.category
-                        ? "majesticons:chevron-up-line"
-                        : "majesticons:chevron-down-line"
-                    }`}
-                    width="30"
-                    height="30"
-                    style={{ color: "#4b5563" }}
-                    className="absolute right-1 top-6 cursor-pointer"
-                    onClick={() => {
-                      setShowDropdown({
-                        ...showDropdown,
-                        category: !showDropdown.category,
-                      });
-                    }}
-                  />
-                  {showDropdown.category && (
-                    <CategoryType
-                      setShow={setCategoryModal}
-                      categoryList={categoryList}
-                    />
-                  )}
-                </div>
-                <div className="w-full max-xl:w-full relative"></div>
-              </div>
               <div className="w-full my-4">
-                <textarea
+                {/* <textarea
                   placeholder="Write Content..."
                   className="resize-none placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full h-[140px] rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
+                /> */}
+                <RichTextEditor
+                  value={description}
+                  onChange={handleOnChange}
+                  className="resize-none placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full h-[200px] rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium overflow-auto"
                 />
               </div>
               {!fileValue.length > 0 && (
@@ -488,6 +559,9 @@ function PostCreate() {
               )}
               <div className="flex items-center justify-center mt-5">
                 <button
+                  onClick={() => {
+                    createPostHandle( );
+                  }}
                   style={{ border: "1px solid #D10505" }}
                   className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#D10505] m-auto w-[40%] max-lg:w-full"
                 >
@@ -513,7 +587,9 @@ function PostCreate() {
 
 export default PostCreate;
 
-function CategoryType({ setShow, categoryList }) {
+function CategoryType({ setShow, categoryList, setCategoryValue }) {
+  console.log("categoryList", categoryList);
+
   return (
     <div className="rounded-md shadow-2xl absolute w-full top-15 bg-white py-2 z-50 max-h-48 overflow-auto">
       <p
@@ -528,12 +604,30 @@ function CategoryType({ setShow, categoryList }) {
       {categoryList &&
         categoryList?.map((item, index) => (
           <p
+            onClick={() => {
+              setCategoryValue({ id: item._id, key: item?.categoryName });
+            }}
             className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
             key={index}
           >
             {item.categoryName}
           </p>
         ))}
+    </div>
+  );
+}
+
+function FilterDropdown({ setFilterValue, filterValue }) {
+  return (
+    <div className="rounded-md shadow-2xl absolute w-full top-15 bg-white py-2 z-10">
+      <p
+        onClick={() => {
+          setFilterValue({ ...filterValue, subValue: "Free" });
+        }}
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+      >
+        Free
+      </p>
     </div>
   );
 }

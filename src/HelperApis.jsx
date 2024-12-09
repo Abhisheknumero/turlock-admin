@@ -113,6 +113,14 @@ class SublyApi {
     );
     return res;
   }
+
+  /* ------CREATE POST API-----*/
+
+  static async createPost(token, data) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(`post/addpost`, data, "post", header);
+    return res;
+  }
 }
 
 export default SublyApi;

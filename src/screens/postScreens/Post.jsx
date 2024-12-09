@@ -200,18 +200,20 @@ function Post() {
                     />
                   )}
                 </div>
-                <div className="w-full relative">
+                <div
+                  onClick={() => {
+                    setShowDropdown({
+                      ...showDropdown,
+                      subscription: !showDropdown.subscription,
+                    });
+                  }}
+                  className="w-full relative"
+                >
                   <input
                     type="text"
-                    value={""}
+                    value={filterValue?.subValue}
                     placeholder="Select Subscription Type"
                     className="placeholder:text-gray-600 placeholder:font-semibold py-1.5 px-3 border border-gray-400 w-full rounded-md bg-white caret-transparent cursor-pointer focus-visible:outline-none text-gray-600 font-semibold"
-                    onClick={() => {
-                      setShowDropdown({
-                        ...showDropdown,
-                        subscription: !showDropdown.subscription,
-                      });
-                    }}
                   />
                   <Icon
                     icon={`${
@@ -224,7 +226,12 @@ function Post() {
                     style={{ color: "#4b5563" }}
                     className="absolute right-1 top-1"
                   />
-                  {showDropdown.subscription && <FilterDropdown />}
+                  {showDropdown.subscription && (
+                    <FilterDropdown
+                      setFilterValue={setFilterValue}
+                      filterValue={filterValue}
+                    />
+                  )}
                 </div>
                 <div className="flex items-center gap-3 w-full">
                   {" "}
@@ -281,20 +288,16 @@ function Post() {
 
 export default Post;
 
-export function FilterDropdown() {
+export function FilterDropdown({ setFilterValue, filterValue }) {
   return (
-    <div className="rounded-md shadow-xl absolute w-full top-10 bg-white py-2">
-      <p className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3">
-        Demo1
-      </p>
-      <p className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3">
-        Demo2
-      </p>
-      <p className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3">
-        Demo3
-      </p>
-      <p className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3">
-        Demo4
+    <div className="rounded-md shadow-2xl absolute w-full top-10 bg-white py-2">
+      <p
+        onClick={() => {
+          setFilterValue({ ...filterValue, subValue: "Free" });
+        }}
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+      >
+        Free
       </p>
     </div>
   );

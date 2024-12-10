@@ -28,10 +28,10 @@ function PostTable({ postList, setPostId, setPostDetail, deleteHandle }) {
             <th className="text-sm font-bold text-center !text-gray-600 !bg-gray-300 w-[10%]">
               Tags
             </th>
-            <th className="text-sm font-bold !text-gray-600 !bg-gray-300 w-[8%]">
+            <th className="text-sm font-bold text-center !text-gray-600 !bg-gray-300 w-[8%]">
               #Comment
             </th>
-            <th className="text-sm font-bold !text-gray-600 !bg-gray-300 w-[5%]">
+            <th className="text-sm font-bold text-center !text-gray-600 !bg-gray-300 w-[5%]">
               #Viwes
             </th>
             <th className="text-sm text-center font-bold !text-gray-600 !bg-gray-300 w-[20%]">
@@ -61,13 +61,13 @@ function PostTable({ postList, setPostId, setPostDetail, deleteHandle }) {
                 Active
               </td> */}
               <td align="center" className="text-sm font-medium !text-gray-700">
-                {val?.postTag}
+                {val?.postTag || "--"}
               </td>
-              <td className="text-sm font-medium !text-gray-700">
-                {val?.comments}
+              <td align="center" className="text-sm font-medium !text-gray-700">
+                {val?.comments || "--"}
               </td>
-              <td className="text-sm font-medium !text-gray-700">
-                {val?.views}
+              <td align="center" className="text-sm font-medium !text-gray-700">
+                {val?.views || "--"}
               </td>
               <td>
                 <div className="flex items-center justify-center gap-3">

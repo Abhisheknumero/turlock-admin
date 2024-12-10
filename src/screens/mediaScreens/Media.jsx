@@ -1,13 +1,40 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 import folderImg from "../../assets/folder-img.png";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
+import SublyApi from "../../HelperApis";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { Loader } from "../../utils/Loader";
 
 function Media() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [mediaValue, setMediaValue] = useState("");
+  const { token } = useSelector((state) => state.user.userdetail);
+
+  // =======================fetch media list=========================
+  useEffect(() => {
+    fetchList();
+  }, []);
+  async function fetchList() {
+    setLoading(true);
+    await SublyApi.mediaList(token)
+      .then((response) => {
+        setLoading(false);
+        console.log(response);
+        if (response.status == "success") {
+          setMediaValue(response.data);
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
   return (
     <section className="overflow-auto">
       {loading ? <Loader /> : ""}
@@ -31,20 +58,30 @@ function Media() {
               </div>
             </div>
             <div className="flex items-center gap-5 my-8">
-              {[1, 2, 3, 4, 5].map(() => (
-                <div className="cursor-pointer">
-                  <div className="w-[100px] h-[100px]">
-                    <img
-                      src={folderImg}
-                      alt="folder"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <p className="mb-0 text-base font-semibold text-center">
-                    XYZ
-                  </p>
-                </div>
-              ))}
+              {mediaValue.length > 0
+                ? mediaValue?.map((item, index) => (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        navigate("/Media/Gallery-list", {
+                          state: { key: item },
+                        });
+                      }}
+                      className="cursor-pointer"
+                    >
+                      <div className="w-[100px] h-[100px]">
+                        <img
+                          src={folderImg}
+                          alt="folder"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <p className="mb-0 text-base font-semibold text-center">
+                        {item?.categoryName}
+                      </p>
+                    </div>
+                  ))
+                : ""}
             </div>
           </div>
         </div>

@@ -121,6 +121,48 @@ class SublyApi {
     let res = await this.request(`post/addpost`, data, "post", header);
     return res;
   }
+
+  /* ------SEARCH POST API-----*/
+
+  static async searchPost(token, data) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(`post/advanced-search`, data, "post", header);
+    return res;
+  }
+
+  /* ------CREATE MEDIA CATEGORY API-----*/
+
+  static async createMediaCategory(token, data) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(`post/addMediaCategory`, data, "post", header);
+    return res;
+  }
+
+  /* ------FETCH MEDIA LIST API-----*/
+
+  static async mediaList(token) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/getMediaCategory-list`,
+      undefined,
+      "get",
+      header
+    );
+    return res;
+  }
+
+  /* ------FETCH MEDIA LIST API-----*/
+
+  static async mediaGalleryList(token, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/getMediaFiles-list?mediaFileCategory=${id}`,
+      undefined,
+      "get",
+      header
+    );
+    return res;
+  }
 }
 
 export default SublyApi;

@@ -11,6 +11,8 @@ import { Loader } from "../../utils/Loader";
 import PostDetail from "../../components/PostDetail";
 import CreateCategory from "../../components/CreateCategory";
 import DatePicker from "react-datepicker";
+import $ from "jquery";
+import ReactPaginate from "react-paginate";
 
 function Post() {
   const location = useLocation();
@@ -31,6 +33,7 @@ function Post() {
   const [endDate, setEndDate] = useState();
   const [categorytype, setCategoryType] = useState("");
   const [filterValue, setFilterValue] = useState("");
+  const [title, setTitle] = useState("");
 
   // ===================Calling API for fetch post list=====================
   useEffect(() => {
@@ -83,6 +86,42 @@ function Post() {
       })
       .catch((err) => console.log(err));
   }
+
+  // ====function to hide dropdown on click outside====
+  $(document).mouseup(function (e) {
+    if (
+      $(e.target).closest(".notifyBlock").length === 0 &&
+      $(e.target).closest(".block_notify").length === 0
+    ) {
+      setShowDropdown({});
+    }
+  });
+
+  // ====================Advance search API handler===================
+  async function advanceSearch() {
+    setLoading(true);
+    const requestData = {
+      title: title,
+      category: filterValue?.category?.id,
+      subscriptionType: filterValue?.subscription?.subValue,
+      startDate: startDate,
+      endDate: endDate,
+    };
+    await SublyApi.searchPost(token, requestData)
+      .then((response) => {
+        setLoading(false);
+        console.log(response);
+        if (response.status == "success") {
+          setPostList(response.data.posts);
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
 
   return (
     <section className="overflow-auto">
@@ -162,6 +201,10 @@ function Post() {
                   <input
                     type="text"
                     placeholder="Title"
+                    value={title}
+                    onChange={(e) => {
+                      setTitle(e.target.value);
+                    }}
                     className="placeholder:text-gray-600 placeholder:font-semibold py-1.5 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-semibold"
                   />
                 </div>
@@ -172,11 +215,11 @@ function Post() {
                       category: !showDropdown.category,
                     });
                   }}
-                  className="w-full relative"
+                  className="w-full relative notifyBlock"
                 >
                   <input
                     type="text"
-                    value={filterValue?.category}
+                    value={filterValue?.category?.name}
                     placeholder="Select Category"
                     className="placeholder:text-gray-600 placeholder:font-semibold py-1.5 px-3 border border-gray-400 w-full rounded-md bg-white caret-transparent cursor-pointer focus-visible:outline-none text-gray-600 font-semibold"
                   />
@@ -207,11 +250,11 @@ function Post() {
                       subscription: !showDropdown.subscription,
                     });
                   }}
-                  className="w-full relative"
+                  className="w-full relative notifyBlock"
                 >
                   <input
                     type="text"
-                    value={filterValue?.subValue}
+                    value={filterValue?.subscription?.subValue}
                     placeholder="Select Subscription Type"
                     className="placeholder:text-gray-600 placeholder:font-semibold py-1.5 px-3 border border-gray-400 w-full rounded-md bg-white caret-transparent cursor-pointer focus-visible:outline-none text-gray-600 font-semibold"
                   />
@@ -240,6 +283,8 @@ function Post() {
                       selected={startDate}
                       onChange={(date) => setStartDate(date)}
                       placeholderText="Start Date"
+                      dateFormat={"dd/MM/YYYY"}
+                      maxDate={new Date()}
                       className="placeholder:text-gray-600 placeholder:font-semibold py-1.5 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-semibold"
                     />
                   </div>
@@ -248,15 +293,35 @@ function Post() {
                       selected={endDate}
                       onChange={(date) => setEndDate(date)}
                       placeholderText="End Date"
+                      dateFormat={"dd/MM/YYYY"}
+                      maxDate={new Date()}
+                      minDate={startDate}
                       className="placeholder:text-gray-600 placeholder:font-semibold py-1.5 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-semibold overflow-hidden"
                     />
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <button className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none">
+                  <button
+                    onClick={() => {
+                      advanceSearch();
+                    }}
+                    className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none"
+                  >
                     Search
                   </button>
-                  <button className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none">
+                  <button
+                    onClick={() => {
+                      setStartDate();
+                      setEndDate();
+                      setFilterValue({
+                        subscription: { subValue: "", id: "" },
+                        category: { name: "", id: "" },
+                      });
+                      setTitle("");
+                      postListHandle();
+                    }}
+                    className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none"
+                  >
                     Show All
                   </button>
                 </div>
@@ -293,7 +358,10 @@ export function FilterDropdown({ setFilterValue, filterValue }) {
     <div className="rounded-md shadow-2xl absolute w-full top-10 bg-white py-2">
       <p
         onClick={() => {
-          setFilterValue({ ...filterValue, subValue: "Free" });
+          setFilterValue({
+            ...filterValue,
+            subscription: { subValue: "Free", id: 1 },
+          });
         }}
         className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
       >
@@ -310,7 +378,10 @@ function CategoryType({ categoryList, setFilterValue, filterValue }) {
         categoryList?.map((item, index) => (
           <p
             onClick={() => {
-              setFilterValue({ ...filterValue, category: item.categoryName });
+              setFilterValue({
+                ...filterValue,
+                category: { name: item.categoryName, id: item._id },
+              });
             }}
             className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
             key={index}

@@ -7,6 +7,7 @@ import Category from "./screens/postScreens/Category";
 import CreateCategory from "./screens/postScreens/CreateCategory";
 import CreateMedia from "./screens/mediaScreens/CreateMedia";
 import Media from "./screens/mediaScreens/Media";
+import GalleryList from "./screens/mediaScreens/GalleryList";
 
 function Router() {
   return (
@@ -20,6 +21,7 @@ function Router() {
         <Route path="/Post/Category/Create" element={<CreateCategory />} />
         <Route path="/Media/Create" element={<CreateMedia />} />
         <Route path="/Media" element={<Media />} />
+        <Route path="/Media/Gallery-list" element={<GalleryList />} />
       </Routes>
     </BrowserRouter>
   );

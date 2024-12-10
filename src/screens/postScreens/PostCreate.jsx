@@ -9,6 +9,7 @@ import SublyApi from "../../HelperApis";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import RichTextEditor from "react-rte";
+import $ from "jquery";
 
 function PostCreate() {
   const navigate = useNavigate();
@@ -29,6 +30,19 @@ function PostCreate() {
   const [postTitle, setPostTitle] = useState("");
   const [linkTitle, setLinkTitle] = useState("");
   const [subValue, setSubValue] = useState("");
+  const [link, setlink] = useState("");
+  const [postTag, setPostTag] = useState([]);
+  const [postTagValue, setPostTagValue] = useState([]);
+
+  // ====function to hide dropdown on click outside====
+  $(document).mouseup(function (e) {
+    if (
+      $(e.target).closest(".notifyBlock").length === 0 &&
+      $(e.target).closest(".block_notify").length === 0
+    ) {
+      setShowDropdown({});
+    }
+  });
 
   // =================================Media handler======================================\
 
@@ -41,8 +55,6 @@ function PostCreate() {
       if (e.target.files[0].type.includes("image")) {
         const file = [e.target.files];
         Object.values(file[0]).map((item, index) => {
-          console.log(item);
-
           profileImageData.push(item);
         });
         setMediaPreview(profileImageData);
@@ -69,8 +81,6 @@ function PostCreate() {
       } else {
         const file = [e.target.files];
         Object.values(file[0]).map((item, index) => {
-          console.log(item);
-
           profileImageData.push(item);
         });
         setMediaPreview(profileImageData);
@@ -231,51 +241,67 @@ function PostCreate() {
     getCategory();
   }, [categoryModal]);
 
-  useEffect(() => {
-    const importModule = async () => {
-      //import module on the client-side to get `createEmptyValue` instead of a component
-      const module = await import("react-rte");
-      setDescription(module.createEmptyValue());
-    };
-    importModule();
-  }, [location.pathname]);
+  // useEffect(() => {
+  //   const importModule = async () => {
+  //     //import module on the client-side to get `createEmptyValue` instead of a component
+  //     const module = await import("react-rte");
+  //     setDescription(module.createEmptyValue());
+  //   };
+  //   importModule();
+  // }, [location.pathname]);
 
-  const handleOnChange = (value) => {
-    setDescription(value);
-  };
+  // const handleOnChange = (value) => {
+  //   setDescription(value);
+  // };
 
-  //if `value` from react-rte is not generated yet, you should not render `RichTextEditor`
-  if (!description) {
-    return null;
-  }
+  // //if `value` from react-rte is not generated yet, you should not render `RichTextEditor`
+  // if (!description) {
+  //   return null;
+  // }
 
   // =================================Create post API handler===================================
   async function createPostHandle() {
-    setLoading(true);
-    const requestData = new FormData();
-    requestData.append("categories", categoryValue.id);
-    requestData.append("postType", categoryValue.key);
-    requestData.append("postTitle", postTitle);
-    requestData.append("postContent", description);
-    requestData.append("commonUpload", mediaPreview);
-    requestData.append("subscription");
-    requestData.append("postTag");
-    requestData.append("title", linkTitle);
-    requestData.append("link");
-    requestData.append("postCategory", categoryValue.key);
-    await SublyApi.createPost(token, requestData)
-      .then((response) => {
-        setLoading(false);
-        if (response.status == "success") {
-          toast.success(response.status);
-        } else {
-          toast.error(response.data.error);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const regExValue =
+      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+    if (link.match(regExValue)) {
+      setLoading(true);
+      const requestData = new FormData();
+      requestData.append("categories", categoryValue.id);
+      requestData.append("postType", categoryValue.key);
+      requestData.append("postTitle", postTitle);
+      requestData.append("postContent", description);
+      requestData.append("commonUpload", mediaPreview[0]);
+      requestData.append("subscription", subValue.subValue);
+      requestData.append("postTag", postTag);
+      requestData.append("title", linkTitle);
+      requestData.append("link", link);
+      requestData.append("postCategory", categoryValue.key);
+      await SublyApi.createPost(token, requestData)
+        .then((response) => {
+          console.log("response", response);
+          setLoading(false);
+          if (response.status == "success") {
+            navigate("/Post/Post-List");
+            toast.success(response.status);
+          } else {
+            toast.error(response.data.error);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      toast.error("Please enter the valid link");
+    }
   }
+
+  async function onTagRemove(index) {
+    let tags = [...postTag];
+    tags.splice(index, 1);
+    setPostTag(tags);
+  }
+
+  console.log("mediaPreview", mediaPreview);
 
   return (
     <section className="h-screen ">
@@ -340,7 +366,7 @@ function PostCreate() {
                       category: !showDropdown.category,
                     });
                   }}
-                  className="w-full max-xl:w-full relative"
+                  className="w-full max-xl:w-full relative notifyBlock"
                 >
                   <label
                     htmlFor="category"
@@ -352,6 +378,7 @@ function PostCreate() {
                       placeholder="Select Category"
                       id="category"
                       value={categoryValue.key}
+                      autoComplete="off"
                       className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
                     />
                   </label>
@@ -418,16 +445,54 @@ function PostCreate() {
                 <div className="w-full max-xl:w-full">
                   <label
                     htmlFor="post-tag"
-                    className="text-sm font-normal w-full"
+                    className="text-sm font-normal w-full "
                   >
                     Post Tag
-                    <input
-                      type="text"
-                      placeholder="Post Tag"
-                      id="post-tag"
-                      className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
-                    />
+                    <div className="flex items-center w-full gap-2">
+                      <input
+                        type="text"
+                        placeholder="Post Tag"
+                        id="post-tag"
+                        value={postTagValue}
+                        onChange={(e) => {
+                          setPostTagValue(
+                            e.target.value.includes("#")
+                              ? e.target.value
+                              : `#${e.target.value}`
+                          );
+                        }}
+                        className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
+                      />
+                      <button
+                        onClick={() => {
+                          setPostTagValue("");
+                          setPostTag([...postTag, postTagValue]);
+                        }}
+                        className="w-24 text-sm rounded-md px-2 py-1.5 buttonClass relative font-medium hover:border-none"
+                      >
+                        Add
+                      </button>
+                    </div>
                   </label>
+                  <div className="flex items-center gap-2 ">
+                    {postTag?.map((val, index) => (
+                      <p
+                        key={index}
+                        className="flex items-center gap-1 justify-between mb-0 bg-[#d105054b] pl-2 pr-0.5 font-medium text-gray-600 rounded-sm mt-2"
+                      >
+                        {val.includes("#") ? val : `#${val}`}{" "}
+                        <Icon
+                          icon="si:close-duotone"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer mt-0.5"
+                          onClick={() => {
+                            onTagRemove(index);
+                          }}
+                        />
+                      </p>
+                    ))}
+                  </div>
                 </div>
                 <div
                   onClick={() => {
@@ -436,7 +501,7 @@ function PostCreate() {
                       subscription: !showDropdown.subscription,
                     });
                   }}
-                  className="w-full max-xl:w-full relative"
+                  className="w-full max-xl:w-full relative notifyBlock"
                 >
                   <label
                     htmlFor="subscription"
@@ -447,6 +512,7 @@ function PostCreate() {
                       type="text"
                       placeholder="Subscription"
                       id="subscription"
+                      autoComplete="off"
                       value={subValue.subValue}
                       className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
                     />
@@ -496,21 +562,29 @@ function PostCreate() {
                       type="text"
                       placeholder="Link"
                       id="link"
+                      value={link}
+                      onChange={(e) => {
+                        setlink(e.target.value);
+                      }}
                       className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
                     />
                   </label>
                 </div>
               </div>
               <div className="w-full my-4">
-                {/* <textarea
+                <textarea
+                  value={description}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                  }}
                   placeholder="Write Content..."
-                  className="resize-none placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full h-[140px] rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
-                /> */}
-                <RichTextEditor
+                  className="resize-none placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full h-[180px] rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
+                />
+                {/* <RichTextEditor
                   value={description}
                   onChange={handleOnChange}
                   className="resize-none placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full h-[200px] rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium overflow-auto"
-                />
+                /> */}
               </div>
               {!fileValue.length > 0 && (
                 <label
@@ -535,7 +609,7 @@ function PostCreate() {
                     fileValue.map((item, index) => (
                       <div
                         key={index}
-                        className="border rounded-md flex items-center justify-center w-[140px] h-[140px] object-cover bg-white relative"
+                        className="border rounded-md flex items-center justify-center w-[140px] h-[140px] object-cover bg-white relative overflow-hidden"
                       >
                         <img src={item.url} alt="img" />
                         <Icon
@@ -549,18 +623,18 @@ function PostCreate() {
                         />
                       </div>
                     ))}
-                  <label
-                    htmlFor="upload"
-                    className="border rounded-md flex items-center justify-center w-[140px] h-[140px] bg-white text-gray-600 cursor-pointer"
-                  >
-                    <Icon icon="iwwa:add" width="65" height="65" />
-                  </label>
+                  {/* <label
+                      htmlFor="upload"
+                      className="border rounded-md flex items-center justify-center w-[140px] h-[140px] bg-white text-gray-600 cursor-pointer"
+                    >
+                      <Icon icon="iwwa:add" width="65" height="65" />
+                    </label> */}
                 </div>
               )}
               <div className="flex items-center justify-center mt-5">
                 <button
                   onClick={() => {
-                    createPostHandle( );
+                    createPostHandle();
                   }}
                   style={{ border: "1px solid #D10505" }}
                   className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#D10505] m-auto w-[40%] max-lg:w-full"
@@ -571,7 +645,7 @@ function PostCreate() {
               <input
                 type="file"
                 id="upload"
-                accept="image/*, video/*"
+                accept=".png, .jpg, .jpeg, .gif, .webp,  video/*"
                 className="hidden"
                 onChange={(e) => {
                   mediaHandler(e);
@@ -588,8 +662,6 @@ function PostCreate() {
 export default PostCreate;
 
 function CategoryType({ setShow, categoryList, setCategoryValue }) {
-  console.log("categoryList", categoryList);
-
   return (
     <div className="rounded-md shadow-2xl absolute w-full top-15 bg-white py-2 z-50 max-h-48 overflow-auto">
       <p
@@ -627,6 +699,14 @@ function FilterDropdown({ setFilterValue, filterValue }) {
         className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
       >
         Free
+      </p>
+      <p
+        onClick={() => {
+          setFilterValue({ ...filterValue, subValue: "Paid" });
+        }}
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+      >
+        Paid
       </p>
     </div>
   );

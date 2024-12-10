@@ -12,6 +12,7 @@ import CategoryTable from "../../components/CategoryTable";
 import CategoryDetail from "../../components/CategoryDetail";
 import DatePicker from "react-datepicker";
 import CreateCategory from "../../components/CreateCategory";
+import $ from "jquery";
 
 function Category() {
   const location = useLocation();
@@ -33,6 +34,16 @@ function Category() {
   const [preFieldData, setPreFieldData] = useState("");
   const [statusValue, setStatusValue] = useState("");
 
+  // ====function to hide dropdown on click outside====
+  $(document).mouseup(function (e) {
+    if (
+      $(e.target).closest(".notifyBlock").length === 0 &&
+      $(e.target).closest(".block_notify").length === 0
+    ) {
+      setShowDropdown({});
+    }
+  });
+  
   //   ====================================Calling API for fetching Category list========================================
   useEffect(() => {
     getCategory();
@@ -162,7 +173,7 @@ function Category() {
                       status: !showDropdown.status,
                     });
                   }}
-                  className="w-full relative"
+                  className="w-full relative notifyBlock"
                 >
                   <input
                     type="text"

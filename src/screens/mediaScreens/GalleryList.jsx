@@ -7,6 +7,7 @@ import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import SublyApi from "../../HelperApis";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import { imgBaseURL } from "../../utils/StaticsData";
 
 function GalleryList() {
   const navigate = useNavigate();
@@ -22,7 +23,6 @@ function GalleryList() {
       await SublyApi.mediaGalleryList(token, location.state.key._id)
         .then((response) => {
           setLoading(false);
-          console.log(response);
           if (response.status == "success") {
             setGallery(response.data);
           } else {
@@ -60,6 +60,22 @@ function GalleryList() {
                   Back
                 </button>
               </div>
+            </div>
+            <div className="flex items-center gap-3 my-4">
+              {gallery.length > 0 ? (
+                gallery.map((item, index) => (
+                  <div key={index} className="w-[130px] h-[130px] rounded-md bg-white object-cover overflow-hidden flex items-center ">
+                    <img
+                      src={`${imgBaseURL}${item?.mediaFile}`}
+                      alt="gallery"
+                    />
+                  </div>
+                ))
+              ) : (
+                <p className="text-center text-lg font-semibold text-gray-500 my-4 w-full">
+                  No Record Found
+                </p>
+              )}
             </div>
           </div>
         </div>

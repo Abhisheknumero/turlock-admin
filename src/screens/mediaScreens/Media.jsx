@@ -24,7 +24,6 @@ function Media() {
     await SublyApi.mediaList(token)
       .then((response) => {
         setLoading(false);
-        console.log(response);
         if (response.status == "success") {
           setMediaValue(response.data);
         } else {
@@ -58,30 +57,34 @@ function Media() {
               </div>
             </div>
             <div className="flex items-center gap-5 my-8">
-              {mediaValue.length > 0
-                ? mediaValue?.map((item, index) => (
-                    <div
-                      key={index}
-                      onClick={() => {
-                        navigate("/Media/Gallery-list", {
-                          state: { key: item },
-                        });
-                      }}
-                      className="cursor-pointer"
-                    >
-                      <div className="w-[100px] h-[100px]">
-                        <img
-                          src={folderImg}
-                          alt="folder"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <p className="mb-0 text-base font-semibold text-center">
-                        {item?.categoryName}
-                      </p>
+              {mediaValue.length > 0 ? (
+                mediaValue?.map((item, index) => (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      navigate("/Media/Gallery-list", {
+                        state: { key: item },
+                      });
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <div className="w-[100px] h-[100px]">
+                      <img
+                        src={folderImg}
+                        alt="folder"
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-                  ))
-                : ""}
+                    <p className="mb-0 text-base font-semibold text-center">
+                      {item?.categoryName}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center text-lg font-semibold text-gray-500 my-4">
+                  No Record Found
+                </p>
+              )}
             </div>
           </div>
         </div>

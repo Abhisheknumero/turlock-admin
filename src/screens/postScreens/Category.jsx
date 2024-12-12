@@ -33,6 +33,7 @@ function Category() {
   const [createCategory, setCreateCategory] = useState(false);
   const [preFieldData, setPreFieldData] = useState("");
   const [statusValue, setStatusValue] = useState("");
+  const [categoryName, setCategoryName] = useState("");
 
   // ====function to hide dropdown on click outside====
   $(document).mouseup(function (e) {
@@ -43,7 +44,7 @@ function Category() {
       setShowDropdown({});
     }
   });
-  
+
   //   ====================================Calling API for fetching Category list========================================
   useEffect(() => {
     getCategory();
@@ -71,6 +72,29 @@ function Category() {
           getCategory();
         } else {
           toast.error(res.data.error);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  // ====================Advance search API handler===================
+  async function advanceSearch() {
+    setLoading(true);
+    const requestData = {
+      categoryName: categoryName,
+      status: statusValue,
+      startDate: startDate,
+      endDate: endDate,
+    };
+    await SublyApi.categoryAdvanceSearch(token, requestData)
+      .then((response) => {
+        setLoading(false);
+        if (response.status == "success") {
+          setCategoryList(response.data.categories);
+        } else {
+          toast.error(response.data.error);
         }
       })
       .catch((err) => {
@@ -163,6 +187,10 @@ function Category() {
                   <input
                     type="text"
                     placeholder="Category Name"
+                    value={categoryName}
+                    onChange={(e) => {
+                      setCategoryName(e.target.value);
+                    }}
                     className="placeholder:text-gray-600 placeholder:font-semibold py-1.5 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-semibold"
                   />
                 </div>
@@ -204,6 +232,8 @@ function Category() {
                       selected={startDate}
                       onChange={(date) => setStartDate(date)}
                       placeholderText="Start Date"
+                      maxDate={new Date()}
+                      dateFormat={"dd/MM/YYYY"}
                       className="placeholder:text-gray-600 placeholder:font-semibold py-1.5 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-semibold"
                     />
                   </div>
@@ -212,15 +242,32 @@ function Category() {
                       selected={endDate}
                       onChange={(date) => setEndDate(date)}
                       placeholderText="End Date"
+                      maxDate={new Date()}
+                      minDate={startDate}
+                      dateFormat={"dd/MM/YYYY"}
                       className="placeholder:text-gray-600 placeholder:font-semibold py-1.5 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-semibold overflow-hidden"
                     />
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <button className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none">
+                  <button
+                    onClick={() => {
+                      advanceSearch();
+                    }}
+                    className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none"
+                  >
                     Search
                   </button>
-                  <button className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none">
+                  <button
+                    onClick={() => {
+                      setCategoryName("");
+                      setStatusValue("");
+                      setStartDate("");
+                      setEndDate("");
+                      getCategory();
+                    }}
+                    className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none"
+                  >
                     Show All
                   </button>
                 </div>

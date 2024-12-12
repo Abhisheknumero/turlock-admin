@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
@@ -6,9 +6,13 @@ import $ from "jquery";
 import CreateMediaCategory from "../../components/CreateMediaCategory";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../../utils/Loader";
+import { toast } from "react-toastify";
+import SublyApi from "../../HelperApis";
+import { useSelector } from "react-redux";
 
 function CreateMedia() {
   const navigate = useNavigate();
+  const { token } = useSelector((state) => state.user.userdetail);
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState({});
   const [fileValue, setFileValue] = useState("");
@@ -204,6 +208,47 @@ function CreateMedia() {
     });
   };
 
+  // =======================fetch media list=========================
+  useEffect(() => {
+    fetchList();
+  }, []);
+  async function fetchList() {
+    setLoading(true);
+    await SublyApi.mediaList(token)
+      .then((response) => {
+        setLoading(false);
+        if (response.status == "success") {
+          setCategoryList(response.data);
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  // ==================================API for create media=====================================
+  async function createMediaHandle() {
+    setLoading(true);
+    const requestData = new FormData();
+    requestData.append("commonUpload", mediaPreview);
+    requestData.append("mediaFileCategory", categoryValue.id);
+    await SublyApi.createMedia(token, requestData)
+      .then((response) => {
+        setLoading(false);
+        if (response.status == "success") {
+          toast.success("Create media successfully");
+          navigate("/Media");
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   return (
     <section className="overflow-auto">
       <CreateMediaCategory
@@ -244,6 +289,7 @@ function CreateMedia() {
                   <input
                     type="text"
                     placeholder="Select Category"
+                    value={categoryValue?.key}
                     className="placeholder:text-gray-600 placeholder:font-semibold py-1.5 px-3 border border-gray-400 w-full rounded-md bg-white caret-transparent cursor-pointer focus-visible:outline-none text-gray-600 font-semibold"
                   />
                   <Icon
@@ -275,7 +321,7 @@ function CreateMedia() {
                   <input
                     type="file"
                     id="upload"
-                    accept="image/*, video/*"
+                    accept=".png, .jpg, .jpeg, .gif, .webp, .mp4, .avi, .mov, .mkv"
                     className="hidden"
                     onChange={(e) => {
                       mediaHandler(e);
@@ -318,10 +364,22 @@ function CreateMedia() {
                 </div>
               )}
               <div className="flex items-center gap-3 mt-4">
-                <button className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none">
+                <button
+                  onClick={() => {
+                    setCategoryValue({ id: "", key: "" });
+                    setMediaPreview("");
+                    setFileValue("");
+                  }}
+                  className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none"
+                >
                   Cancel
                 </button>
-                <button className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none">
+                <button
+                  onClick={() => {
+                    createMediaHandle();
+                  }}
+                  className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none"
+                >
                   Create
                 </button>
               </div>

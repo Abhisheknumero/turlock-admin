@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = "http://192.168.29.114:3000/admin";
+const BASE_URL = "http://192.168.29.221:3000/admin";
+// const BASE_URL = "http://192.168.29.161:3000/admin";
 
 class SublyApi {
   //token which interact with the API will be stored here.
@@ -159,6 +160,27 @@ class SublyApi {
       `post/getMediaFiles-list?mediaFileCategory=${id}`,
       undefined,
       "get",
+      header
+    );
+    return res;
+  }
+
+  /* ------CREATE MEDIA API-----*/
+
+  static async createMedia(token, data) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(`post/addMediaFiles`, data, "post", header);
+    return res;
+  }
+
+  /* ------CATEGORY ADVANCE SEARCH API-----*/
+
+  static async categoryAdvanceSearch(token, data) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/advanced-searchCategory`,
+      data,
+      "post",
       header
     );
     return res;

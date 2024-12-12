@@ -645,7 +645,7 @@ function PostCreate() {
               <input
                 type="file"
                 id="upload"
-                accept=".png, .jpg, .jpeg, .gif, .webp,  video/*"
+                accept=".png, .jpg, .jpeg, .gif, .webp, .mp4, .avi, .mov, .mkv"
                 className="hidden"
                 onChange={(e) => {
                   mediaHandler(e);

@@ -1,7 +1,9 @@
 import moment from "moment";
 import { Table } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 function PostTable({ postList, setPostId, setPostDetail, deleteHandle }) {
+  const navigate = useNavigate();
   return (
     <div className="h-[calc(100vh-450px)] overflow-auto">
       <Table bordered responsive className="!border-gray-500">
@@ -80,7 +82,12 @@ function PostTable({ postList, setPostId, setPostDetail, deleteHandle }) {
                   >
                     View
                   </span>
-                  <span className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal">
+                  <span
+                    onClick={() => {
+                      navigate("/Post/Create", { state: val });
+                    }}
+                    className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal"
+                  >
                     Edit
                   </span>
                   <span

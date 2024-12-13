@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import RichTextEditor from "react-rte";
 import $ from "jquery";
+import { imgBaseURL } from "../../utils/StaticsData";
 
 function PostCreate() {
   const navigate = useNavigate();
@@ -33,6 +34,27 @@ function PostCreate() {
   const [link, setlink] = useState("");
   const [postTag, setPostTag] = useState([]);
   const [postTagValue, setPostTagValue] = useState([]);
+
+  // =====================prefield data for edit post=======================
+  useEffect(() => {
+    if (location.state) {
+      setDescription(location.state?.postContent);
+      setFileValue([`${imgBaseURL}${location.state?.postMedia}`]);
+      setMediaPreview([`${imgBaseURL}${location.state?.postMedia}`]);
+      const tags = location.state?.postTag[0].split(",");
+      setPostTag(tags);
+      setlink(location.state?.externalLink?.link);
+      setLinkTitle(location.state?.externalLink?.title);
+      setSubValue({ subValue: location.state?.subscription });
+      setCategoryValue({
+        id: location?.state?.categories?._id,
+        key: location?.state?.categories?.categoryName,
+      });
+      setPostTitle(location?.state?.postTitle);
+    }
+  }, [location.state]);
+
+  console.log("location.state", location.state);
 
   // ====function to hide dropdown on click outside====
   $(document).mouseup(function (e) {
@@ -65,12 +87,12 @@ function PostCreate() {
               const { result } = e.target;
               if (item.type.includes("image")) {
                 if (result && !isCancel) {
-                  await profileViewData.push({ url: result, type: "image" });
+                  await profileViewData.push(result);
                   await setFileValue(profileViewData);
                 }
               } else {
                 if (result && !isCancel) {
-                  await profileViewData.push({ url: result, type: "video" });
+                  await profileViewData.push(result);
                   await setFileValue(profileViewData);
                 }
               }
@@ -278,6 +300,41 @@ function PostCreate() {
       requestData.append("postCategory", categoryValue.key);
       await SublyApi.createPost(token, requestData)
         .then((response) => {
+          setLoading(false);
+          if (response.status == "success") {
+            navigate("/Post/Post-List");
+            toast.success(response.status);
+          } else {
+            toast.error(response.data.error);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      toast.error("Please enter the valid link");
+    }
+  }
+
+  // =================================Update post API handler===================================
+  async function updatePostHandle() {
+    const regExValue =
+      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+    if (link.match(regExValue)) {
+      setLoading(true);
+      const requestData = new FormData();
+      requestData.append("categories", categoryValue.id);
+      requestData.append("postType", categoryValue.key);
+      requestData.append("postTitle", postTitle);
+      requestData.append("postContent", description);
+      requestData.append("commonUpload", mediaPreview[0]);
+      requestData.append("subscription", subValue.subValue);
+      requestData.append("postTag", postTag);
+      requestData.append("title", linkTitle);
+      requestData.append("link", link);
+      requestData.append("postCategory", categoryValue.key);
+      await SublyApi.updatePost(token, requestData, location.state?._id)
+        .then((response) => {
           console.log("response", response);
           setLoading(false);
           if (response.status == "success") {
@@ -300,8 +357,6 @@ function PostCreate() {
     tags.splice(index, 1);
     setPostTag(tags);
   }
-
-  console.log("mediaPreview", mediaPreview);
 
   return (
     <section className="h-screen ">
@@ -465,8 +520,10 @@ function PostCreate() {
                       />
                       <button
                         onClick={() => {
-                          setPostTagValue("");
-                          setPostTag([...postTag, postTagValue]);
+                          if (postTagValue) {
+                            setPostTagValue("");
+                            setPostTag([...postTag, postTagValue]);
+                          }
                         }}
                         className="w-24 text-sm rounded-md px-2 py-1.5 buttonClass relative font-medium hover:border-none"
                       >
@@ -611,7 +668,7 @@ function PostCreate() {
                         key={index}
                         className="border rounded-md flex items-center justify-center w-[140px] h-[140px] object-cover bg-white relative overflow-hidden"
                       >
-                        <img src={item.url} alt="img" />
+                        <img src={item} alt="img" />
                         <Icon
                           icon="si:close-duotone"
                           width="35"
@@ -632,15 +689,27 @@ function PostCreate() {
                 </div>
               )}
               <div className="flex items-center justify-center mt-5">
-                <button
-                  onClick={() => {
-                    createPostHandle();
-                  }}
-                  style={{ border: "1px solid #D10505" }}
-                  className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#D10505] m-auto w-[40%] max-lg:w-full"
-                >
-                  Create
-                </button>
+                {location.state ? (
+                  <button
+                    onClick={() => {
+                      updatePostHandle();
+                    }}
+                    style={{ border: "1px solid #D10505" }}
+                    className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#D10505] m-auto w-[40%] max-lg:w-full"
+                  >
+                    Update
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      createPostHandle();
+                    }}
+                    style={{ border: "1px solid #D10505" }}
+                    className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#D10505] m-auto w-[40%] max-lg:w-full"
+                  >
+                    Create
+                  </button>
+                )}
               </div>
               <input
                 type="file"

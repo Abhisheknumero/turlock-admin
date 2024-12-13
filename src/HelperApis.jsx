@@ -185,6 +185,14 @@ class SublyApi {
     );
     return res;
   }
+
+  /* -----UPDATE POST API-----*/
+
+  static async updatePost(token, data, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(`post/updatepost/${id}`, data, "put", header);
+    return res;
+  }
 }
 
 export default SublyApi;

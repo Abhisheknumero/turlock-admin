@@ -372,7 +372,7 @@ function PostCreate() {
         <div className="w-full h-screen overflow-auto">
           <Header />
           <div className="px-9 max-xl:px-2">
-            <div className="flex items-center justify-between pt-10 pb-5">
+            <div className="flex items-center justify-between pt-4 pb-5">
               <h3 className="mb-0 text-2xl font-semibold">Create Post</h3>
               <div className="flex items-center gap-2">
                 <button

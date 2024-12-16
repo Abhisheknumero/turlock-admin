@@ -81,6 +81,7 @@ function CreateCategory({
     requestData.append("categoryType", title.toLowerCase());
     requestData.append("categoryStatus", isActive ? "Active" : "Inactive");
     requestData.append("uploadImage", mediaPreview);
+    requestData.append("categoryDescription", description);
     await SublyApi.createCategory(requestData, token)
       .then((response) => {
         if (response.status == "success") {
@@ -111,6 +112,7 @@ function CreateCategory({
     requestData.append("categoryType", title.toLowerCase());
     requestData.append("categoryStatus", isActive ? "Active" : "Inactive");
     requestData.append("uploadImage", mediaPreview);
+    requestData.append("categoryDescription", description);
     await SublyApi.updateCategory(token, requestData, preFieldData?._id)
       .then((response) => {
         setLoading(false);
@@ -232,7 +234,7 @@ function CreateCategory({
                 </label>
               </div>
             </div>
-            {/* <div className="w-full mb-3">
+            <div className="w-full mb-3">
               <textarea
                 placeholder="Write Content..."
                 className="resize-none placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full h-[140px] rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
@@ -241,7 +243,7 @@ function CreateCategory({
                   setDescription(e.target.value);
                 }}
               />
-            </div>{" "} */}
+            </div>{" "}
             {!fileValue && (
               <div className="flex items-center justify-center">
                 <label

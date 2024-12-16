@@ -77,13 +77,13 @@ function CategoryDetail({ show, setShow, topMargin, id, setLoading }) {
                   </span>
                 </p> */}
               </div>
-              {/* <p className="mt-2.5 text-lg font-semibold mb-2">
+              <p className="mt-2.5 text-lg font-semibold mb-2">
                 Description :
                 <span className="text-base font-semibold">
                   {" "}
                   {detailValue?.categoryDescription}
                 </span>
-              </p> */}
+              </p>
             </div>
             {detailValue.categoryThumbnail && (
               <div className="flex items-center gap-2 mt-7">

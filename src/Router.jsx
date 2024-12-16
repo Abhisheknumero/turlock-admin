@@ -8,6 +8,8 @@ import CreateCategory from "./screens/postScreens/CreateCategory";
 import CreateMedia from "./screens/mediaScreens/CreateMedia";
 import Media from "./screens/mediaScreens/Media";
 import GalleryList from "./screens/mediaScreens/GalleryList";
+import Reels from "./screens/reelsSection/Reels";
+import CreateReels from "./screens/reelsSection/CreateReels";
 
 function Router() {
   return (
@@ -22,6 +24,8 @@ function Router() {
         <Route path="/Media/Create" element={<CreateMedia />} />
         <Route path="/Media" element={<Media />} />
         <Route path="/Media/Gallery-list" element={<GalleryList />} />
+        <Route path="/Reels" element={<Reels />} />
+        <Route path="/Reels/Create" element={<CreateReels />} />
       </Routes>
     </BrowserRouter>
   );

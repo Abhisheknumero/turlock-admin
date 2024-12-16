@@ -1,6 +1,6 @@
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import Header from "../components/Header";
-import Sidebar from "../components/SideBar";
+import Sidebar from "../components/Sidebar";
 import DashboardCard from "../components/DashboardCard";
 import { Col, Row } from "react-bootstrap";
 import DashboardUser from "../components/DashboardUser";
@@ -15,7 +15,7 @@ function Dashboard() {
         <div className="w-full">
           <Header />
           <div className="px-9 max-xl:px-2">
-            <div className="flex items-center justify-between pt-10 pb-3 flex-wrap gap-x-3 gap-y-1">
+            <div className="flex items-center justify-between pt-4 pb-3 flex-wrap gap-x-3 gap-y-1">
               <h3 className="mb-0 text-lg font-semibold">Dashboard</h3>
               <p className="mb-0 flex items-center gap-2 text-sm">
                 Dashboard{" "}

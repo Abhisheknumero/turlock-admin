@@ -15,6 +15,8 @@ function CreateCategory({
   setLoading,
   preFieldData,
   setPreFieldData,
+  isReels,
+  setIsCategory,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -77,8 +79,8 @@ function CreateCategory({
   async function categoryHandler() {
     setLoading(true);
     const requestData = new FormData();
-    requestData.append("categoryName", title);
-    requestData.append("categoryType", title.toLowerCase());
+    requestData.append("categoryName", categoryType.key);
+    requestData.append("categoryType", categoryType.id);
     requestData.append("categoryStatus", isActive ? "Active" : "Inactive");
     requestData.append("uploadImage", mediaPreview);
     requestData.append("categoryDescription", description);
@@ -93,6 +95,7 @@ function CreateCategory({
           setMediaPreview("");
           setIsActive(false);
           setShow(false);
+          setIsCategory && setIsCategory(true);
           if (location.pathname.includes("Category")) {
             navigate("/Post/Category");
           }
@@ -108,8 +111,8 @@ function CreateCategory({
   async function updateHandler() {
     setLoading(true);
     const requestData = new FormData();
-    requestData.append("categoryName", title);
-    requestData.append("categoryType", title.toLowerCase());
+    requestData.append("categoryName", categoryType.key);
+    requestData.append("categoryType", categoryType.id);
     requestData.append("categoryStatus", isActive ? "Active" : "Inactive");
     requestData.append("uploadImage", mediaPreview);
     requestData.append("categoryDescription", description);
@@ -124,6 +127,7 @@ function CreateCategory({
           setFileValue("");
           setMediaPreview("");
           setIsActive(false);
+          setIsCategory && setIsCategory(true);
           if (location.pathname.includes("Category")) {
             navigate("/Post/Category");
           }
@@ -143,6 +147,7 @@ function CreateCategory({
         className={`${topMargin}`}
         show={show}
         onHide={() => {
+          isReels && isReels();
           setShow(false);
           setTitle("");
           setDescription("");
@@ -159,7 +164,7 @@ function CreateCategory({
         <Modal.Body>
           <div>
             <div className="flex items-center gap-3 max-lg:flex-wrap">
-              <div className="w-full max-xl:w-full">
+              {/* <div className="w-full max-xl:w-full">
                 <label htmlFor="title" className="text-sm font-normal w-full">
                   Category Title
                   <input
@@ -173,8 +178,8 @@ function CreateCategory({
                     className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
                   />
                 </label>
-              </div>
-              {/* <div
+              </div> */}
+              <div
                 onClick={() => {
                   setShowDropdown({
                     ...showDropdown,
@@ -208,9 +213,9 @@ function CreateCategory({
                 {showDropdown.type && (
                   <CategoryType setCategoryType={setCategoryType} />
                 )}
-              </div> */}
+              </div>
             </div>
-            <div className="flex items-center gap-3 max-lg:flex-wrap my-3 mb-5">
+            <div className="flex items-center gap-3 max-lg:flex-wrap my-3">
               <div className="w-full max-xl:w-full ml-2">
                 <label
                   htmlFor="post-tag"
@@ -234,7 +239,7 @@ function CreateCategory({
                 </label>
               </div>
             </div>
-            <div className="w-full mb-3">
+            <div className="w-full mb-4">
               <textarea
                 placeholder="Write Content..."
                 className="resize-none placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full h-[140px] rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
@@ -282,6 +287,7 @@ function CreateCategory({
             <div className="flex items-center justify-center mt-7 mb-1 gap-3">
               <button
                 onClick={() => {
+                  isReels && isReels();
                   setShow(false);
                   setTitle("");
                   setDescription("");

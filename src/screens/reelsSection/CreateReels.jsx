@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
 import { Loader } from "../../utils/Loader";
@@ -8,9 +8,14 @@ import SublyApi from "../../HelperApis";
 import $ from "jquery";
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import { Col, Row } from "react-bootstrap";
+import placeholder from "../../assets/video-placeholder.png";
+import { toast } from "react-toastify";
+import { categoryType, imgBaseURL } from "../../utils/StaticsData";
+import CreateCategory from "../../components/CreateCategory";
 
 function CreateReels() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
   const { token } = useSelector((state) => state.user.userdetail);
   const [showDropdown, setShowDropdown] = useState({
@@ -24,6 +29,26 @@ function CreateReels() {
   const [categoryValue, setCategoryValue] = useState("");
   const [postTitle, setPostTitle] = useState("");
   const [categoryList, setCategoryList] = useState("");
+  const [postTag, setPostTag] = useState([]);
+  const [postTagValue, setPostTagValue] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [isCategory, setIsCategory] = useState(false);
+  const [subValue, setSubValue] = useState("");
+  const [mediaObject, setMediaObject] = useState("");
+
+  // =====================prefield data for edit post=======================
+  useEffect(() => {
+    if (location.state) {
+      setDescription(location.state?.postContent);
+      setFileValue(`${imgBaseURL}${location.state?.postMedia}`);
+      setMediaPreview(`${imgBaseURL}${location.state?.postMedia}`);
+      setMediaObject(`${imgBaseURL}${location.state?.postMedia}`);
+      const tags = location.state?.postTag[0].split(",");
+      setPostTag(tags);
+      setSubValue({ subValue: location.state?.subscription });
+      setPostTitle(location?.state?.postTitle);
+    }
+  }, [location.state]);
 
   // ====function to hide dropdown on click outside====
   $(document).mouseup(function (e) {
@@ -39,6 +64,7 @@ function CreateReels() {
 
   const mediaHandler = (event) => {
     const file = event.target.files[0];
+    setMediaObject(file);
     const url = URL.createObjectURL(file);
     setMediaPreview(url);
     generateVideoThumbnails(file);
@@ -218,12 +244,82 @@ function CreateReels() {
     setMediaPreview("");
   }
 
+  async function onTagRemove(index) {
+    let tags = [...postTag];
+    tags.splice(index, 1);
+    setPostTag(tags);
+  }
+
+  // =================================Create Reels API handler===================================
+  async function createReelsHandle() {
+    setLoading(true);
+    const requestData = new FormData();
+    requestData.append("categories", categoryList._id);
+    requestData.append("postType", categoryList.categoryType);
+    requestData.append("postTitle", postTitle);
+    requestData.append("postContent", description);
+    requestData.append("commonUpload", mediaObject);
+    requestData.append("subscription", subValue.subValue);
+    requestData.append("postTag", postTag);
+    requestData.append("postCategory", categoryList.categoryType);
+    await SublyApi.createPost(token, requestData)
+      .then((response) => {
+        setLoading(false);
+        if (response.status == "success") {
+          navigate("/Reels");
+          toast.success(response.status);
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  // =================================Update post API handler===================================
+  async function updatePostHandle() {
+    setLoading(true);
+    const requestData = new FormData();
+    requestData.append("categories", categoryList._id);
+    requestData.append("postType", categoryList.categoryType);
+    requestData.append("postTitle", postTitle);
+    requestData.append("postContent", description);
+    requestData.append("commonUpload", mediaObject);
+    requestData.append("subscription", subValue.subValue);
+    requestData.append("postTag", postTag);
+    requestData.append("postCategory", categoryList.categoryType);
+    await SublyApi.updatePost(token, requestData, location.state?._id)
+      .then((response) => {
+        console.log("response", response);
+        setLoading(false);
+        if (response.status == "success") {
+          navigate("/Post/Post-List");
+          toast.success(response.status);
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   useEffect(() => {
     async function getCategory() {
       await SublyApi.fetchCategory(token)
         .then((response) => {
           if (response.status == "success") {
-            setCategoryList(response.data);
+            setCategoryList;
+            const reelCheck = response.data.filter(
+              (ele) => ele.categoryName == "REELS"
+            );
+            setCategoryList(reelCheck[0]);
+            if (!reelCheck.length > 0) {
+              toast.dismiss();
+              toast.error("First need to create category for reels type.");
+              setShowModal(true);
+            }
           } else {
             toast.error(response.data.error);
           }
@@ -231,18 +327,31 @@ function CreateReels() {
         .catch((err) => console.log(err));
     }
     getCategory();
-  }, []);
+  }, [isCategory]);
+
+  function onCloseHandle() {
+    setShowModal(false);
+    navigate("/Reels");
+  }
 
   return (
     <section className="overflow-auto">
       {loading ? <Loader /> : ""}
+      <CreateCategory
+        setShow={setShowModal}
+        show={showModal}
+        topMargin={"marginClass"}
+        setLoading={setLoading}
+        isReels={onCloseHandle}
+        setIsCategory={setIsCategory}
+      />
       <div className="xl:flex">
         <Sidebar />
         <div className="w-full z-0 h-screen overflow-auto">
           <Header />
           <div className="px-9 max-xl:px-2">
             <div className="flex items-center justify-between pt-4 pb-4 flex-wrap border-b-2">
-              <h3 className="mb-0 text-lg font-semibold">Create Media</h3>
+              <h3 className="mb-0 text-lg font-semibold">Create Reels</h3>
               <button
                 onClick={() => {
                   navigate("/Reels");
@@ -291,32 +400,106 @@ function CreateReels() {
                         type="text"
                         placeholder="Select Category"
                         id="category"
-                        value={categoryValue.key}
+                        value={"Reels"}
                         autoComplete="off"
+                        className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium caret-transparent"
+                      />
+                    </label>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 max-lg:flex-wrap my-3">
+                  <div className="w-full max-xl:w-full">
+                    <label
+                      htmlFor="post-tag"
+                      className="text-sm font-normal w-full "
+                    >
+                      Post Tag
+                      <div className="flex items-center w-full gap-2">
+                        <input
+                          type="text"
+                          placeholder="Post Tag"
+                          id="post-tag"
+                          value={postTagValue}
+                          onChange={(e) => {
+                            setPostTagValue(
+                              e.target.value.includes("#")
+                                ? e.target.value
+                                : `#${e.target.value}`
+                            );
+                          }}
+                          className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
+                        />
+                        <button
+                          onClick={() => {
+                            if (postTagValue) {
+                              setPostTagValue("");
+                              setPostTag([...postTag, postTagValue]);
+                            }
+                          }}
+                          className="w-24 text-sm rounded-md px-2 py-1.5 buttonClass relative font-medium hover:border-none"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </label>
+                    <div className="flex items-center gap-2 ">
+                      {postTag?.map((val, index) => (
+                        <p
+                          key={index}
+                          className="flex items-center gap-1 justify-between mb-0 bg-[#d105054b] pl-2 pr-0.5 font-medium text-gray-600 rounded-sm mt-2"
+                        >
+                          {val.includes("#") ? val : `#${val}`}{" "}
+                          <Icon
+                            icon="si:close-duotone"
+                            width="20"
+                            height="20"
+                            className="cursor-pointer mt-0.5"
+                            onClick={() => {
+                              onTagRemove(index);
+                            }}
+                          />
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                  <div
+                    onClick={() => {
+                      setShowDropdown({
+                        ...showDropdown,
+                        subscription: !showDropdown.subscription,
+                      });
+                    }}
+                    className="w-full max-xl:w-full relative notifyBlock"
+                  >
+                    <label
+                      htmlFor="subscription"
+                      className="text-sm font-normal w-full"
+                    >
+                      Subscription
+                      <input
+                        type="text"
+                        placeholder="Subscription"
+                        id="subscription"
+                        autoComplete="off"
+                        value={subValue.subValue}
                         className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
                       />
                     </label>
                     <Icon
                       icon={`${
-                        showDropdown.category
+                        showDropdown.subscription
                           ? "majesticons:chevron-up-line"
                           : "majesticons:chevron-down-line"
                       }`}
                       width="30"
                       height="30"
                       style={{ color: "#4b5563" }}
-                      className="absolute right-1 top-6 cursor-pointer"
-                      onClick={() => {
-                        setShowDropdown({
-                          ...showDropdown,
-                          category: !showDropdown.category,
-                        });
-                      }}
+                      className="absolute right-1 top-6"
                     />
-                    {showDropdown.category && (
-                      <CategoryType
-                        categoryList={categoryList}
-                        setCategoryValue={setCategoryValue}
+                    {showDropdown.subscription && (
+                      <FilterDropdown
+                        setFilterValue={setSubValue}
+                        filterValue={subValue}
                       />
                     )}
                   </div>
@@ -368,15 +551,27 @@ function CreateReels() {
                   </div>
                 )}
                 <div className="flex items-center justify-center mt-5">
-                  <button
-                    onClick={() => {
-                      createPostHandle();
-                    }}
-                    style={{ border: "1px solid #D10505" }}
-                    className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#D10505] m-auto w-[40%] max-lg:w-full"
-                  >
-                    Create
-                  </button>
+                  {location.state ? (
+                    <button
+                      onClick={() => {
+                        updatePostHandle();
+                      }}
+                      style={{ border: "1px solid #D10505" }}
+                      className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#D10505] m-auto w-[40%] max-lg:w-full"
+                    >
+                      Update
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        createReelsHandle();
+                      }}
+                      style={{ border: "1px solid #D10505" }}
+                      className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#D10505] m-auto w-[40%] max-lg:w-full"
+                    >
+                      Create
+                    </button>
+                  )}
                 </div>
                 <input
                   type="file"
@@ -397,7 +592,19 @@ function CreateReels() {
                       className="h-100% w-100% rounded-lg"
                     />
                   ) : (
-                    ""
+                    <label
+                      htmlFor="upload"
+                      className="w-full h-full relative cursor-pointer"
+                    >
+                      <p className="mb-0 absolute bottom-20 left-[40%] text-2xl font-semibold text-gray-400">
+                        Upload reels
+                      </p>
+                      <img
+                        src={placeholder}
+                        alt="placeholder"
+                        className="w-full h-full  rounded-lg"
+                      />
+                    </label>
                   )}
                 </div>
               </Col>
@@ -411,21 +618,44 @@ function CreateReels() {
 
 export default CreateReels;
 
-function CategoryType({ categoryList, setCategoryValue }) {
+function CategoryType() {
   return (
     <div className="rounded-md shadow-2xl absolute w-full top-15 bg-white py-2 z-50 max-h-48 overflow-auto">
-      {categoryList &&
-        categoryList?.map((item, index) => (
+      {categoryType &&
+        categoryType?.map((item, index) => (
           <p
             onClick={() => {
-              setCategoryValue({ id: item._id, key: item?.categoryName });
+              setCategoryValue({ id: item.id, key: item?.key });
             }}
             className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
             key={index}
           >
-            {item.categoryName}
+            {item.key}
           </p>
         ))}
+    </div>
+  );
+}
+
+function FilterDropdown({ setFilterValue, filterValue }) {
+  return (
+    <div className="rounded-md shadow-2xl absolute w-full top-15 bg-white py-2 z-10">
+      <p
+        onClick={() => {
+          setFilterValue({ ...filterValue, subValue: "Free" });
+        }}
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+      >
+        Free
+      </p>
+      <p
+        onClick={() => {
+          setFilterValue({ ...filterValue, subValue: "Paid" });
+        }}
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+      >
+        Paid
+      </p>
     </div>
   );
 }

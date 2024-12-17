@@ -22,14 +22,14 @@ export const DashboardStatic = [
 ];
 
 export const categoryType = [
-  { id: "featured_news", key: "Featured News" },
-  { id: "news", key: "News" },
-  { id: "reels", key: "Reels" },
-  { id: "forum", key: "Forum" },
-  { id: "advertising", key: "Advertising" },
-  { id: "lost_pet", key: "Lost Pet" },
-  { id: "obituaries", key: "Obituaries" },
-  { id: "shop", key: "Shop" },
+  { id: "FEATURED NEWS", key: "FEATURED NEWS" },
+  { id: "NEWS", key: "NEWS" },
+  { id: "REELS", key: "REELS" },
+  { id: "FORUM", key: "FORUM" },
+  { id: "ADVERTISING", key: "ADVERTISING" },
+  { id: "LOST PET", key: "LOST PET" },
+  { id: "OBITUARIES", key: "OBITUARIES" },
+  { id: "SHOP", key: "SHOP" },
 ];
 
 // export const imgBaseURL = "http://192.168.29.161:3000/";

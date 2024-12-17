@@ -110,7 +110,6 @@ function Post() {
     await SublyApi.searchPost(token, requestData)
       .then((response) => {
         setLoading(false);
-        console.log(response);
         if (response.status == "success") {
           setPostList(response.data.posts);
         } else {
@@ -121,7 +120,6 @@ function Post() {
         console.log(err);
       });
   }
-
 
   return (
     <section className="overflow-auto">

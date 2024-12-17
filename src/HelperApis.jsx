@@ -193,6 +193,19 @@ class SublyApi {
     let res = await this.request(`post/updatepost/${id}`, data, "put", header);
     return res;
   }
+
+  /* -----FETCH POST BY CATEGORY API-----*/
+
+  static async fetchPostBycate(token, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/posts/category/${id}`,
+      undefined,
+      "get",
+      header
+    );
+    return res;
+  }
 }
 
 export default SublyApi;

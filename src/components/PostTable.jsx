@@ -2,7 +2,13 @@ import moment from "moment";
 import { Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-function PostTable({ postList, setPostId, setPostDetail, deleteHandle }) {
+function PostTable({
+  postList,
+  setPostId,
+  setPostDetail,
+  deleteHandle,
+  isReel,
+}) {
   const navigate = useNavigate();
   return (
     <div className="h-[calc(100vh-450px)] overflow-auto">
@@ -84,7 +90,11 @@ function PostTable({ postList, setPostId, setPostDetail, deleteHandle }) {
                   </span>
                   <span
                     onClick={() => {
-                      navigate("/Post/Create", { state: val });
+                      if (isReel) {
+                        navigate("/Reels/Create", { state: val });
+                      } else {
+                        navigate("/Post/Create", { state: val });
+                      }
                     }}
                     className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal"
                   >

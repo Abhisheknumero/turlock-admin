@@ -8,7 +8,7 @@ import { ToCapitalize } from "../utils/CustomMethod";
 import { imgBaseURL } from "../utils/StaticsData";
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 
-function PostDetail({ show, setShow, topMargin, id, setLoading }) {
+function ReelsDetail({ show, setShow, topMargin, id, setLoading }) {
   const { token } = useSelector((state) => state.user.userdetail);
   const [detailValue, setDetailValue] = useState("");
 
@@ -31,6 +31,8 @@ function PostDetail({ show, setShow, topMargin, id, setLoading }) {
       fetchDetailHandle();
     }
   }, [show]);
+
+  console.log("detailValue", detailValue);
 
   return (
     <section>
@@ -64,13 +66,6 @@ function PostDetail({ show, setShow, topMargin, id, setLoading }) {
               </div>
               <div className="flex items-center justify-between gap-2 flex-wrap">
                 <p className="mb-0 text-lg font-semibold">
-                  Post Category :
-                  <span className="text-base font-semibold">
-                    {" "}
-                    {detailValue?.postCategory || "NA"}
-                  </span>
-                </p>
-                <p className="mb-0 text-lg font-semibold">
                   Subscription :
                   <span className="text-base font-semibold">
                     {" "}
@@ -80,7 +75,7 @@ function PostDetail({ show, setShow, topMargin, id, setLoading }) {
               </div>
               <div className="flex items-center justify-between gap-2 my-2 flex-wrap">
                 <p className="mb-0 text-lg font-semibold">
-                  Post Tag :
+                  Reel Tag :
                   <span className="text-base font-semibold">
                     {" "}
                     {detailValue?.postTag || "NA"}
@@ -94,31 +89,12 @@ function PostDetail({ show, setShow, topMargin, id, setLoading }) {
                 </p>
               </div>
               <p className="mt-2.5 mb-3 text-lg font-semibold">
-                Post Content :
+                Description :
                 <span className="text-base font-semibold">
                   {" "}
                   {detailValue?.postContent || "NA"}
                 </span>
               </p>
-              <div className="my-2 bg-gray-200 rounded-md py-2 px-3">
-                <p className="mb-0 text-xl font-semibold border-b border-gray-300 pb-2">
-                  External Links
-                </p>
-                <p className="mb-0 text-lg font-semibold mt-1">
-                  Title :
-                  <span className="text-base font-semibold">
-                    {" "}
-                    {detailValue?.externalLink?.title || "NA"}
-                  </span>
-                </p>
-                <p className="mb-0 text-lg font-semibold mt-1">
-                  Link :
-                  <span className="text-base font-semibold">
-                    {" "}
-                    {detailValue?.externalLink?.link || "NA"}
-                  </span>
-                </p>
-              </div>
             </div>
             {detailValue.postMedia && (
               <div className="flex items-center gap-2 mt-7">
@@ -137,4 +113,4 @@ function PostDetail({ show, setShow, topMargin, id, setLoading }) {
   );
 }
 
-export default PostDetail;
+export default ReelsDetail;

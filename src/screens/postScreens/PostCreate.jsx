@@ -496,7 +496,7 @@ function PostCreate() {
                   />
                 </div> */}
               </div>
-              <div className="flex items-center gap-3 max-lg:flex-wrap my-3">
+              <div className="flex items-start gap-3 max-lg:flex-wrap my-3">
                 <div className="w-full max-xl:w-full">
                   <label
                     htmlFor="post-tag"

@@ -38,8 +38,8 @@ function CreateCategory({
       );
       setTitle(preFieldData?.categoryName);
       setCategoryType({
-        id: preFieldData?.categoryCreatedBy,
-        key: preFieldData?.categoryType,
+        id: preFieldData?.categoryType,
+        key: preFieldData?.categoryName,
       });
       setDescription(preFieldData?.categoryDescription);
       setFileValue(`${imgBaseURL}${preFieldData?.categoryThumbnail}`);

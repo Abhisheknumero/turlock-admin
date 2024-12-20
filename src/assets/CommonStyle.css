@@ -181,6 +181,8 @@
   max-width: 60% !important;
 }
 
+
+
 @media (max-width: 1200px) {
   .widthClass.modal.show .modal-dialog {
     max-width: 60% !important;

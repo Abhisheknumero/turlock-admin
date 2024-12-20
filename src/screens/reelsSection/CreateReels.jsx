@@ -35,20 +35,43 @@ function CreateReels() {
   const [isCategory, setIsCategory] = useState(false);
   const [subValue, setSubValue] = useState("");
   const [mediaObject, setMediaObject] = useState("");
+  const [thumbnail, setThumbnail] = useState("");
 
+  
   // =====================prefield data for edit post=======================
   useEffect(() => {
     if (location.state) {
       setDescription(location.state?.postContent);
-      setFileValue(`${imgBaseURL}${location.state?.postMedia}`);
+      setFileValue(`${imgBaseURL}${location.state?.postThumbnail}`);
       setMediaPreview(`${imgBaseURL}${location.state?.postMedia}`);
       setMediaObject(`${imgBaseURL}${location.state?.postMedia}`);
+      setThumbnail(`${imgBaseURL}${location.state?.postThumbnail}`);
       const tags = location.state?.postTag[0].split(",");
       setPostTag(tags);
       setSubValue({ subValue: location.state?.subscription });
       setPostTitle(location?.state?.postTitle);
     }
   }, [location.state]);
+
+  function base64ToFile(base64String, fileName) {
+    // Decode the Base64 string into binary data
+    const byteString = atob(base64String.split(",")[1]); // Get the data portion after 'base64,'
+    const mimeType = base64String.match(/data:(.*?);base64/)[1]; // Extract MIME type
+
+    // Convert binary data to an array of bytes
+    const byteArray = new Uint8Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) {
+      byteArray[i] = byteString.charCodeAt(i);
+    }
+
+    // Create a Blob from the byte array
+    const blob = new Blob([byteArray], { type: mimeType });
+
+    // Convert the Blob to a File
+    const file = new File([blob], fileName, { type: mimeType });
+    setThumbnail(file);
+    console.log("file", file);
+  }
 
   // ====function to hide dropdown on click outside====
   $(document).mouseup(function (e) {
@@ -59,6 +82,8 @@ function CreateReels() {
       setShowDropdown({});
     }
   });
+
+  // console.log("fileValue");
 
   // =================================Media handler======================================\
 
@@ -104,6 +129,7 @@ function CreateReels() {
         await Promise.all(promiseArray)
           .then((res) => {
             res.forEach((res) => {
+              base64ToFile(res, "image.png");
               setFileValue(res);
             });
             resolve(fileValue);
@@ -192,52 +218,6 @@ function CreateReels() {
     });
   };
 
-  //   const mediaHandler = async (e) => {
-  //     let profileImageData = [...mediaPreview];
-  //     let profileViewData = [...fileValue];
-  //     let fileReader,
-  //       isCancel = false;
-  //     if (e.target.files && e.target.files.length > 0) {
-  //       if (e.target.files[0].type.includes("image")) {
-  //         const file = [e.target.files];
-  //         Object.values(file[0]).map((item, index) => {
-  //           profileImageData.push(item);
-  //         });
-  //         setMediaPreview(profileImageData);
-  //         await Object.values(file[0]).map(async (item, index) => {
-  //           if (e.target.files && e.target.files.length > 0) {
-  //             fileReader = new FileReader();
-  //             var url = URL.createObjectURL(file.originFileObj);
-
-  //             fileReader.onload = async (e) => {
-  //               const { result } = e.target;
-  //               if (item.type.includes("image")) {
-  //                 if (result && !isCancel) {
-  //                   await profileViewData.push(result);
-  //                   await setFileValue(profileViewData);
-  //                 }
-  //               } else {
-  //                 if (result && !isCancel) {
-  //                   await profileViewData.push(result);
-  //                   await setFileValue(profileViewData);
-  //                 }
-  //               }
-  //             };
-  //             fileReader.readAsDataURL(item);
-  //           }
-  //         });
-  //       } else {
-  //         const file = [e.target.files];
-  //         Object.values(file[0]).map((item, index) => {
-  //           profileImageData.push(item);
-  //         });
-  //         setMediaPreview(profileImageData);
-  //         // importFileandPreview(e.target.files);
-  //         generateVideoThumbnails(e.target.files[0], 1);
-  //       }
-  //     }
-  //   };
-
   // ==============================Function for handling removing image===================================
   async function onImageRemove() {
     setFileValue("");
@@ -262,6 +242,7 @@ function CreateReels() {
     requestData.append("subscription", subValue.subValue);
     requestData.append("postTag", postTag);
     requestData.append("postCategory", categoryList.categoryType);
+    requestData.append("uploadImage", thumbnail);
     await SublyApi.createPost(token, requestData)
       .then((response) => {
         setLoading(false);
@@ -289,12 +270,13 @@ function CreateReels() {
     requestData.append("subscription", subValue.subValue);
     requestData.append("postTag", postTag);
     requestData.append("postCategory", categoryList.categoryType);
+    requestData.append("uploadImage", thumbnail);
     await SublyApi.updatePost(token, requestData, location.state?._id)
       .then((response) => {
         console.log("response", response);
         setLoading(false);
         if (response.status == "success") {
-          navigate("/Post/Post-List");
+          navigate("/Reels");
           toast.success(response.status);
         } else {
           toast.error(response.data.error);
@@ -407,7 +389,7 @@ function CreateReels() {
                     </label>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 max-lg:flex-wrap my-3">
+                <div className="flex items-start gap-3 max-lg:flex-wrap my-3">
                   <div className="w-full max-xl:w-full">
                     <label
                       htmlFor="post-tag"
@@ -417,7 +399,7 @@ function CreateReels() {
                       <div className="flex items-center w-full gap-2">
                         <input
                           type="text"
-                          placeholder="Post Tag"
+                          placeholder="Reels Tag"
                           id="post-tag"
                           value={postTagValue}
                           onChange={(e) => {

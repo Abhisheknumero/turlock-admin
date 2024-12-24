@@ -206,6 +206,14 @@ class SublyApi {
     );
     return res;
   }
+
+  /* ------CREATE BANNER API-----*/
+
+  static async createBanner(token, id, data) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(`post/banners?id=${id}`, data, "post", header);
+    return res;
+  }
 }
 
 export default SublyApi;

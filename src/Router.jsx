@@ -10,6 +10,7 @@ import Media from "./screens/mediaScreens/Media";
 import GalleryList from "./screens/mediaScreens/GalleryList";
 import Reels from "./screens/reelsSection/Reels";
 import CreateReels from "./screens/reelsSection/CreateReels";
+import CreateBannerAds from "./screens/bannerAndAds/CreateBannerAds";
 
 function Router() {
   return (
@@ -26,6 +27,7 @@ function Router() {
         <Route path="/Media/Gallery-list" element={<GalleryList />} />
         <Route path="/Reels" element={<Reels />} />
         <Route path="/Reels/Create" element={<CreateReels />} />
+        <Route path="/Ads-promo-banners" element={<CreateBannerAds />} />
       </Routes>
     </BrowserRouter>
   );

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { userLogin } from "../store/slices/authSlice";
 import { toast } from "react-toastify";
 import { Loader } from "../utils/Loader";
+import ParticlesBg from "particles-bg";
 
 function Login() {
   const navigate = useNavigate();
@@ -59,11 +60,10 @@ function Login() {
     }
   };
 
-
   return (
-    <section className="w-full relative">
+    <section className="w-full">
       {loading ? <Loader /> : ""}
-      <div class="background">
+      {/* <div class="background">
         <div class="cube"></div>
         <div class="cube"></div>
         <div class="cube"></div>
@@ -76,9 +76,24 @@ function Login() {
         <div class="cube"></div>
         <div class="cube"></div>
         <div class="cube"></div>
-      </div>
-      <div className="h-screen absolute flex items-center justify-center px-28 max-lg:px-5 w-full top-0">
-        <div className="w-[40%] max-lg:w-[90%]">
+      </div> */}
+      <div
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, rgb(255 69 54) 0%, rgb(251 27 6) 0%, rgb(255 34 9) 21%, rgb(255 26 0) 52%, rgb(177, 0, 0) 78%, rgb(102, 0, 0) 100%)",
+        }}
+        className="h-screen absolute flex items-center justify-center px-28 max-lg:px-5 w-full top-0"
+      >
+        <ParticlesBg
+          type="cobweb"
+          bg={{
+            position: "absolute",
+            zIndex: 10,
+            color: "white",
+          }}
+          color="white"
+        />
+        <div className="w-[40%] max-lg:w-[90%] z-50">
           {" "}
           {/* <h3 className="text-center text-white pb-10">TurlockCityNewsAdmin Panel</h3> */}
           <form

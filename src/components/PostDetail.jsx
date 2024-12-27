@@ -49,6 +49,9 @@ function PostDetail({ show, setShow, topMargin, id, setLoading }) {
         <Modal.Body>
           <div className="p-2 w-[90%] m-auto">
             <div className="border-b pb-3">
+              <p className="mb-2 flex items-center gap-1 text-lg font-semibold justify-end">
+                <Icon icon="flowbite:eye-outline" width="25" height="25" /> 0
+              </p>
               <div className="mb-2 flex items-center justify-between gap-2 flex-wrap">
                 {" "}
                 <p className="mb-0 text-lg font-semibold">
@@ -57,9 +60,13 @@ function PostDetail({ show, setShow, topMargin, id, setLoading }) {
                     {" "}
                     {detailValue?.postTitle || "NA"}
                   </span>
-                </p>
-                <p className="mb-0 flex items-center gap-1 text-lg font-semibold">
-                  <Icon icon="flowbite:eye-outline" width="25" height="25" /> 0
+                </p>{" "}
+                <p className="mb-0 text-lg font-semibold">
+                  Post Type :
+                  <span className="text-base font-semibold">
+                    {" "}
+                    {detailValue?.postType || "NA"}
+                  </span>
                 </p>
               </div>
               <div className="flex items-center justify-between gap-2 flex-wrap">

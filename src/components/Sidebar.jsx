@@ -71,7 +71,7 @@ function Sidebar() {
                 navigate(item.path);
               }}
               className={`${
-                location.pathname.includes(item.path)
+                location.pathname.includes(item.location)
                   ? "text-[#D10505] bg-[#ff6d6d33] rounded-e-full"
                   : "hover:text-[#D10505] hover:bg-[#ff6d6d33] hover:rounded-e-full"
               } ${"flex items-center gap-3 cursor-pointer px-3 py-2.5"}`}

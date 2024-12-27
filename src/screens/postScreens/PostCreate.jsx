@@ -34,6 +34,7 @@ function PostCreate() {
   const [link, setlink] = useState("");
   const [postTag, setPostTag] = useState([]);
   const [postTagValue, setPostTagValue] = useState([]);
+  const [postType, setPostType] = useState("");
 
   // =====================prefield data for edit post=======================
   useEffect(() => {
@@ -51,6 +52,7 @@ function PostCreate() {
         key: location?.state?.categories?.categoryName,
       });
       setPostTitle(location?.state?.postTitle);
+      setPostType(location.state?.postType);
     }
   }, [location.state]);
 
@@ -289,7 +291,7 @@ function PostCreate() {
       setLoading(true);
       const requestData = new FormData();
       requestData.append("categories", categoryValue.id);
-      requestData.append("postType", categoryValue.key);
+      requestData.append("postType", postType);
       requestData.append("postTitle", postTitle);
       requestData.append("postContent", description);
       requestData.append("commonUpload", mediaPreview[0]);
@@ -324,7 +326,7 @@ function PostCreate() {
       setLoading(true);
       const requestData = new FormData();
       requestData.append("categories", categoryValue.id);
-      requestData.append("postType", categoryValue.key);
+      requestData.append("postType", postType);
       requestData.append("postTitle", postTitle);
       requestData.append("postContent", description);
       requestData.append("commonUpload", mediaPreview[0]);
@@ -414,6 +416,58 @@ function PostCreate() {
                     />
                   </label>
                 </div>
+                <div className="w-full max-xl:w-full">
+                  <label htmlFor="title" className="text-sm font-normal w-full">
+                    Post Type
+                    <input
+                      type="text"
+                      placeholder="Post Type"
+                      id="title"
+                      value={postType}
+                      onChange={(e) => {
+                        setPostType(e.target.value);
+                      }}
+                      className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
+                    />
+                  </label>
+                </div>
+
+                {/* <div className="w-full max-xl:w-full relative">
+                  <label
+                    htmlFor="type"
+                    className="text-sm font-normal w-full"
+                    onClick={() => {
+                      setShowDropdown({
+                        ...showDropdown,
+                        type: !showDropdown.type,
+                      });
+                    }}
+                  >
+                    Post Type
+                    <input
+                      type="text"
+                      placeholder="Select Type"
+                      id="type"
+                      value={""}
+                      autoComplete="off"
+                      className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
+                    />
+                  </label>
+                  <Icon
+                    icon={`${
+                      showDropdown.type
+                        ? "majesticons:chevron-up-line"
+                        : "majesticons:chevron-down-line"
+                    }`}
+                    width="30"
+                    height="30"
+                    style={{ color: "#4b5563" }}
+                    className="absolute right-1 top-6"
+                  />
+                </div> */}
+              </div>
+
+              <div className="flex items-start gap-3 max-lg:flex-wrap my-3">
                 <div
                   onClick={() => {
                     setShowDropdown({
@@ -462,95 +516,6 @@ function PostCreate() {
                     />
                   )}
                 </div>
-                {/* <div className="w-full max-xl:w-full relative">
-                  <label
-                    htmlFor="type"
-                    className="text-sm font-normal w-full"
-                    onClick={() => {
-                      setShowDropdown({
-                        ...showDropdown,
-                        type: !showDropdown.type,
-                      });
-                    }}
-                  >
-                    Post Type
-                    <input
-                      type="text"
-                      placeholder="Select Type"
-                      id="type"
-                      value={""}
-                      autoComplete="off"
-                      className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
-                    />
-                  </label>
-                  <Icon
-                    icon={`${
-                      showDropdown.type
-                        ? "majesticons:chevron-up-line"
-                        : "majesticons:chevron-down-line"
-                    }`}
-                    width="30"
-                    height="30"
-                    style={{ color: "#4b5563" }}
-                    className="absolute right-1 top-6"
-                  />
-                </div> */}
-              </div>
-              <div className="flex items-start gap-3 max-lg:flex-wrap my-3">
-                <div className="w-full max-xl:w-full">
-                  <label
-                    htmlFor="post-tag"
-                    className="text-sm font-normal w-full "
-                  >
-                    Post Tag
-                    <div className="flex items-center w-full gap-2">
-                      <input
-                        type="text"
-                        placeholder="Post Tag"
-                        id="post-tag"
-                        value={postTagValue}
-                        onChange={(e) => {
-                          setPostTagValue(
-                            e.target.value.includes("#")
-                              ? e.target.value
-                              : `#${e.target.value}`
-                          );
-                        }}
-                        className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
-                      />
-                      <button
-                        onClick={() => {
-                          if (postTagValue) {
-                            setPostTagValue("");
-                            setPostTag([...postTag, postTagValue]);
-                          }
-                        }}
-                        className="w-24 text-sm rounded-md px-2 py-1.5 buttonClass relative font-medium hover:border-none"
-                      >
-                        Add
-                      </button>
-                    </div>
-                  </label>
-                  <div className="flex items-center gap-2 ">
-                    {postTag?.map((val, index) => (
-                      <p
-                        key={index}
-                        className="flex items-center gap-1 justify-between mb-0 bg-[#d105054b] pl-2 pr-0.5 font-medium text-gray-600 rounded-sm mt-2"
-                      >
-                        {val.includes("#") ? val : `#${val}`}{" "}
-                        <Icon
-                          icon="si:close-duotone"
-                          width="20"
-                          height="20"
-                          className="cursor-pointer mt-0.5"
-                          onClick={() => {
-                            onTagRemove(index);
-                          }}
-                        />
-                      </p>
-                    ))}
-                  </div>
-                </div>
                 <div
                   onClick={() => {
                     setShowDropdown({
@@ -591,6 +556,60 @@ function PostCreate() {
                       filterValue={subValue}
                     />
                   )}
+                </div>
+              </div>
+              <div className="w-[49%] max-xl:w-full">
+                <label
+                  htmlFor="post-tag"
+                  className="text-sm font-normal w-full "
+                >
+                  Post Tag
+                  <div className="flex items-center w-full gap-2">
+                    <input
+                      type="text"
+                      placeholder="Post Tag"
+                      id="post-tag"
+                      value={postTagValue}
+                      onChange={(e) => {
+                        setPostTagValue(
+                          e.target.value.includes("#")
+                            ? e.target.value
+                            : `#${e.target.value}`
+                        );
+                      }}
+                      className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
+                    />
+                    <button
+                      onClick={() => {
+                        if (postTagValue) {
+                          setPostTagValue("");
+                          setPostTag([...postTag, postTagValue]);
+                        }
+                      }}
+                      className="w-24 text-sm rounded-md px-2 py-1.5 buttonClass relative font-medium hover:border-none"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </label>
+                <div className="flex items-center gap-2">
+                  {postTag?.map((val, index) => (
+                    <p
+                      key={index}
+                      className="flex items-center gap-1 justify-between mb-0 bg-[#d105054b] pl-2 pr-0.5 font-medium text-gray-600 rounded-sm mt-2"
+                    >
+                      {val.includes("#") ? val : `#${val}`}{" "}
+                      <Icon
+                        icon="si:close-duotone"
+                        width="20"
+                        height="20"
+                        className="cursor-pointer mt-0.5"
+                        onClick={() => {
+                          onTagRemove(index);
+                        }}
+                      />
+                    </p>
+                  ))}
                 </div>
               </div>
               <div className="flex items-center gap-3 max-lg:flex-wrap my-3">

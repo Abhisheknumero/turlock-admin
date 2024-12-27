@@ -214,6 +214,58 @@ class SublyApi {
     let res = await this.request(`post/banners?id=${id}`, data, "post", header);
     return res;
   }
+
+  /* -----FETCH BANNER API-----*/
+
+  static async fetchBanner(token, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/get-banners?id=${id}`,
+      undefined,
+      "get",
+      header
+    );
+    return res;
+  }
+
+  /* ------DELETE BANNER API-----*/
+
+  static async deleteBanner(token, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/delete-banner/${id}`,
+      undefined,
+      "delete",
+      header
+    );
+    return res;
+  }
+
+  /* -----UPDATE BANNER API-----*/
+
+  static async updateBanner(token, data, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/update-banner/${id}`,
+      data,
+      "put",
+      header
+    );
+    return res;
+  }
+
+  /* -----FETCH BANNER DETAIL API-----*/
+
+  static async getBannerDetail(token, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/get-banner/${id}`,
+      undefined,
+      "get",
+      header
+    );
+    return res;
+  }
 }
 
 export default SublyApi;

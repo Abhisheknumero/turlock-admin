@@ -28,7 +28,7 @@ export const SidebarData = [
     icon: "hugeicons:promotion",
     key: "Ads/Promo Banners",
     path: "/Ads-promo-banners",
-    location: "Ads-Promo",
+    location: "Ads-promo-banners",
   },
   {
     icon: "streamline:subscription-cashflow",

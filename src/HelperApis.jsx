@@ -266,6 +266,45 @@ class SublyApi {
     );
     return res;
   }
+
+  /* -----FETCH COMMENT LIST API-----*/
+
+  static async fetchCommentList(token) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `comment/get-comments`,
+      undefined,
+      "get",
+      header
+    );
+    return res;
+  }
+
+  /* ------ADVANCE SEARCH FOR BANNER API-----*/
+
+  static async bannerAdvanceSearch(token, data) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/banner-advanced-search`,
+      data,
+      "post",
+      header
+    );
+    return res;
+  }
+
+  /* ------DELETE COMMENT API-----*/
+
+  static async deleteComment(token, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `comment/delete-comment/${id}`,
+      undefined,
+      "delete",
+      header
+    );
+    return res;
+  }
 }
 
 export default SublyApi;

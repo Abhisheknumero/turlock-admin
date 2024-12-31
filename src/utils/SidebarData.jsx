@@ -31,6 +31,12 @@ export const SidebarData = [
     location: "Ads-promo-banners",
   },
   {
+    icon: "oui:reporter",
+    key: "Reporters",
+    path: "/Reporters",
+    location: "Reporters",
+  },
+  {
     icon: "streamline:subscription-cashflow",
     key: "Subscription",
     path: "/Subscription",

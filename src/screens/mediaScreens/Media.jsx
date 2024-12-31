@@ -81,7 +81,7 @@ function Media() {
                   </div>
                 ))
               ) : (
-                <p className="text-center text-lg font-semibold text-gray-500 my-4">
+                <p className="text-center text-lg font-semibold text-gray-500 my-4 w-full">
                   No Record Found
                 </p>
               )}

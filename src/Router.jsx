@@ -12,6 +12,8 @@ import Reels from "./screens/reelsSection/Reels";
 import CreateReels from "./screens/reelsSection/CreateReels";
 import CreateBannerAds from "./screens/bannerAndAds/CreateBannerAds";
 import BannerList from "./screens/bannerAndAds/BannerList";
+import CommentList from "./screens/commentList/CommentList";
+import Reporters from "./screens/reporters/Reporters";
 
 function Router() {
   return (
@@ -30,6 +32,8 @@ function Router() {
         <Route path="/Reels/Create" element={<CreateReels />} />
         <Route path="/Ads-promo-banners" element={<BannerList />} />
         <Route path="/Ads-promo-banners/Create" element={<CreateBannerAds />} />
+        <Route path="/Comments" element={<CommentList />} />
+        <Route path="/Reporters" element={<Reporters />} />
       </Routes>
     </BrowserRouter>
   );

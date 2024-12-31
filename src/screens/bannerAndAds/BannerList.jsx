@@ -23,6 +23,7 @@ function BannerList() {
   const [bannerList, setBannerList] = useState("");
   const [bannerDetail, setBannerDetail] = useState(false);
   const [bannerId, setBannerId] = useState("");
+  const [title, setTitle] = useState("");
 
   // ====function to hide dropdown on click outside====
   $(document).mouseup(function (e) {
@@ -68,6 +69,29 @@ function BannerList() {
       });
   }
 
+  // ====================Advance search API handler===================
+  async function advanceSearch() {
+    setLoading(true);
+    const requestData = {
+      title: title,
+      bannerType: typeValue,
+      startDate: startDate,
+      endDate: endDate,
+    };
+    await SublyApi.bannerAdvanceSearch(userdetail?.token, requestData)
+      .then((response) => {
+        setLoading(false);
+        if (response.status == "success") {
+          setBannerList(response.data);
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   return (
     <section className="h-screen ">
       {loading ? <Loader /> : ""}
@@ -78,15 +102,6 @@ function BannerList() {
         id={bannerId}
         setLoading={setLoading}
       />
-      {/* <CreateCategory
-          topMargin={"marginClass"}
-          setShow={setCreateCategory}
-          show={createCategory}
-          id={chategoryId}
-          setLoading={setLoading}
-          preFieldData={preFieldData}
-          setPreFieldData={setPreFieldData}
-        /> */}
       <div className="xl:flex">
         <Sidebar />
         <div className="w-full z-0 h-screen overflow-auto">
@@ -115,6 +130,10 @@ function BannerList() {
                   <input
                     type="text"
                     placeholder="Title"
+                    value={title}
+                    onChange={(e) => {
+                      setTitle(e.target.value);
+                    }}
                     className="placeholder:text-gray-600 placeholder:font-semibold py-1.5 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-semibold"
                   />
                 </div>
@@ -170,20 +189,20 @@ function BannerList() {
                 </div>
                 <div className="flex items-center gap-3">
                   <button
-                    // onClick={() => {
-                    //   advanceSearch();
-                    // }}
+                    onClick={() => {
+                      advanceSearch();
+                    }}
                     className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none"
                   >
                     Search
                   </button>
                   <button
                     onClick={() => {
-                      setCategoryName("");
-                      setStatusValue("");
+                      setTypeValue("");
                       setStartDate("");
                       setEndDate("");
-                      getCategory();
+                      setTitle("");
+                      getBanner();
                     }}
                     className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none"
                   >

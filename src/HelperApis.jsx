@@ -305,6 +305,19 @@ class SublyApi {
     );
     return res;
   }
+
+  /* ------ADVANCE SEARCH FOR COMMENT API-----*/
+
+  static async commentAdvanceSearch(token, data) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `comment/comment-advanced-search`,
+      data,
+      "post",
+      header
+    );
+    return res;
+  }
 }
 
 export default SublyApi;

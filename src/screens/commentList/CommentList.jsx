@@ -51,6 +51,29 @@ function CommentList() {
       });
   }
 
+  // ====================Advance search API handler===================
+  async function advanceSearch() {
+    setLoading(true);
+    const requestData = {
+      comment: comment,
+      userID: author,
+      startDate: startDate,
+      endDate: endDate,
+    };
+    await SublyApi.commentAdvanceSearch(token, requestData)
+      .then((response) => {
+        setLoading(false);
+        if (response.status == "success") {
+          setCommentList(response.data);
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   return (
     <section className="h-screen ">
       {loading ? <Loader /> : ""}
@@ -124,11 +147,11 @@ function CommentList() {
                   </button>
                   <button
                     onClick={() => {
-                      setTypeValue("");
+                      setAuthor("");
                       setStartDate("");
                       setEndDate("");
-                      setTitle("");
-                      getBanner();
+                      setComment("");
+                      getComments();
                     }}
                     className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none"
                   >

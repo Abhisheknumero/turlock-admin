@@ -61,8 +61,7 @@ function Login() {
   };
 
   return (
-    <section className="w-full">
-      {loading ? <Loader /> : ""}
+    <section className="w-full bg-class">
       {/* <div class="background">
         <div class="cube"></div>
         <div class="cube"></div>
@@ -78,13 +77,13 @@ function Login() {
         <div class="cube"></div>
       </div> */}
       <div
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, rgb(255 69 54) 0%, rgb(251 27 6) 0%, rgb(255 34 9) 21%, rgb(255 26 0) 52%, rgb(177, 0, 0) 78%, rgb(102, 0, 0) 100%)",
-        }}
-        className="h-screen absolute flex items-center justify-center px-28 max-lg:px-5 w-full top-0"
+        // style={{
+        //   backgroundImage:
+        //     "linear-gradient(to right, rgb(255 69 54) 0%, rgb(251 27 6) 0%, rgb(255 34 9) 21%, rgb(255 26 0) 52%, rgb(177, 0, 0) 78%, rgb(102, 0, 0) 100%)",
+        // }}
+        className="h-screen flex items-center justify-center px-28 max-lg:px-5 w-full top-0"
       >
-        <ParticlesBg
+        {/* <ParticlesBg
           type="cobweb"
           bg={{
             position: "absolute",
@@ -92,13 +91,14 @@ function Login() {
             color: "white",
           }}
           color="white"
-        />
+        /> */}
+        {loading ? <Loader /> : ""}
         <div className="w-[40%] max-lg:w-[90%] z-50">
           {" "}
           {/* <h3 className="text-center text-white pb-10">TurlockCityNewsAdmin Panel</h3> */}
           <form
             style={styles.form}
-            className="w-full px-8 py-7"
+            className="w-full p-10"
             onSubmit={handleLogin}
           >
             <div className="my-3">
@@ -121,7 +121,7 @@ function Login() {
                     email: "",
                   });
                 }}
-                className="text-black border border-black rounded-md px-2 py-2 w-full"
+                className="text-black border border-black rounded-md px-2 py-2 w-full  bg-transparent"
               />
               <p className="mb-1 text-sm text-red-600">{errorMessage?.email}</p>
             </div>
@@ -139,7 +139,7 @@ function Login() {
                   });
                 }}
                 placeholder="Enter your password"
-                className="text-black border border-black rounded-md px-2 py-2 w-full"
+                className="text-black border border-black rounded-md px-2 py-2 w-full  bg-transparent"
               />
               <p className="mb-1 text-sm text-red-600">
                 {errorMessage?.password}
@@ -165,7 +165,7 @@ export const styles = {
   form: {
     display: "flex",
     flexDirection: "column",
-    borderRadius: "8px",
+    borderRadius: "12px",
     boxShadow: "15px 15px 15px rgba(0, 0, 0, 0.1)",
     backgroundColor: "white",
   },

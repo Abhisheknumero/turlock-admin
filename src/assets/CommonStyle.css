@@ -1,4 +1,12 @@
+
+.bg-class {
+    background-image: url("./tempBg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
 /* ============= Animation background ========= */
+
 .background {
   background: linear-gradient(132deg, #971c1c, #830101, #a00909);
   background-size: 400% 400%;

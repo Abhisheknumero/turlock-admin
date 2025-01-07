@@ -56,7 +56,7 @@ function CommentList() {
     setLoading(true);
     const requestData = {
       comment: comment,
-      userID: author,
+      userName: author,
       startDate: startDate,
       endDate: endDate,
     };

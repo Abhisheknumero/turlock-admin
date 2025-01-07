@@ -1,6 +1,7 @@
 import axios from "axios";
+import { imgBaseURL } from "./utils/StaticsData";
 
-const BASE_URL = "http://192.168.29.221:3000/admin";
+const BASE_URL = `${imgBaseURL}admin`;
 // const BASE_URL = "http://192.168.29.161:3000/admin";
 
 class SublyApi {

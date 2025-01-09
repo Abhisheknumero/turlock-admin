@@ -1,8 +1,7 @@
-
 .bg-class {
-    background-image: url("./tempBg.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
+  background-image: url("./tempBg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 /* ============= Animation background ========= */
@@ -189,8 +188,6 @@
   max-width: 60% !important;
 }
 
-
-
 @media (max-width: 1200px) {
   .widthClass.modal.show .modal-dialog {
     max-width: 60% !important;
@@ -231,6 +228,10 @@
 .createBtn:hover:after {
   transform: scaleX(1);
   transform-origin: bottom left;
+}
+
+.datePickerClass .react-datepicker-wrapper {
+  width: 100% !important;
 }
 
 /* .buttonClass {

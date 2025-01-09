@@ -319,6 +319,53 @@ class SublyApi {
     );
     return res;
   }
+
+  /* ------CREATE SUBSCRIPTION PLAN API-----*/
+
+  static async createPlans(token, data) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(`post/baseSubscription`, data, "post", header);
+    return res;
+  }
+
+  /* -----FETCH PLAN LIST API-----*/
+
+  static async fetchPlanList(token) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/getbaseSubscription`,
+      undefined,
+      "get",
+      header
+    );
+    return res;
+  }
+
+  /* ------DELETE PLAN API-----*/
+
+  static async deletePlan(token, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/deleteSubscription/${id}`,
+      undefined,
+      "delete",
+      header
+    );
+    return res;
+  }
+
+  /* ------UPDATE SUBSCRIPTION PLAN API-----*/
+
+  static async updatePlans(token, data, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/updateSubscription/${id}`,
+      data,
+      "put",
+      header
+    );
+    return res;
+  }
 }
 
 export default SublyApi;

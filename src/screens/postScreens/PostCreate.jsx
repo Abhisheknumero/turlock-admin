@@ -56,8 +56,6 @@ function PostCreate() {
     }
   }, [location.state]);
 
-  console.log("location.state", location.state);
-
   // ====function to hide dropdown on click outside====
   $(document).mouseup(function (e) {
     if (

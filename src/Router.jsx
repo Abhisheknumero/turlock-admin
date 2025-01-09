@@ -14,6 +14,8 @@ import CreateBannerAds from "./screens/bannerAndAds/CreateBannerAds";
 import BannerList from "./screens/bannerAndAds/BannerList";
 import CommentList from "./screens/commentList/CommentList";
 import Reporters from "./screens/reporters/Reporters";
+import Subscription from "./screens/subscription/Subscription";
+import CreatePlans from "./screens/subscription/CreatePlans";
 
 function Router() {
   return (
@@ -34,6 +36,8 @@ function Router() {
         <Route path="/Ads-promo-banners/Create" element={<CreateBannerAds />} />
         <Route path="/Comments" element={<CommentList />} />
         <Route path="/Reporters" element={<Reporters />} />
+        <Route path="/Subscription" element={<Subscription />} />
+        <Route path="/Subscription/Create" element={<CreatePlans />} />
       </Routes>
     </BrowserRouter>
   );

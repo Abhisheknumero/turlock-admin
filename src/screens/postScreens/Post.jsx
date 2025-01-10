@@ -373,20 +373,23 @@ function CategoryType({ categoryList, setFilterValue, filterValue }) {
   return (
     <div className="rounded-md shadow-2xl absolute w-full top-15 bg-white py-2 z-50 max-h-48 overflow-auto">
       {categoryList &&
-        categoryList?.map((item, index) => (
-          <p
-            onClick={() => {
-              setFilterValue({
-                ...filterValue,
-                category: { name: item.categoryName, id: item._id },
-              });
-            }}
-            className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
-            key={index}
-          >
-            {item.categoryName}
-          </p>
-        ))}
+        categoryList?.map(
+          (item, index) =>
+            item.categoryName !== "REELS" && (
+              <p
+                onClick={() => {
+                  setFilterValue({
+                    ...filterValue,
+                    category: { name: item.categoryName, id: item._id },
+                  });
+                }}
+                className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+                key={index}
+              >
+                {item.categoryName}
+              </p>
+            )
+        )}
     </div>
   );
 }

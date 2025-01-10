@@ -760,17 +760,20 @@ function CategoryType({ setShow, categoryList, setCategoryValue }) {
         Create Category
       </p>
       {categoryList &&
-        categoryList?.map((item, index) => (
-          <p
-            onClick={() => {
-              setCategoryValue({ id: item._id, key: item?.categoryName });
-            }}
-            className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
-            key={index}
-          >
-            {item.categoryName}
-          </p>
-        ))}
+        categoryList?.map(
+          (item, index) =>
+            item.categoryName !== "REELS" && (
+              <p
+                onClick={() => {
+                  setCategoryValue({ id: item._id, key: item?.categoryName });
+                }}
+                className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+                key={index}
+              >
+                {item.categoryName}
+              </p>
+            )
+        )}
     </div>
   );
 }

@@ -125,7 +125,7 @@ function Login() {
               />
               <p className="mb-1 text-sm text-red-600">{errorMessage?.email}</p>
             </div>
-            <div className="mt-2">
+            <div className="mt-2 mb-3">
               <label htmlFor="password">Password:</label>
               <input
                 type="password"
@@ -145,9 +145,9 @@ function Login() {
                 {errorMessage?.password}
               </p>
             </div>
-            <p className="text-[#D10505] cursor-pointer font-medium text-sm text-end m-2">
+            {/* <p className="text-[#D10505] cursor-pointer font-medium text-sm text-end m-2">
               Forget password
-            </p>
+            </p> */}
             <button
               type="submit"
               className="bg-[#D10505] text-white text-lg font-semibold py-2 px-3 rounded-3xl my-3"

@@ -4,12 +4,20 @@ import logo from "../assets/logo.png";
 import { Icon } from "@iconify-icon/react";
 import { SidebarData } from "../utils/SidebarData";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { clearReducer } from "../store/slices/authSlice";
 
 function Sidebar() {
   const [show, setShow] = useState(false);
   const [ShowSidebar, setShowSidebar] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
+
+  function Logout() {
+    dispatch(clearReducer());
+    navigate("/");
+  }
 
   return (
     <>
@@ -36,7 +44,11 @@ function Sidebar() {
               <div
                 key={index}
                 onClick={() => {
-                  navigate(item.path);
+                  if (item.key == "Logout") {
+                    Logout();
+                  } else {
+                    navigate(item.path);
+                  }
                 }}
                 className={`${
                   location.pathname.includes(item.location)
@@ -68,7 +80,11 @@ function Sidebar() {
             <div
               key={index}
               onClick={() => {
-                navigate(item.path);
+                if (item.key == "Logout") {
+                  Logout();
+                } else {
+                  navigate(item.path);
+                }
               }}
               className={`${
                 location.pathname.includes(item.location)

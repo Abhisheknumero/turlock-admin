@@ -375,7 +375,8 @@ function CategoryType({ categoryList, setFilterValue, filterValue }) {
       {categoryList &&
         categoryList?.map(
           (item, index) =>
-            item.categoryName !== "REELS" && (
+            (item.categoryName == "NEWS" ||
+              item.categoryName == "FEATURED NEWS") && (
               <p
                 onClick={() => {
                   setFilterValue({

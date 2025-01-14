@@ -18,7 +18,7 @@ function Reporters() {
             </div>
             <div>
               <h3 className="text-gray-600 font-bold text-base my-3">
-                Reporters Count {0}
+                Reporters Count {`(${0})`}
               </h3>
               {/* {commentList?.length > 0 ? (
                 <CommentTable

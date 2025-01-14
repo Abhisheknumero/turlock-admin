@@ -12,12 +12,6 @@ export const SidebarData = [
     location: "Post",
   },
   {
-    icon: "ic:outline-perm-media",
-    key: "Media",
-    path: "/Media",
-    location: "Media",
-  },
-  {
     icon: "lsicon:comments-outline",
     key: "Comments",
     path: "/Comments",
@@ -25,10 +19,34 @@ export const SidebarData = [
   },
   { icon: "bi:camera-reels", key: "Reels", path: "/Reels", location: "Reels" },
   {
+    icon: "map:pet-store",
+    key: "Lost pet",
+    path: "/Lost-pet",
+    location: "Lost-pet",
+  },
+  {
+    icon: "streamline:group-meeting-call",
+    key: "Obituaries",
+    path: "/Obituaries",
+    location: "Obituaries",
+  },
+  {
+    icon: "bi:shop",
+    key: "Shop",
+    path: "/Shop",
+    location: "Shop",
+  },
+  {
     icon: "hugeicons:promotion",
-    key: "Ads/Promo Banners",
-    path: "/Ads-promo-banners",
-    location: "Ads-promo-banners",
+    key: "Advertising",
+    path: "/Advertising",
+    location: "Advertising",
+  },
+  {
+    icon: "material-symbols:planner-banner-ad-pt-outline",
+    key: "Banner",
+    path: "/Banner",
+    location: "Banner",
   },
   {
     icon: "oui:reporter",

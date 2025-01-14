@@ -16,6 +16,7 @@ import CommentList from "./screens/commentList/CommentList";
 import Reporters from "./screens/reporters/Reporters";
 import Subscription from "./screens/subscription/Subscription";
 import CreatePlans from "./screens/subscription/CreatePlans";
+import User from "./screens/users/User";
 
 function Router() {
   return (
@@ -32,12 +33,13 @@ function Router() {
         <Route path="/Media/Gallery-list" element={<GalleryList />} />
         <Route path="/Reels" element={<Reels />} />
         <Route path="/Reels/Create" element={<CreateReels />} />
-        <Route path="/Ads-promo-banners" element={<BannerList />} />
-        <Route path="/Ads-promo-banners/Create" element={<CreateBannerAds />} />
+        <Route path="/Banner" element={<BannerList />} />
+        <Route path="/Banner/Create" element={<CreateBannerAds />} />
         <Route path="/Comments" element={<CommentList />} />
         <Route path="/Reporters" element={<Reporters />} />
         <Route path="/Subscription" element={<Subscription />} />
         <Route path="/Subscription/Create" element={<CreatePlans />} />
+        <Route path="/User" element={<User />} />{" "}
       </Routes>
     </BrowserRouter>
   );

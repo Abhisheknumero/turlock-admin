@@ -108,7 +108,7 @@ function BannerList() {
           <Header />
           <div className="px-9 max-xl:px-2">
             <div className="flex items-center justify-between pt-4 pb-4 flex-wrap border-b-2">
-              <h3 className="mb-0 text-lg font-semibold"> Banner and Ads</h3>
+              <h3 className="mb-0 text-lg font-semibold"> Banners</h3>
             </div>
             <div className="flex items-center justify-end w-full mt-2">
               <button

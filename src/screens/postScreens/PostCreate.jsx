@@ -762,7 +762,8 @@ function CategoryType({ setShow, categoryList, setCategoryValue }) {
       {categoryList &&
         categoryList?.map(
           (item, index) =>
-            item.categoryName !== "REELS" && (
+            (item.categoryName == "NEWS" ||
+              item.categoryName == "FEATURED NEWS") && (
               <p
                 onClick={() => {
                   setCategoryValue({ id: item._id, key: item?.categoryName });

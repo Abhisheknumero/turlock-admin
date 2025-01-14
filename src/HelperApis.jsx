@@ -366,6 +366,27 @@ class SublyApi {
     );
     return res;
   }
+
+  /* ------FETCH USER LIST API-----*/
+
+  static async fetchUserList(token) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(`auth/users`, undefined, "get", header);
+    return res;
+  }
+
+  /* ------DELETE USER API-----*/
+
+  static async deleteUser(token, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `auth/users/${id}`,
+      undefined,
+      "delete",
+      header
+    );
+    return res;
+  }
 }
 
 export default SublyApi;

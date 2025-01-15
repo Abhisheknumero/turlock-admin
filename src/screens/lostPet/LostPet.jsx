@@ -5,27 +5,45 @@ import { Loader } from "../../utils/Loader";
 import SublyApi from "../../HelperApis";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import UserTable from "./UserTable";
+import LostPetTable from "./LostPetTable";
+import DatePicker from "react-datepicker";
 
-function User() {
+function LostPet() {
   const { token } = useSelector((state) => state.user.userdetail);
   const [loading, setLoading] = useState(false);
-  const [userList, setUserList] = useState("");
+  const [petList, setPetList] = useState("");
   const [name, setName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
   useEffect(() => {
-    getUserList();
+    getCategory();
   }, []);
-  async function getUserList() {
+
+  async function getCategory() {
+    await SublyApi.fetchCategory(token)
+      .then((response) => {
+        if (response.status == "success") {
+          const lostPetValue = response.data.filter(
+            (ele) => ele.categoryType == "lost_pet"
+          );
+          getPetList(lostPetValue);
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+
+  async function getPetList(lostPetValue) {
     setLoading(true);
-    await SublyApi.fetchUserList(token)
+    await SublyApi.fetchPetLost(token, lostPetValue[0]._id)
       .then(async (response) => {
         setLoading(false);
         if (response.status == "success") {
-          setUserList(response.data.users);
+          setPetList(response.data);
         } else {
           toast.dismiss();
           toast.error(response.data.error);
@@ -37,12 +55,12 @@ function User() {
   // ===========================Calling API for delete post============================
   async function deleteHandle(id) {
     setLoading(true);
-    await SublyApi.deleteUser(token, id)
+    await SublyApi.deletePet(token, id)
       .then((response) => {
         setLoading(false);
         if (response.status == "success") {
-          toast.success("User deleted successfully.");
-          getUserList();
+          toast.success("Lost pet deleted successfully.");
+          getCategory();
         } else {
           toast.error(response.data.error);
         }
@@ -54,16 +72,17 @@ function User() {
   async function advanceSearch() {
     setLoading(true);
     const requestData = {
-      firstName: name,
-      lastName: lastName,
+      applicantName: name,
+      phoneNumber: phone,
       email: email,
-      phone: phone,
+      startDate: startDate,
+      endDate: endDate,
     };
-    await SublyApi.userAdvanceSearch(token, requestData)
+    await SublyApi.petAdvanceSearch(token, requestData)
       .then((response) => {
         setLoading(false);
         if (response.status == "success") {
-          setUserList(response.data);
+          setPetList(response.data);
         } else {
           toast.error(response.data.error);
         }
@@ -82,7 +101,7 @@ function User() {
           <Header />
           <div className="px-9 max-xl:px-2">
             <div className="flex items-center justify-between pt-4 pb-4 flex-wrap">
-              <h3 className="mb-0 text-lg font-semibold">Users</h3>
+              <h3 className="mb-0 text-lg font-semibold">Lost Pet</h3>
             </div>
             <div className="mb-3">
               <h3 className="text-gray-600 font-bold text-base my-3">
@@ -92,21 +111,10 @@ function User() {
                 <div className="w-full">
                   <input
                     type="text"
-                    placeholder="First Name"
+                    placeholder="Applicant Name"
                     value={name}
                     onChange={(e) => {
                       setName(e.target.value);
-                    }}
-                    className="placeholder:text-gray-600 placeholder:font-semibold py-1.5 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-semibold"
-                  />
-                </div>
-                <div className="w-full">
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    value={lastName}
-                    onChange={(e) => {
-                      setLastName(e.target.value);
                     }}
                     className="placeholder:text-gray-600 placeholder:font-semibold py-1.5 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-semibold"
                   />
@@ -133,6 +141,30 @@ function User() {
                     className="placeholder:text-gray-600 placeholder:font-semibold py-1.5 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-semibold"
                   />
                 </div>
+                <div className="flex items-center gap-3 w-full">
+                  {" "}
+                  <div>
+                    <DatePicker
+                      selected={startDate}
+                      onChange={(date) => setStartDate(date)}
+                      placeholderText="Start Date"
+                      dateFormat={"dd/MM/YYYY"}
+                      maxDate={new Date()}
+                      className="placeholder:text-gray-600 placeholder:font-semibold py-1.5 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-semibold"
+                    />
+                  </div>
+                  <div className="overflow-hidden">
+                    <DatePicker
+                      selected={endDate}
+                      onChange={(date) => setEndDate(date)}
+                      placeholderText="End Date"
+                      dateFormat={"dd/MM/YYYY"}
+                      maxDate={new Date()}
+                      minDate={startDate}
+                      className="placeholder:text-gray-600 placeholder:font-semibold py-1.5 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-semibold overflow-hidden"
+                    />
+                  </div>
+                </div>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => {
@@ -144,11 +176,12 @@ function User() {
                   </button>
                   <button
                     onClick={() => {
-                      getUserList();
-                      setName("");
+                      getCategory();
                       setEmail("");
                       setPhone("");
-                      setLastName("");
+                      setStartDate("");
+                      setEndDate("");
+                      setName("");
                     }}
                     className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none"
                   >
@@ -159,10 +192,10 @@ function User() {
             </div>
             <div>
               <h3 className="text-gray-600 font-bold text-base my-3">
-                Users Count {`(${userList?.length})`}
+                Lost Pet Count {`(${petList?.length})`}
               </h3>
-              {userList?.length > 0 ? (
-                <UserTable list={userList} deleteHandle={deleteHandle} />
+              {petList?.length > 0 ? (
+                <LostPetTable list={petList} deleteHandle={deleteHandle} />
               ) : (
                 <p className="text-center text-lg font-semibold text-gray-500">
                   No Record Found
@@ -176,4 +209,4 @@ function User() {
   );
 }
 
-export default User;
+export default LostPet;

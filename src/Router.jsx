@@ -17,6 +17,7 @@ import Reporters from "./screens/reporters/Reporters";
 import Subscription from "./screens/subscription/Subscription";
 import CreatePlans from "./screens/subscription/CreatePlans";
 import User from "./screens/users/User";
+import LostPet from "./screens/lostPet/LostPet";
 
 function Router() {
   return (
@@ -40,6 +41,7 @@ function Router() {
         <Route path="/Subscription" element={<Subscription />} />
         <Route path="/Subscription/Create" element={<CreatePlans />} />
         <Route path="/User" element={<User />} />{" "}
+        <Route path="/Lost-pet" element={<LostPet />} />{" "}
       </Routes>
     </BrowserRouter>
   );

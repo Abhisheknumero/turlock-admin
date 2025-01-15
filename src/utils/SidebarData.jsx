@@ -11,12 +11,7 @@ export const SidebarData = [
     path: "/Post/Post-List",
     location: "Post",
   },
-  {
-    icon: "lsicon:comments-outline",
-    key: "Comments",
-    path: "/Comments",
-    location: "Comments",
-  },
+
   { icon: "bi:camera-reels", key: "Reels", path: "/Reels", location: "Reels" },
   {
     icon: "map:pet-store",
@@ -41,6 +36,12 @@ export const SidebarData = [
     key: "Advertising",
     path: "/Advertising",
     location: "Advertising",
+  },
+  {
+    icon: "lsicon:comments-outline",
+    key: "Comments",
+    path: "/Comments",
+    location: "Comments",
   },
   {
     icon: "material-symbols:planner-banner-ad-pt-outline",

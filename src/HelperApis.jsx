@@ -387,6 +387,58 @@ class SublyApi {
     );
     return res;
   }
+
+  /* ------USER ADVANCE SERACH API-----*/
+
+  static async userAdvanceSearch(token, data) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `auth/users-advanced-search `,
+      data,
+      "post",
+      header
+    );
+    return res;
+  }
+
+  /* ------FETCH LOST PET API-----*/
+
+  static async fetchPetLost(token, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `lostpet/get-lostPet/${id}`,
+      undefined,
+      "get",
+      header
+    );
+    return res;
+  }
+
+  /* ------DELETE LOST PET API-----*/
+
+  static async deletePet(token, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `lostpet/delete-lostPet/${id}`,
+      undefined,
+      "delete",
+      header
+    );
+    return res;
+  }
+
+  /* ------USER ADVANCE SERACH API-----*/
+
+  static async petAdvanceSearch(token, data) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `lostpet/lostPet-advanced-search`,
+      data,
+      "post",
+      header
+    );
+    return res;
+  }
 }
 
 export default SublyApi;

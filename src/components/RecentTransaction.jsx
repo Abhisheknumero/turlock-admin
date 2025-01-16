@@ -1,25 +1,29 @@
-function DashboardUser({ recentUsers }) {
+import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
+
+function RecentTransaction({ transaction }) {
   return (
     <div className="bg-white shadow-md rounded-lg border">
       <div className="p-3 border-b">
-        <p className="mb-0 text-md font-bold text-gray-600">Users</p>
+        <p className="mb-0 text-md font-bold text-gray-600">
+          Recent Transaction
+        </p>
       </div>
       <div className="p-3 w-full flex items-center justify-between border-b">
         <p className="mb-0 text-center font-bold text-gray-600 text-sm w-[15%]">
           #
         </p>
         <p className="mb-0 text-center font-bold text-gray-600 text-sm w-[30%]">
-          First Name
+          Amount
         </p>
         <p className="mb-0 text-center font-bold text-gray-600 text-sm w-[30%]">
-          Last Name
+          Currency
         </p>
         <p className="mb-0 text-center font-bold text-gray-600 text-sm w-[25%]">
-          Action
+          Method
         </p>
       </div>
       <div className=" max-h-[300px] overflow-auto">
-        {recentUsers?.map((item, index) => (
+        {transaction?.map((item, index) => (
           <div
             key={index}
             className="px-3 py-2 w-full flex items-center justify-between border-b"
@@ -28,15 +32,13 @@ function DashboardUser({ recentUsers }) {
               {index + 1}
             </p>
             <p className="mb-0 text-center font-semibold text-gray-600 text-sm w-[30%]">
-              {item?.firstName}
+              {item?.amount}
             </p>
             <p className="mb-0 text-center font-semibold text-gray-600 text-sm w-[30%]">
-              {item?.lastName}
+              {item?.currency.toUpperCase()}
             </p>
-            <p className="mb-0 text-center font-semibold text-gray-600 w-[25%] flex items-center justify-center">
-              <p className="bg-[#94a3b854] flex items-center justify-center mb-0 w-max rounded-sm px-2 py-1 text-xs cursor-pointer">
-                View
-              </p>
+            <p className="mb-0 text-center font-semibold text-gray-600 text-sm w-[30%]">
+              {item?.paymentMethod}
             </p>
           </div>
         ))}
@@ -45,4 +47,4 @@ function DashboardUser({ recentUsers }) {
   );
 }
 
-export default DashboardUser;
+export default RecentTransaction;

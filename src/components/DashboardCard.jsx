@@ -2,7 +2,7 @@ import { LineChart } from "@mui/x-charts";
 import { AgCharts } from "ag-charts-react";
 import { useState } from "react";
 
-function DashboardCard({ item }) {
+function DashboardCard({ dashboardData, heading }) {
   const [options, setOptions] = useState({
     data: getData(),
     series: [
@@ -21,11 +21,9 @@ function DashboardCard({ item }) {
   });
   return (
     <div className="bg-white p-3 shadow-md rounded-lg border">
-      <p className="mb-0 text-xs">Total Subscriptions</p>
+      <p className="mb-0 text-xs">{heading}</p>
       <div className="flex items-center gap-1 h-[70px]">
-        <p className="font-bold my-2.5">
-          {item.key == 1 ? `$${item.count}` : item.count}
-        </p>
+        <p className="font-bold my-2.5">{dashboardData}</p>
         <LineChart
           leftAxis={null}
           bottomAxis={null}
@@ -39,7 +37,7 @@ function DashboardCard({ item }) {
           height={200}
         />{" "}
       </div>
-      <div className="flex items-center gap-1 text-sm">
+      {/* <div className="flex items-center gap-1 text-sm">
         <span
           className={` ${
             item?.lastWeek > 0 || item.key == 1
@@ -47,14 +45,10 @@ function DashboardCard({ item }) {
               : "text-[#cc2424] bg-[#f100001e] font-medium"
           } ${"text-xs px-1.5 py-[2px] rounded-[4px]"}`}
         >
-          {item.key == 1
-            ? `$${item?.lastWeek}`
-            : item?.lastWeek > 0
-            ? `+${item?.lastWeek}`
-            : `${item?.lastWeek} ${item.key == 2 && "Less User"}`}
+          {`${item?.lastWeek} ${item.key == 2 && "Less User"}`}
         </span>
         <p className="mb-0 text-xs">Since last week</p>
-      </div>
+      </div> */}
     </div>
   );
 }

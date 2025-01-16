@@ -5,10 +5,10 @@ import { Loader } from "../../utils/Loader";
 import SublyApi from "../../HelperApis";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import LostPetTable from "./LostPetTable";
 import DatePicker from "react-datepicker";
+import ObituariesTable from "./ObituriesTable";
 
-function LostPet() {
+function Obituaries() {
   const { token } = useSelector((state) => state.user.userdetail);
   const [loading, setLoading] = useState(false);
   const [petList, setPetList] = useState("");
@@ -27,7 +27,7 @@ function LostPet() {
       .then((response) => {
         if (response.status == "success") {
           const lostPetValue = response.data.filter(
-            (ele) => ele.categoryType == "lost_pet"
+            (ele) => ele.categoryType == "obituaries"
           );
           getPetList(lostPetValue);
         } else {
@@ -59,7 +59,7 @@ function LostPet() {
       .then((response) => {
         setLoading(false);
         if (response.status == "success") {
-          toast.success("Lost pet deleted successfully.");
+          toast.success("Obituaries deleted successfully.");
           getCategory();
         } else {
           toast.error(response.data.error);
@@ -78,11 +78,35 @@ function LostPet() {
       startDate: startDate,
       endDate: endDate,
     };
+    await SublyApi.petAdvanceSearch(token, requestData)
+      .then((response) => {
+        setLoading(false);
+        if (response.status == "success") {
+          setPetList(response.data);
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  // ====================Advance search API handler===================
+  async function advanceSearch() {
+    setLoading(true);
+    const requestData = {
+      applicantName: name,
+      phoneNumber: phone,
+      email: email,
+      startDate: startDate,
+      endDate: endDate,
+    };
     await SublyApi.fetchCategory(token)
       .then(async (response) => {
         if (response.status == "success") {
           const lostPetValue = response.data.filter(
-            (ele) => ele.categoryType == "lost_pet"
+            (ele) => ele.categoryType == "obituaries"
           );
           await SublyApi.petAdvanceSearch(
             token,
@@ -116,7 +140,7 @@ function LostPet() {
           <Header />
           <div className="px-9 max-xl:px-2">
             <div className="flex items-center justify-between pt-4 pb-4 flex-wrap">
-              <h3 className="mb-0 text-lg font-semibold">Lost Pet</h3>
+              <h3 className="mb-0 text-lg font-semibold">Obituaries</h3>
             </div>
             <div className="mb-3">
               <h3 className="text-gray-600 font-bold text-base my-3">
@@ -207,10 +231,10 @@ function LostPet() {
             </div>
             <div>
               <h3 className="text-gray-600 font-bold text-base my-3">
-                Lost Pet Count {`(${petList?.length})`}
+                Obituaries Count {`(${petList?.length})`}
               </h3>
               {petList?.length > 0 ? (
-                <LostPetTable list={petList} deleteHandle={deleteHandle} />
+                <ObituariesTable list={petList} deleteHandle={deleteHandle} />
               ) : (
                 <p className="text-center text-lg font-semibold text-gray-500">
                   No Record Found
@@ -224,4 +248,4 @@ function LostPet() {
   );
 }
 
-export default LostPet;
+export default Obituaries;

@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import RichTextEditor from "react-rte";
 import $ from "jquery";
-import { imgBaseURL } from "../../utils/StaticsData";
+import { imgBaseURL, postType } from "../../utils/StaticsData";
 
 function PostCreate() {
   const navigate = useNavigate();
@@ -414,20 +414,49 @@ function PostCreate() {
                     />
                   </label>
                 </div>
-                <div className="w-full max-xl:w-full">
-                  <label htmlFor="title" className="text-sm font-normal w-full">
-                    Post Type
+                <div
+                  onClick={() => {
+                    setShowDropdown({
+                      ...showDropdown,
+                      postType: !showDropdown.postType,
+                    });
+                  }}
+                  className="w-full max-xl:w-full relative notifyBlock"
+                >
+                  <label
+                    htmlFor="posttype"
+                    className="text-sm font-normal w-full"
+                  >
+                    post Type
                     <input
                       type="text"
-                      placeholder="Post Type"
-                      id="title"
+                      placeholder="Select Post Type"
+                      id="posttype"
                       value={postType}
-                      onChange={(e) => {
-                        setPostType(e.target.value);
-                      }}
-                      className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
+                      autoComplete="off"
+                      className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
                     />
                   </label>
+                  <Icon
+                    icon={`${
+                      showDropdown.postType
+                        ? "majesticons:chevron-up-line"
+                        : "majesticons:chevron-down-line"
+                    }`}
+                    width="30"
+                    height="30"
+                    style={{ color: "#4b5563" }}
+                    className="absolute right-1 top-6 cursor-pointer"
+                    onClick={() => {
+                      setShowDropdown({
+                        ...showDropdown,
+                        postType: !showDropdown.postType,
+                      });
+                    }}
+                  />
+                  {showDropdown.postType && (
+                    <PostType setCategoryValue={setPostType} />
+                  )}
                 </div>
 
                 {/* <div className="w-full max-xl:w-full relative">
@@ -775,6 +804,25 @@ function CategoryType({ setShow, categoryList, setCategoryValue }) {
               </p>
             )
         )}
+    </div>
+  );
+}
+
+function PostType({ setCategoryValue }) {
+  return (
+    <div className="rounded-md shadow-2xl absolute w-full top-15 bg-white py-2 z-50 max-h-48 overflow-auto">
+      {postType &&
+        postType?.map((item, index) => (
+          <p
+            onClick={() => {
+              setCategoryValue(item?.id);
+            }}
+            className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+            key={index}
+          >
+            {item.id}
+          </p>
+        ))}
     </div>
   );
 }

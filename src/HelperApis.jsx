@@ -429,12 +429,38 @@ class SublyApi {
 
   /* ------USER ADVANCE SERACH API-----*/
 
-  static async petAdvanceSearch(token, data) {
+  static async petAdvanceSearch(token, data, id) {
     let header = { Authorization: `Bearer ${token}` };
     let res = await this.request(
-      `lostpet/lostPet-advanced-search`,
+      `lostpet/lostPet-advanced-search/${id}`,
       data,
       "post",
+      header
+    );
+    return res;
+  }
+
+  /* ------FETCH RECENT ACTIVITY API-----*/
+
+  static async fetchRecentActivity(token) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `dashBoard/recent-activity`,
+      undefined,
+      "get",
+      header
+    );
+    return res;
+  }
+
+  /* ------FETCH DASHBOARD DATA API-----*/
+
+  static async dashboardStatics(token) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `dashBoard/dashBoard-stats`,
+      undefined,
+      "get",
       header
     );
     return res;

@@ -6,10 +6,61 @@ import { Col, Row } from "react-bootstrap";
 import DashboardUser from "../components/DashboardUser";
 import ArticleBox from "../components/ArticleBox";
 import { DashboardStatic } from "../utils/StaticsData";
+import { useEffect, useState } from "react";
+import SublyApi from "../HelperApis";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import RecentTransaction from "../components/RecentTransaction";
+import { Loader } from "../utils/Loader";
 
 function Dashboard() {
+  const { token } = useSelector((state) => state.user.userdetail);
+  const [userActivity, setUserActivity] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [dashboardData, setDashboardData] = useState("");
+
+  useEffect(() => {
+    recentActivityHandle();
+    dashboardHandle();
+  }, []);
+
+  async function recentActivityHandle() {
+    setLoading(true);
+    await SublyApi.fetchRecentActivity(token)
+      .then((response) => {
+        setLoading(false);
+        if (response.status == "success") {
+          setUserActivity(response.data);
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  async function dashboardHandle() {
+    setLoading(true);
+    await SublyApi.dashboardStatics(token)
+      .then((response) => {
+        console.log("setDashboardData", response);
+
+        setLoading(false);
+        if (response.status == "success") {
+          setDashboardData(response);
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   return (
     <section className="h-screen ">
+      {loading ? <Loader /> : ""}
       <div className="flex">
         <Sidebar />
         <div className="w-full">
@@ -24,21 +75,42 @@ function Dashboard() {
               </p>
             </div>
             <Row className="m-0 p-0 gap-3 pb-4">
-              {DashboardStatic.map((item, index) => (
-                <Col xl={2} className="p-0" key={index}>
-                  <DashboardCard item={item} />
-                </Col>
-              ))}
+              <Col xl={2} className="p-0">
+                <DashboardCard
+                  dashboardData={dashboardData?.totalSubscribedUsers}
+                  heading={"Total Subscribers"}
+                />
+              </Col>
+              <Col xl={2} className="p-0">
+                <DashboardCard
+                  dashboardData={dashboardData?.totalRevenue}
+                  heading={"Total Revenue"}
+                />
+              </Col>
+              <Col xl={2} className="p-0">
+                <DashboardCard
+                  dashboardData={dashboardData?.totalPostViews}
+                  heading={"Total Post Views"}
+                />
+              </Col>
+              <Col xl={2} className="p-0">
+                <DashboardCard
+                  dashboardData={dashboardData?.totalUsers}
+                  heading={"Total Users"}
+                />
+              </Col>
             </Row>
-            <Row className="m-0 p-0 gap-3">
+            <Row className="m-0 p-0 gap-y-3 gap-x-8">
               <Col xl={3} className="p-0">
-                <DashboardUser />
+                <DashboardUser recentUsers={userActivity?.recentUsers} />
               </Col>
               <Col xl={3} className="p-0">
-                <ArticleBox />
+                <ArticleBox recentArticle={userActivity?.recentPosts} />
               </Col>
               <Col xl={3} className="p-0">
-                <ArticleBox />
+                <RecentTransaction
+                  transaction={userActivity?.recentTransactions}
+                />
               </Col>
             </Row>
           </div>

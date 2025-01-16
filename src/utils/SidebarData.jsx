@@ -25,18 +25,18 @@ export const SidebarData = [
     path: "/Obituaries",
     location: "Obituaries",
   },
-  {
-    icon: "bi:shop",
-    key: "Shop",
-    path: "/Shop",
-    location: "Shop",
-  },
-  {
-    icon: "hugeicons:promotion",
-    key: "Advertising",
-    path: "/Advertising",
-    location: "Advertising",
-  },
+  // {
+  //   icon: "bi:shop",
+  //   key: "Shop",
+  //   path: "/Shop",
+  //   location: "Shop",
+  // },
+  // {
+  //   icon: "hugeicons:promotion",
+  //   key: "Advertising",
+  //   path: "/Advertising",
+  //   location: "Advertising",
+  // },
   {
     icon: "lsicon:comments-outline",
     key: "Comments",
@@ -61,19 +61,19 @@ export const SidebarData = [
     path: "/Subscription",
     location: "Subscription",
   },
-  {
-    icon: "pajamas:live-stream",
-    key: "Live Streams",
-    path: "/Live-streams",
-    location: "Live-Streams",
-  },
+  // {
+  //   icon: "pajamas:live-stream",
+  //   key: "Live Streams",
+  //   path: "/Live-streams",
+  //   location: "Live-Streams",
+  // },
   { icon: "tabler:users", key: "User", path: "/User", location: "User" },
-  {
-    icon: "clarity:form-line",
-    key: "Forum",
-    path: "/Forum",
-    location: "Forum",
-  },
+  // {
+  //   icon: "clarity:form-line",
+  //   key: "Forum",
+  //   path: "/Forum",
+  //   location: "Forum",
+  // },
   {
     icon: "mi:notification",
     key: "Notifications",

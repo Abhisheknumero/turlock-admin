@@ -32,5 +32,12 @@ export const categoryType = [
   { id: "shop", key: "SHOP" },
 ];
 
+export const postType = [
+  { id: "Breaking", key: "Breaking" },
+  { id: "Investigative", key: "Investigative" },
+  { id: "Crime", key: "Crime" },
+  { id: "Politics", key: "Politics" },
+];
+
 // export const imgBaseURL = "http://192.168.29.161:3000/";
 export const imgBaseURL = "http://192.168.29.221:3000/";

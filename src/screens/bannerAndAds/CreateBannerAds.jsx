@@ -160,7 +160,7 @@ function CreateBannerAds() {
             setBannerType("");
             setStartDate("");
             setEndDate("");
-            navigate("/Ads-promo-banners");
+            navigate("/Banner");
           } else {
             toast.error(response.data.error);
           }
@@ -198,7 +198,7 @@ function CreateBannerAds() {
             setBannerType("");
             setStartDate("");
             setEndDate("");
-            navigate("/Ads-promo-banners");
+            navigate("/Banner");
           } else {
             toast.error(response.data.error);
           }
@@ -224,7 +224,7 @@ function CreateBannerAds() {
               </h3>
               <button
                 onClick={() => {
-                  navigate("/Ads-promo-banners");
+                  navigate("/Banner");
                 }}
                 className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none"
               >

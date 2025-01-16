@@ -113,7 +113,7 @@ function BannerList() {
             <div className="flex items-center justify-end w-full mt-2">
               <button
                 onClick={() => {
-                  navigate("/Ads-promo-banners/Create");
+                  navigate("/Banner/Create");
                 }}
                 className="w-38 text-base rounded-md px-2 py-2 relative font-medium hover:border-none border-none flex items-center gap-2 hover:text-[#D10505] createBtn"
               >

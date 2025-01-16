@@ -87,7 +87,7 @@ function BannerTable({
                     </span>
                     <span
                       onClick={() => {
-                        navigate("/Ads-promo-banners/Create", { state: item });
+                        navigate("/Banner/Create", { state: item });
                       }}
                       className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal"
                     >

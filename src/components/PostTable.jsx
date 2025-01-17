@@ -28,7 +28,7 @@ function PostTable({
               Category
             </th>
             <th className="text-sm text-center font-bold !text-gray-600 !bg-gray-300 w-[8%]">
-              Subscription
+              Post Type
             </th>
             {/* <th className="text-sm text-center font-bold !text-gray-600 !bg-gray-300 w-[5%]">
               Status
@@ -63,7 +63,7 @@ function PostTable({
                 {val?.postCategory || "--"}
               </td>
               <td align="center" className="text-sm font-medium !text-gray-700">
-                {val?.subscription}
+                {val?.postType}
               </td>
               {/* <td align="center" className="text-sm font-medium !text-gray-700">
                 Active

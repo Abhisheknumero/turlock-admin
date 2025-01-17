@@ -100,12 +100,15 @@ function PostDetail({ show, setShow, topMargin, id, setLoading }) {
                   ).format("MMM DD, YYYY")}`}</span>
                 </p>
               </div>
-              <p className="mt-2.5 mb-3 text-lg font-semibold">
+              <p className="mt-2.5 mb-3 text-lg font-semibold flex items-start gap-2 text-nowrap">
                 Post Content :
-                <span className="text-base font-semibold">
-                  {" "}
-                  {detailValue?.postContent || "NA"}
-                </span>
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: detailValue?.postContent,
+                  }}
+                  className="text-base font-semibold !text-wrap"
+                />{" "}
+                {/* { detailValue?.postContent || "NA"} */}
               </p>
               <div className="my-2 bg-gray-200 rounded-md py-2 px-3">
                 <p className="mb-0 text-xl font-semibold border-b border-gray-300 pb-2">

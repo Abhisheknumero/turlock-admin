@@ -107,6 +107,12 @@ function CreatePlans() {
       });
   }
 
+  async function onTagRemove(index) {
+    let tags = [...postTag];
+    tags.splice(index, 1);
+    setPostTag(tags);
+  }
+
   return (
     <section className="overflow-auto">
       {loading ? <Loader /> : ""}

@@ -68,12 +68,12 @@ export const SidebarData = [
   //   location: "Live-Streams",
   // },
   { icon: "tabler:users", key: "User", path: "/User", location: "User" },
-  // {
-  //   icon: "clarity:form-line",
-  //   key: "Forum",
-  //   path: "/Forum",
-  //   location: "Forum",
-  // },
+  {
+    icon: "clarity:form-line",
+    key: "Forum",
+    path: "/Forum",
+    location: "Forum",
+  },
   {
     icon: "mi:notification",
     key: "Notifications",

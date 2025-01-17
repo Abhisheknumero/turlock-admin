@@ -7,6 +7,8 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import ObituariesTable from "./ObituriesTable";
+import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
+import AddObituaries from "./AddObituaries";
 
 function Obituaries() {
   const { token } = useSelector((state) => state.user.userdetail);
@@ -17,6 +19,7 @@ function Obituaries() {
   const [endDate, setEndDate] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     getCategory();
@@ -134,6 +137,7 @@ function Obituaries() {
   return (
     <section className="h-screen ">
       {loading ? <Loader /> : ""}
+      <AddObituaries topMargin={""} show={show} setShow={setShow} />
       <div className="xl:flex">
         <Sidebar />
         <div className="w-full z-0 h-screen overflow-auto">
@@ -141,6 +145,15 @@ function Obituaries() {
           <div className="px-9 max-xl:px-2">
             <div className="flex items-center justify-between pt-4 pb-4 flex-wrap">
               <h3 className="mb-0 text-lg font-semibold">Obituaries</h3>
+              <button
+                onClick={() => {
+                  setShow(true);
+                }}
+                className="w-38 text-base rounded-md px-2 py-2 relative font-medium hover:border-none border-none flex items-center gap-2 hover:text-[#D10505] createBtn"
+              >
+                <Icon icon="ion:add-outline" width="30" height="27" />
+                Add Obituaries
+              </button>
             </div>
             <div className="mb-3">
               <h3 className="text-gray-600 font-bold text-base my-3">

@@ -465,6 +465,14 @@ class SublyApi {
     );
     return res;
   }
+
+  /* ------ADD LOST PET API-----*/
+
+  static async addLostPet(token, data) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(`lostPet/add-lostPet`, data, "post", header);
+    return res;
+  }
 }
 
 export default SublyApi;

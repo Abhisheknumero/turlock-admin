@@ -12,6 +12,7 @@ import placeholder from "../../assets/video-placeholder.png";
 import { toast } from "react-toastify";
 import { categoryType, imgBaseURL } from "../../utils/StaticsData";
 import CreateCategory from "../../components/CreateCategory";
+import ReactQuill from "react-quill";
 
 function CreateReels() {
   const navigate = useNavigate();
@@ -37,7 +38,6 @@ function CreateReels() {
   const [mediaObject, setMediaObject] = useState("");
   const [thumbnail, setThumbnail] = useState("");
 
-  
   // =====================prefield data for edit post=======================
   useEffect(() => {
     if (location.state) {
@@ -487,13 +487,20 @@ function CreateReels() {
                   </div>
                 </div>
                 <div className="w-full my-4">
-                  <textarea
+                  {/* <textarea
                     value={description}
                     onChange={(e) => {
                       setDescription(e.target.value);
                     }}
                     placeholder="Write Content..."
                     className="resize-none placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full h-[180px] rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
+                  /> */}
+                  <ReactQuill
+                    theme="snow"
+                    value={description}
+                    onChange={setDescription}
+                    className="bg-white h-[232px] editorClass "
+                    placeholder="Write Content..."
                   />
                 </div>
                 {!fileValue && (

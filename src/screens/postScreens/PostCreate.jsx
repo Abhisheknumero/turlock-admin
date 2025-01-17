@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import RichTextEditor from "react-rte";
 import $ from "jquery";
 import { imgBaseURL, postType } from "../../utils/StaticsData";
+import ReactQuill from "react-quill";
 
 function PostCreate() {
   const navigate = useNavigate();
@@ -35,6 +36,9 @@ function PostCreate() {
   const [postTag, setPostTag] = useState([]);
   const [postTagValue, setPostTagValue] = useState([]);
   const [postType, setPostType] = useState("");
+  const [value, setValue] = useState("");
+
+  console.log("value", value);
 
   // =====================prefield data for edit post=======================
   useEffect(() => {
@@ -427,7 +431,7 @@ function PostCreate() {
                     htmlFor="posttype"
                     className="text-sm font-normal w-full"
                   >
-                    post Type
+                    Post Type
                     <input
                       type="text"
                       placeholder="Select Post Type"
@@ -675,13 +679,20 @@ function PostCreate() {
                 </div>
               </div>
               <div className="w-full my-4">
-                <textarea
+                {/* <textarea
                   value={description}
                   onChange={(e) => {
                     setDescription(e.target.value);
                   }}
                   placeholder="Write Content..."
                   className="resize-none placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full h-[180px] rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
+                /> */}
+                <ReactQuill
+                  theme="snow"
+                  value={description}
+                  onChange={setDescription}
+                  className="bg-white h-[232px] editorClass "
+                  placeholder="Write Content..."
                 />
                 {/* <RichTextEditor
                   value={description}

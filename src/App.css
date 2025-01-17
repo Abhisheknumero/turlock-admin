@@ -70,3 +70,7 @@ body {
   background: #555;
 }
 
+p {
+  margin-bottom: 0px !important;
+}
+

@@ -40,7 +40,7 @@ function ArticleBox({ recentArticle }) {
         {recentArticle?.map((item, index) => (
           <div
             key={index}
-            className="flex items-center justify-between gap-2 px-3 pt-3"
+            className="flex items-center justify-between gap-2 px-3 pt-2"
           >
             <Icon
               icon="gg:arrow-up-o"

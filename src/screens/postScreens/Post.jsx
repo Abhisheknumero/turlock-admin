@@ -121,6 +121,8 @@ function Post() {
       });
   }
 
+  
+
   return (
     <section className="overflow-auto">
       <PostDetail

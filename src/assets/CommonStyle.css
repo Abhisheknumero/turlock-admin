@@ -234,6 +234,10 @@
   width: 100% !important;
 }
 
+.editorClass .ql-container.ql-snow {
+  height: 190px !important;
+}
+
 /* .buttonClass {
   --clr-font-main: hsla(0 0% 20% / 100);
   --btn-bg-1: hsla(194 100% 90% / 1);

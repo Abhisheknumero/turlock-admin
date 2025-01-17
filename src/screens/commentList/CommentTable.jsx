@@ -62,6 +62,9 @@ function CommentTable({ list, deleteHandler }) {
                   </td> */}
                 <td>
                   <div className="flex items-center justify-center gap-3">
+                    <span className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal">
+                      View
+                    </span>
                     <span
                       onClick={() => {
                         deleteHandler(item._id);

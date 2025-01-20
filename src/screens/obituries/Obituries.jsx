@@ -9,6 +9,7 @@ import DatePicker from "react-datepicker";
 import ObituariesTable from "./ObituriesTable";
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import AddObituaries from "./AddObituaries";
+import ObituariesDetail from "./ObituariesDetail";
 
 function Obituaries() {
   const { token } = useSelector((state) => state.user.userdetail);
@@ -20,12 +21,15 @@ function Obituaries() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [show, setShow] = useState(false);
+  const [dataValue, setDataValue] = useState("");
+  const [showDetail, setShowDetail] = useState(false);
 
   useEffect(() => {
     getCategory();
   }, []);
 
   async function getCategory() {
+    setLoading(true);
     await SublyApi.fetchCategory(token)
       .then((response) => {
         if (response.status == "success") {
@@ -34,6 +38,7 @@ function Obituaries() {
           );
           getPetList(lostPetValue);
         } else {
+          setLoading(false);
           toast.error(response.data.error);
         }
       })
@@ -41,7 +46,6 @@ function Obituaries() {
   }
 
   async function getPetList(lostPetValue) {
-    setLoading(true);
     await SublyApi.fetchPetLost(token, lostPetValue[0]._id)
       .then(async (response) => {
         setLoading(false);
@@ -137,7 +141,20 @@ function Obituaries() {
   return (
     <section className="h-screen ">
       {loading ? <Loader /> : ""}
-      <AddObituaries topMargin={""} show={show} setShow={setShow} />
+      <AddObituaries
+        topMargin={""}
+        show={show}
+        setShow={setShow}
+        setLoader={setLoading}
+        dataValue={dataValue}
+      />
+      <ObituariesDetail
+        topMargin={"marginClass"}
+        show={showDetail}
+        setShow={setShowDetail}
+        setLoading={setLoading}
+        id={dataValue?._id}
+      />
       <div className="xl:flex">
         <Sidebar />
         <div className="w-full z-0 h-screen overflow-auto">
@@ -247,7 +264,12 @@ function Obituaries() {
                 Obituaries Count {`(${petList?.length})`}
               </h3>
               {petList?.length > 0 ? (
-                <ObituariesTable list={petList} deleteHandle={deleteHandle} />
+                <ObituariesTable
+                  list={petList}
+                  deleteHandle={deleteHandle}
+                  setDataValue={setDataValue}
+                  setShowDetail={setShowDetail}
+                />
               ) : (
                 <p className="text-center text-lg font-semibold text-gray-500">
                   No Record Found

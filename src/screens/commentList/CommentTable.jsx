@@ -2,7 +2,7 @@ import moment from "moment";
 import { Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-function CommentTable({ list, deleteHandler }) {
+function CommentTable({ list, deleteHandler, setDetailValue, setShow }) {
   const navigate = useNavigate();
   return (
     <div>
@@ -62,7 +62,13 @@ function CommentTable({ list, deleteHandler }) {
                   </td> */}
                 <td>
                   <div className="flex items-center justify-center gap-3">
-                    <span className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal">
+                    <span
+                      onClick={() => {
+                        setDetailValue(item);
+                        setShow(true);
+                      }}
+                      className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal"
+                    >
                       View
                     </span>
                     <span

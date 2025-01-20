@@ -9,6 +9,7 @@ import LostPetTable from "./LostPetTable";
 import DatePicker from "react-datepicker";
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import AddLostPet from "./AddLostPet";
+import LostPetDetail from "./LostPetDetail";
 
 function LostPet() {
   const { token } = useSelector((state) => state.user.userdetail);
@@ -20,9 +21,13 @@ function LostPet() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [show, setShow] = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
+  const [dataValue, setDataValue] = useState("");
 
   useEffect(() => {
-    getCategory();
+    if (!show) {
+      getCategory();
+    }
   }, [show]);
 
   async function getCategory() {
@@ -115,11 +120,19 @@ function LostPet() {
     <section className="h-screen ">
       {loading ? <Loader /> : ""}
       <div className="xl:flex">
+        <LostPetDetail
+          topMargin={"marginClass"}
+          show={showDetail}
+          setShow={setShowDetail}
+          setLoading={setLoading}
+          id={dataValue?._id}
+        />
         <AddLostPet
           topMargin={""}
           show={show}
           setShow={setShow}
           setLoader={setLoading}
+          dataValue={dataValue}
         />
         <Sidebar />
         <div className="w-full z-0 h-screen overflow-auto">
@@ -229,7 +242,13 @@ function LostPet() {
                 Lost Pet Count {`(${petList?.length})`}
               </h3>
               {petList?.length > 0 ? (
-                <LostPetTable list={petList} deleteHandle={deleteHandle} />
+                <LostPetTable
+                  list={petList}
+                  deleteHandle={deleteHandle}
+                  setShowDetail={setShowDetail}
+                  setShow={setShow}
+                  setDataValue={setDataValue}
+                />
               ) : (
                 <p className="text-center text-lg font-semibold text-gray-500">
                   No Record Found

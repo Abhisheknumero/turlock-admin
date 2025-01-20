@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import CommentTable from "./CommentTable";
 import DatePicker from "react-datepicker";
+import CommentDetail from "./CommentDetail";
 
 function CommentList() {
   const { token } = useSelector((state) => state.user.userdetail);
@@ -16,6 +17,8 @@ function CommentList() {
   const [endDate, setEndDate] = useState("");
   const [comment, setComment] = useState("");
   const [author, setAuthor] = useState("");
+  const [detailValue, setDetailValue] = useState("");
+  const [show, setShow] = useState(false);
 
   //   =-====================Calling API for fetching comment list========================
   useEffect(() => {
@@ -76,6 +79,12 @@ function CommentList() {
 
   return (
     <section className="h-screen ">
+      <CommentDetail
+        topMargin={"marginClass"}
+        show={show}
+        setShow={setShow}
+        detailValue={detailValue}
+      />
       {loading ? <Loader /> : ""}
       <div className="xl:flex">
         <Sidebar />
@@ -168,6 +177,8 @@ function CommentList() {
                 <CommentTable
                   list={commentList}
                   deleteHandler={deleteHandler}
+                  setDetailValue={setDetailValue}
+                  setShow={setShow}
                 />
               ) : (
                 <p className="text-center text-lg font-semibold text-gray-500">

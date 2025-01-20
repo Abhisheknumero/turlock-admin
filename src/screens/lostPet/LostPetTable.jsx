@@ -1,7 +1,13 @@
 import moment from "moment";
 import { Table } from "react-bootstrap";
 
-function LostPetTable({ list, deleteHandle }) {
+function LostPetTable({
+  list,
+  deleteHandle,
+  setShowDetail,
+  setShow,
+  setDataValue,
+}) {
   return (
     <div>
       <Table bordered responsive className="!border-gray-500">
@@ -54,6 +60,24 @@ function LostPetTable({ list, deleteHandle }) {
                 </td>
                 <td>
                   <div className="flex items-center justify-center gap-3">
+                    <span
+                      onClick={() => {
+                        setShowDetail(true);
+                        setDataValue(item);
+                      }}
+                      className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal"
+                    >
+                      View
+                    </span>
+                    <span
+                      onClick={() => {
+                        setShow(true);
+                        setDataValue(item);
+                      }}
+                      className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal"
+                    >
+                      Edit
+                    </span>
                     <span
                       onClick={() => {
                         deleteHandle(item._id);

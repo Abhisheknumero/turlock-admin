@@ -1,7 +1,7 @@
 import moment from "moment";
 import { Table } from "react-bootstrap";
 
-function ObituariesTable({ list, deleteHandle }) {
+function ObituariesTable({ list, deleteHandle, setDataValue, setShowDetail }) {
   return (
     <div>
       <Table bordered responsive className="!border-gray-500">
@@ -54,6 +54,18 @@ function ObituariesTable({ list, deleteHandle }) {
                 </td>
                 <td>
                   <div className="flex items-center justify-center gap-3">
+                    <span
+                      onClick={() => {
+                        setShowDetail(true);
+                        setDataValue(item);
+                      }}
+                      className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal"
+                    >
+                      View
+                    </span>
+                    <span className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal">
+                      Edit
+                    </span>
                     <span
                       onClick={() => {
                         deleteHandle(item._id);

@@ -473,6 +473,45 @@ class SublyApi {
     let res = await this.request(`lostPet/add-lostPet`, data, "post", header);
     return res;
   }
+
+  /* ------PLAN DETAIL API-----*/
+
+  static async fetchPlanDetail(token, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `post/user-subscribed-list/${id}`,
+      undefined,
+      "get",
+      header
+    );
+    return res;
+  }
+
+  /* ------EDIT LOST PET API-----*/
+
+  static async editLostPet(token, id, data) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `lostPet/update-lostPet/${id}`,
+      data,
+      "put",
+      header
+    );
+    return res;
+  }
+
+  /* ------LOST PET DETAIL API-----*/
+
+  static async fetchPetDetail(token, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `lostPet/lostpet-detail/${id}`,
+      undefined,
+      "get",
+      header
+    );
+    return res;
+  }
 }
 
 export default SublyApi;

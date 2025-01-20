@@ -52,7 +52,10 @@ function UserTable({ list, deleteHandle }) {
                   {item?.phone || "--"}
                 </td>
                 <td>
-                  <div className="flex items-center justify-center gap-3">
+                  <div className="flex items-center justify-center gap-4">
+                    <span className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal">
+                      View
+                    </span>
                     <span
                       onClick={() => {
                         deleteHandle(item._id);

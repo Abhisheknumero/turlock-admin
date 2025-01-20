@@ -1,11 +1,12 @@
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
 import SublyApi from "../../HelperApis";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { imgBaseURL } from "../../utils/StaticsData";
 
-function AddLostPet({ topMargin, show, setShow, setLoader }) {
+function AddLostPet({ topMargin, show, setShow, setLoader, dataValue }) {
   const { userdetail } = useSelector((state) => state.user);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -13,6 +14,20 @@ function AddLostPet({ topMargin, show, setShow, setLoader }) {
   const [fileValue, setFileValue] = useState("");
   const [mediaPreview, setMediaPreview] = useState("");
   const [phone, setPhone] = useState("");
+
+  console.log("dataValue", dataValue);
+
+  // =====================prefield data for edit post=======================
+  useEffect(() => {
+    if (dataValue) {
+      setContent(dataValue?.postContent);
+      setFileValue([`${imgBaseURL}${dataValue?.postMedia}`]);
+      setMediaPreview([`${imgBaseURL}${dataValue?.postMedia}`]);
+      setName(dataValue?.applicantName);
+      setEmail(dataValue?.email);
+      setPhone(dataValue?.phoneNumber);
+    }
+  }, [dataValue]);
 
   //   ============================================================================
   async function lostPetHandle() {
@@ -31,6 +46,52 @@ function AddLostPet({ topMargin, show, setShow, setLoader }) {
           requestData.append("postContent", content);
           requestData.append("commonUpload", mediaPreview);
           await SublyApi.addLostPet(userdetail.token, requestData)
+            .then((response) => {
+              setLoader(false);
+              if (response.status == "success") {
+                setShow(false);
+                setName("");
+                setEmail("");
+                setContent("");
+                setMediaPreview("");
+                setPhone("");
+                setFileValue("");
+                toast.success(response.message);
+              } else {
+                toast.error(response.data.error);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+
+  //   ============================================================================
+  async function editLostPetHandle() {
+    setLoader(true);
+    await SublyApi.fetchCategory(userdetail?.token)
+      .then(async (response) => {
+        if (response.status == "success") {
+          const lostPetValue = response.data.filter(
+            (ele) => ele.categoryType == "lost_pet"
+          );
+          const requestData = new FormData();
+          requestData.append("categories", lostPetValue[0]?._id);
+          requestData.append("applicantName", name);
+          requestData.append("email", email);
+          requestData.append("phoneNumber", phone);
+          requestData.append("postContent", content);
+          requestData.append("commonUpload", mediaPreview);
+          await SublyApi.editLostPet(
+            userdetail.token,
+            dataValue?._id,
+            requestData
+          )
             .then((response) => {
               setLoader(false);
               if (response.status == "success") {
@@ -204,15 +265,27 @@ function AddLostPet({ topMargin, show, setShow, setLoader }) {
               >
                 Cancel
               </button>
-              <button
-                onClick={() => {
-                  lostPetHandle();
-                }}
-                style={{ border: "1px solid #d01505" }}
-                className="px-3 py-2 rounded-3xl text-base font-medium text-white bg-[#d01505] w-[120px]"
-              >
-                Create
-              </button>
+              {dataValue ? (
+                <button
+                  onClick={() => {
+                    editLostPetHandle();
+                  }}
+                  style={{ border: "1px solid #d01505" }}
+                  className="px-3 py-2 rounded-3xl text-base font-medium text-white bg-[#d01505] w-[120px]"
+                >
+                  Update
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    lostPetHandle();
+                  }}
+                  style={{ border: "1px solid #d01505" }}
+                  className="px-3 py-2 rounded-3xl text-base font-medium text-white bg-[#d01505] w-[120px]"
+                >
+                  Create
+                </button>
+              )}
             </div>
             <input
               type="file"

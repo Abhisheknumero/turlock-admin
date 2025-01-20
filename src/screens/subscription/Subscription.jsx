@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { PlansTypeList, StatusDropdown } from "./CreatePlans";
 import $ from "jquery";
 import PlansTable from "./PlansTable";
+import PlanDetail from "./PlanDetail";
 
 function Subscription() {
   const navigate = useNavigate();
@@ -24,6 +25,9 @@ function Subscription() {
   const [status, setStatus] = useState("");
   const [planValue, setPlanValue] = useState("");
   const [showDropdown, setShowDropdown] = useState("");
+  const [show, setShow] = useState(false);
+  const [planId, setPlanId] = useState("");
+
   //   ======================================================================
   useEffect(() => {
     getPlanList();
@@ -75,6 +79,12 @@ function Subscription() {
 
   return (
     <section className="overflow-auto">
+      <PlanDetail
+        show={show}
+        setShow={setShow}
+        setLoading={setLoading}
+        planId={planId}
+      />
       {loading ? <Loader /> : ""}
       <div className="xl:flex">
         <Sidebar />
@@ -203,7 +213,12 @@ function Subscription() {
                 Plans Count {`(${planList.length})`}
               </h3>
               {planList?.length > 0 ? (
-                <PlansTable planList={planList} deleteHandle={deleteHandle} />
+                <PlansTable
+                  planList={planList}
+                  deleteHandle={deleteHandle}
+                  setShow={setShow}
+                  setPlanId={setPlanId}
+                />
               ) : (
                 <p className="text-center text-lg font-semibold text-gray-500">
                   No Record Found

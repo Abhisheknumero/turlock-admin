@@ -6,6 +6,7 @@ import SublyApi from "../../HelperApis";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import UserTable from "./UserTable";
+import UserDetail from "../subscription/PlanDetail";
 
 function User() {
   const { token } = useSelector((state) => state.user.userdetail);

@@ -2,7 +2,7 @@ import moment from "moment";
 import { Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-function PlansTable({ planList, deleteHandle }) {
+function PlansTable({ planList, deleteHandle, setShow, setPlanId }) {
   const navigate = useNavigate();
   return (
     <div className="h-[calc(100vh-450px)] overflow-auto">
@@ -42,7 +42,7 @@ function PlansTable({ planList, deleteHandle }) {
                 {moment(new Date(val?.startDate)).format("MMM DD, YYYY")}
               </td>
               <td align="center" className="text-sm font-medium !text-gray-700">
-                {val?.features.map((item, index) => item + ", ") || "--"}
+                {val?.features.map((item, index) =>  item + ", ") || "--"}
               </td>
               <td align="center" className="text-sm font-medium !text-gray-700">
                 {val?.price}
@@ -55,7 +55,13 @@ function PlansTable({ planList, deleteHandle }) {
               </td>
               <td>
                 <div className="flex items-center justify-center gap-3">
-                  <span className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal">
+                  <span
+                    onClick={() => {
+                      setShow(true);
+                      setPlanId(val?._id);
+                    }}
+                    className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal"
+                  >
                     View
                   </span>
                   <span

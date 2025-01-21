@@ -745,7 +745,7 @@ function PostCreate() {
                     </label> */}
                 </div>
               )}
-              <div className="flex items-center justify-center mt-5">
+              <div className="flex items-center justify-center my-5">
                 {location.state ? (
                   <button
                     onClick={() => {

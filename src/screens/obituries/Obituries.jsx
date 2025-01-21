@@ -25,8 +25,10 @@ function Obituaries() {
   const [showDetail, setShowDetail] = useState(false);
 
   useEffect(() => {
-    getCategory();
-  }, []);
+    if (!show) {
+      getCategory();
+    }
+  }, [show]);
 
   async function getCategory() {
     setLoading(true);
@@ -269,6 +271,7 @@ function Obituaries() {
                   deleteHandle={deleteHandle}
                   setDataValue={setDataValue}
                   setShowDetail={setShowDetail}
+                  setShow={setShow}
                 />
               ) : (
                 <p className="text-center text-lg font-semibold text-gray-500">

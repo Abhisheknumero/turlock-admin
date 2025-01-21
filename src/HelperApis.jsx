@@ -512,6 +512,19 @@ class SublyApi {
     );
     return res;
   }
+
+  /* ------FETCH USER DETAIL API-----*/
+
+  static async fetchUserDetail(token, id) {
+    let header = { Authorization: `Bearer ${token}` };
+    let res = await this.request(
+      `auth/userdetails/${id}`,
+      undefined,
+      "get",
+      header
+    );
+    return res;
+  }
 }
 
 export default SublyApi;

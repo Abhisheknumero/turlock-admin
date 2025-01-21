@@ -6,7 +6,7 @@ import SublyApi from "../../HelperApis";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import UserTable from "./UserTable";
-import UserDetail from "../subscription/PlanDetail";
+import UserDetail from "./UserDetail";
 
 function User() {
   const { token } = useSelector((state) => state.user.userdetail);
@@ -16,6 +16,8 @@ function User() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [show, setShow] = useState(false);
+  const [userValue, setUserValue] = useState("");
 
   useEffect(() => {
     getUserList();
@@ -76,6 +78,13 @@ function User() {
 
   return (
     <section className="h-screen ">
+      <UserDetail
+        topMargin={"marginClass"}
+        show={show}
+        setShow={setShow}
+        id={userValue._id}
+        setLoading={setLoading}
+      />
       {loading ? <Loader /> : ""}
       <div className="xl:flex">
         <Sidebar />
@@ -163,7 +172,12 @@ function User() {
                 Users Count {`(${userList?.length})`}
               </h3>
               {userList?.length > 0 ? (
-                <UserTable list={userList} deleteHandle={deleteHandle} />
+                <UserTable
+                  list={userList}
+                  deleteHandle={deleteHandle}
+                  setShow={setShow}
+                  setUserValue={setUserValue}
+                />
               ) : (
                 <p className="text-center text-lg font-semibold text-gray-500">
                   No Record Found

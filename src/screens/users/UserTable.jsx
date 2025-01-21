@@ -1,6 +1,6 @@
 import { Table } from "react-bootstrap";
 
-function UserTable({ list, deleteHandle }) {
+function UserTable({ list, deleteHandle, setShow, setUserValue }) {
   return (
     <div>
       <Table bordered responsive className="!border-gray-500">
@@ -53,7 +53,13 @@ function UserTable({ list, deleteHandle }) {
                 </td>
                 <td>
                   <div className="flex items-center justify-center gap-4">
-                    <span className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal">
+                    <span
+                      onClick={() => {
+                        setShow(true);
+                        setUserValue(item);
+                      }}
+                      className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal"
+                    >
                       View
                     </span>
                     <span

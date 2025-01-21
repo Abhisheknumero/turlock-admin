@@ -39,5 +39,7 @@ export const postType = [
   { id: "Politics", key: "Politics" },
 ];
 
-export const imgBaseURL = "http://3.19.221.85:3000/";
-// export const imgBaseURL = "http://192.168.29.221:3000/";
+// export const imgBaseURL = "http://3.19.221.85:3000/";
+// export const imgBaseURL = "http://192.168.29.221:3001/";
+export const imgBaseURL = "http://192.168.29.161:3001/";
+

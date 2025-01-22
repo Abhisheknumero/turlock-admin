@@ -365,8 +365,8 @@ function CreateBannerAds() {
                     onClick={() => {
                       bannerEditHandler();
                     }}
-                    style={{ border: "1px solid #D10505" }}
-                    className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#D10505] m-auto w-[30%] max-lg:w-full"
+                    style={{ border: "1px solid #6418C3" }}
+                    className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#6418C3] m-auto w-[30%] max-lg:w-full"
                   >
                     Update
                   </button>
@@ -375,8 +375,8 @@ function CreateBannerAds() {
                     onClick={() => {
                       bannerHandler();
                     }}
-                    style={{ border: "1px solid #D10505" }}
-                    className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#D10505] m-auto w-[30%] max-lg:w-full"
+                    style={{ border: "1px solid #6418C3" }}
+                    className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#6418C3] m-auto w-[30%] max-lg:w-full"
                   >
                     Create
                   </button>
@@ -409,7 +409,7 @@ function BannerType({ setBannerType }) {
         onClick={() => {
           setBannerType("Right Banner");
         }}
-        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
       >
         Right Banner
       </p>
@@ -417,7 +417,7 @@ function BannerType({ setBannerType }) {
         onClick={() => {
           setBannerType("Left Banner");
         }}
-        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
       >
         Left Banner
       </p>

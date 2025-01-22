@@ -147,9 +147,9 @@ function CreateCategory() {
                   }}
                   className={`${
                     location.pathname.includes("/Post-List")
-                      ? "bg-[#D10505] text-white"
+                      ? "bg-[#6418C3] text-white"
                       : "buttonClass"
-                  } ${"w-28 text-sm rounded-md px-2 py-2 font-medium hover:border-[#D10505] relative"}`}
+                  } ${"w-28 text-sm rounded-md px-2 py-2 font-medium hover:border-[#6418C3] relative"}`}
                 >
                   Post
                 </button>
@@ -159,9 +159,9 @@ function CreateCategory() {
                   }}
                   className={`${
                     location.pathname.includes("/Post/Category")
-                      ? "bg-[#D10505] text-white"
+                      ? "bg-[#6418C3] text-white"
                       : "buttonClass"
-                  } ${"w-28 text-sm rounded-md px-2 py-2 font-medium hover:border-[#D10505] relative"}`}
+                  } ${"w-28 text-sm rounded-md px-2 py-2 font-medium hover:border-[#6418C3] relative"}`}
                 >
                   Post Category
                 </button>
@@ -233,13 +233,13 @@ function CreateCategory() {
                       }}
                       checked={isActive}
                       offColor="#a5a5a5"
-                      onColor="#D10505"
+                      onColor="#6418C3"
                       uncheckedIcon={false}
                       checkedIcon={false}
                       width={40}
                       height={20}
-                      boxShadow="0 0 2px 3px #D10505"
-                      activeBoxShadow="0 0 2px 3px #D10505"
+                      boxShadow="0 0 2px 3px #6418C3"
+                      activeBoxShadow="0 0 2px 3px #6418C3"
                     />
                   </label>
                 </div>
@@ -308,7 +308,7 @@ function CreateCategory() {
                     setIsActive(false);
                     navigate("/Post/Category");
                   }}
-                  style={{ border: "1px solid #D10505" }}
+                  style={{ border: "1px solid #6418C3" }}
                   className="px-3 py-1.5 rounded-3xl font-normal text-md text-black bg-gray-100 w-[120px]"
                 >
                   Cancel
@@ -318,8 +318,8 @@ function CreateCategory() {
                     onClick={() => {
                       updateHandler();
                     }}
-                    style={{ border: "1px solid #D10505" }}
-                    className="px-3 py-1.5 rounded-3xl font-normal text-md text-white bg-[#D10505] w-[120px]"
+                    style={{ border: "1px solid #6418C3" }}
+                    className="px-3 py-1.5 rounded-3xl font-normal text-md text-white bg-[#6418C3] w-[120px]"
                   >
                     Update
                   </button>
@@ -328,8 +328,8 @@ function CreateCategory() {
                     onClick={() => {
                       categoryHandler();
                     }}
-                    style={{ border: "1px solid #D10505" }}
-                    className="px-3 py-1.5 rounded-3xl font-normal text-md text-white bg-[#D10505] w-[120px]"
+                    style={{ border: "1px solid #6418C3" }}
+                    className="px-3 py-1.5 rounded-3xl font-normal text-md text-white bg-[#6418C3] w-[120px]"
                   >
                     Create
                   </button>
@@ -362,7 +362,7 @@ function CategoryType({ setCategoryType }) {
           onClick={() => {
             setCategoryType({ id: item.id, key: item.key });
           }}
-          className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+          className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
           key={index}
         >
           {item.key}

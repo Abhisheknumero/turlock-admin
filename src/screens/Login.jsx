@@ -145,12 +145,12 @@ function Login() {
                 {errorMessage?.password}
               </p>
             </div>
-            {/* <p className="text-[#D10505] cursor-pointer font-medium text-sm text-end m-2">
+            {/* <p className="text-[#6418C3] cursor-pointer font-medium text-sm text-end m-2">
               Forget password
             </p> */}
             <button
               type="submit"
-              className="bg-[#D10505] text-white text-lg font-semibold py-2 px-3 rounded-3xl my-3"
+              className="bg-[#6418C3] text-white text-lg font-semibold py-2 px-3 rounded-3xl my-3"
             >
               Login
             </button>

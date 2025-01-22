@@ -7,7 +7,7 @@ function ArticleBox({ recentArticle }) {
         <p className="mb-0 text-md font-bold text-gray-600 pb-3">
           Recent Articles
         </p>
-        {/* <p className="mb-0 text-md font-normal text-[#D10505] border-b-2 border-[#D10505] w-[10%] text-center pb-3">
+        {/* <p className="mb-0 text-md font-normal text-[#6418C3] border-b-2 border-[#6418C3] w-[10%] text-center pb-3">
           All
         </p> */}
       </div>
@@ -18,7 +18,7 @@ function ArticleBox({ recentArticle }) {
             icon="gg:arrow-down-o"
             width="20"
             height="20"
-            style={{ color: "#D10505" }}
+            style={{ color: "#6418C3" }}
             className="w-[10%]"
           />
           <div className="w-[40%]">

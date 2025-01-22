@@ -75,7 +75,7 @@ function CategoryTable({
                         setCategoryId(item._id);
                         setCategoryDetail(true);
                       }}
-                      className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-3 rounded-sm font-normal"
+                      className="text-[#6418C3] cursor-pointer bg-[#6418C333] text-sm px-3 rounded-sm font-normal"
                     >
                       View
                     </span>
@@ -84,18 +84,18 @@ function CategoryTable({
                         setEdit(true);
                         setPreFieldData(item);
                       }}
-                      className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-3 rounded-sm font-normal"
+                      className="text-[#6418C3] cursor-pointer bg-[#6418C333] text-sm px-3 rounded-sm font-normal"
                     >
                       Edit
                     </span>
-                    {/* <span
+                    <span
                       onClick={() => {
                         deleteHandler(item._id);
                       }}
-                      className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal"
+                      className="text-[#6418C3] cursor-pointer bg-[#6418C333] text-sm px-2 rounded-sm font-normal"
                     >
                       Delete
-                    </span> */}
+                    </span>
                   </div>
                 </td>
               </tr>

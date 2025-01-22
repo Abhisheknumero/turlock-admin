@@ -1,7 +1,6 @@
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import Header from "../../components/Header";
 import PostTable from "../../components/PostTable";
-import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import SublyApi from "../../HelperApis";
@@ -12,11 +11,9 @@ import PostDetail from "../../components/PostDetail";
 import CreateCategory from "../../components/CreateCategory";
 import DatePicker from "react-datepicker";
 import $ from "jquery";
-import ReactPaginate from "react-paginate";
+import CreatePostModal from "./CreatePostModal";
 
 function Post() {
-  const location = useLocation();
-  const navigate = useNavigate();
   const { token } = useSelector((state) => state.user.userdetail);
   const [showDropdown, setShowDropdown] = useState({
     type: false,
@@ -34,6 +31,16 @@ function Post() {
   const [categorytype, setCategoryType] = useState("");
   const [filterValue, setFilterValue] = useState("");
   const [title, setTitle] = useState("");
+  const [show, setShow] = useState(false);
+
+  const getInitials = (userName) => {
+    const names = userName.split(" ");
+    let initials = names[0].substring(0, 1).toUpperCase();
+    if (names.length > 1) {
+      initials += names[names.length - 1].substring(0, 1).toUpperCase();
+    }
+    return initials;
+  };
 
   // ===================Calling API for fetch post list=====================
   useEffect(() => {
@@ -45,13 +52,23 @@ function Post() {
       .then((response) => {
         setLoading(false);
         if (response.status == "success") {
-          setPostList(response.data);
+          const list = response.data.map((val, index) => {
+            const initials = getInitials(val?.postType || "Post");
+            const imgvalue = `https://ui-avatars.com/api/?name=${initials}&background=6418c3b8&color=fff&bold=true`; // Set fallback image
+            response.data[index] = {
+              ...response.data[index],
+              imgValue: imgvalue,
+            };
+            setPostList(response.data);
+          });
         } else {
           toast.error(response.data.error);
         }
       })
       .catch((err) => console.log(err));
   }
+
+  console.log("postList", postList);
 
   // ====================API for fetch category list=====================
   useEffect(() => {
@@ -121,8 +138,6 @@ function Post() {
       });
   }
 
-  
-
   return (
     <section className="overflow-auto">
       <PostDetail
@@ -138,6 +153,12 @@ function Post() {
         topMargin={"marginClass"}
         setLoading={setLoading}
       />
+      <CreatePostModal
+        topMargin={"marginClass"}
+        setShow={setShow}
+        show={show}
+        setLoading={setLoading}
+      />
       {loading ? <Loader /> : ""}
       <div className="xl:flex">
         <Sidebar />
@@ -149,50 +170,28 @@ function Post() {
               <div className="flex items-center gap-2 flex-wrap">
                 <button
                   onClick={() => {
-                    navigate("/Post/Post-List");
+                    setShow(true);
                   }}
-                  className={`${
-                    location.pathname.includes("/Post-List")
-                      ? "bg-[#D10505] text-white"
-                      : "buttonClass"
-                  } ${"w-28 text-sm rounded-md px-2 py-2 font-medium hover:border-[#D10505] relative"}`}
+                  className={`${"bg-[#6418C3] text-white"} ${"w-[160px] text-base rounded-md px-2 py-2 font-medium hover:border-[#6418C3] flex items-center justify-center gap-1"}`}
                 >
-                  Post
+                  <Icon icon="fluent:add-16-filled" width="25" height="25" />
+                  Create Post
                 </button>
-                <button
-                  onClick={() => {
-                    navigate("/Post/Category");
-                  }}
-                  className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none"
-                >
-                  Post Category
-                </button>
-                {/*<button className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none">
-                  Category Type
-                </button>
-                <button className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none">
-                  Post Type
-                </button>
-                <button className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none">
-                  Tag
-                </button>
-                <button className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none">
-                  Tag Type
-                </button> */}
               </div>
             </div>
             <div className="flex items-center justify-end w-full my-2">
-              <button
+              {/* <button
                 onClick={() => {
-                  navigate("/Post/Create");
+                  // navigate("/Post/Create");
+                  setShow(true);
                 }}
-                className="w-38 text-base rounded-md px-2 py-2 relative font-medium hover:border-none border-none flex items-center gap-2 hover:text-[#D10505] createBtn"
+                className="w-38 text-base rounded-md px-2 py-2 relative font-medium hover:border-none border-none flex items-center gap-2 hover:text-[#6418C3] createBtn"
               >
                 <Icon icon="ion:add-outline" width="30" height="27" />
                 Create Post
-              </button>
+              </button> */}
             </div>
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <h3 className="text-gray-600 font-bold text-base my-3">
                 Advanced Search
               </h3>
@@ -326,7 +325,7 @@ function Post() {
                   </button>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="mb-5">
               <h3 className="text-gray-600 font-bold text-base my-3">
                 Post Count {`(${postList?.length})`}
@@ -363,7 +362,7 @@ export function FilterDropdown({ setFilterValue, filterValue }) {
             subscription: { subValue: "Free", id: 1 },
           });
         }}
-        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
       >
         Free
       </p>
@@ -386,7 +385,7 @@ function CategoryType({ categoryList, setFilterValue, filterValue }) {
                     category: { name: item.categoryName, id: item._id },
                   });
                 }}
-                className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+                className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
                 key={index}
               >
                 {item.categoryName}

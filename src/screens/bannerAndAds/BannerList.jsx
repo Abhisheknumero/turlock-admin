@@ -115,7 +115,7 @@ function BannerList() {
                 onClick={() => {
                   navigate("/Banner/Create");
                 }}
-                className="w-38 text-base rounded-md px-2 py-2 relative font-medium hover:border-none border-none flex items-center gap-2 hover:text-[#D10505] createBtn"
+                className="w-38 text-base rounded-md px-2 py-2 relative font-medium hover:border-none border-none flex items-center gap-2 hover:text-[#6418C3] createBtn"
               >
                 <Icon icon="ion:add-outline" width="30" height="27" />
                 Create Banner
@@ -247,7 +247,7 @@ function BannerType({ setTypeValue }) {
         onClick={() => {
           setTypeValue("Right Banner");
         }}
-        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
       >
         Right Banner
       </p>
@@ -255,7 +255,7 @@ function BannerType({ setTypeValue }) {
         onClick={() => {
           setTypeValue("Left Banner");
         }}
-        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
       >
         Left Banner
       </p>

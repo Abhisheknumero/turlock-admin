@@ -136,7 +136,7 @@
 
 .buttonClass:hover {
   color: white;
-  background-color: transparent;
+  background-color: #6418C3;
 }
 
 .buttonClass::before {
@@ -161,7 +161,7 @@
   left: 0;
   width: 200px;
   height: 200px;
-  background-color: #d10505;
+  background-color: #6418C3;
   border-color: transparent;
   border-radius: 50%;
   transform: translate(-10px, -70px) scale(0.1);
@@ -220,7 +220,7 @@
   height: 3px;
   bottom: 0;
   right: 5px;
-  background-color: #d10505;
+  background-color: #6418C3;
   transform-origin: bottom right;
   transition: transform 0.5s ease-out;
 }

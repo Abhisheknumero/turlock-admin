@@ -9,35 +9,13 @@ import { imgBaseURL } from "../../utils/StaticsData";
 function UserDetail({ topMargin, show, setShow, id, setLoading }) {
   const { userdetail } = useSelector((state) => state.user);
   const [detailValue, setDetailValue] = useState("");
+  const [imageValue, setImageValue] = useState("");
 
   useEffect(() => {
     if (id && show) {
       planDetailHandle();
     }
   }, [show]);
-
-  async function planDetailHandle() {
-    setLoading(true);
-    await SublyApi.fetchUserDetail(userdetail.token, id)
-      .then((response) => {
-        setLoading(false);
-        if (response.status == "success") {
-          setDetailValue(response.data);
-        } else {
-          toast.error(response.data.error);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  const handleImageError = (e, contact) => {
-    const initials = getInitials(
-      detailValue?.firstName + " " + detailValue?.lastName || "User"
-    );
-    e.target.src = `https://ui-avatars.com/api/?name=${initials}&background=3b82f6&color=fff&bold=true`; // Set fallback image
-  };
 
   const getInitials = (userName) => {
     const names = userName.split(" ");
@@ -48,7 +26,26 @@ function UserDetail({ topMargin, show, setShow, id, setLoading }) {
     return initials;
   };
 
-  console.log("detailValue", detailValue);
+  async function planDetailHandle() {
+    setLoading(true);
+    await SublyApi.fetchUserDetail(userdetail.token, id)
+      .then((response) => {
+        setLoading(false);
+        if (response.status == "success") {
+          setDetailValue(response.data);
+          const initials = getInitials(
+            response.data?.firstName + " " + response.data?.lastName || "User"
+          );
+          const imgvalue = `https://ui-avatars.com/api/?name=${initials}&background=6418c330&color=fff&bold=true`; // Set fallback image
+          setImageValue(imgvalue);
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   return (
     <Modal
@@ -70,7 +67,11 @@ function UserDetail({ topMargin, show, setShow, id, setLoading }) {
               {/* {detailValue?.profileImage && ( */}
               <div className="w-[150px] h-[150px] mb-3">
                 <img
-                  src={`${imgBaseURL}${detailValue?.profileImage}`}
+                  src={
+                    detailValue?.profileImage
+                      ? `${imgBaseURL}${detailValue?.profileImage}`
+                      : imageValue
+                  }
                   className="w-full h-full object-cover rounded-xl"
                   alt="profile"
                   onError={(event) => handleImageError(event, contact)}

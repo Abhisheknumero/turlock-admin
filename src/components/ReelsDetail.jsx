@@ -74,9 +74,15 @@ function ReelsDetail({ show, setShow, topMargin, id, setLoading }) {
                 <p className="mb-0 text-white text-base">
                   {detailValue?.postTitle}
                 </p>
-                <p className="text-gray-100 text-sm mb-0">
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: detailValue?.postContent,
+                  }}
+                  className={`${"text-gray-100 text-sm mb-0 max-h-[80px] overflow-auto"}`}
+                />
+                {/* <p className="text-gray-100 text-sm mb-0">
                   {detailValue?.postContent}{" "}
-                </p>
+                </p> */}
                 {detailValue?.postTag?.map((item, index) => (
                   <span key={index} className="text-gray-300 text-sm">
                     {item}{" "}

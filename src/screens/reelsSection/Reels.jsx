@@ -140,7 +140,7 @@ function Reels() {
                   onClick={() => {
                     navigate("/Reels/Create");
                   }}
-                  className="w-38 text-base rounded-md px-2 py-2 font-medium hover:border-none border-none flex items-center gap-2 hover:text-[#D10505] createBtn"
+                  className="w-38 text-base rounded-md px-2 py-2 font-medium hover:border-none border-none flex items-center gap-2 hover:text-[#6418C3] createBtn"
                 >
                   <Icon icon="ion:add-outline" width="30" height="27" />
                   Create Reels

@@ -67,7 +67,7 @@ function CreateMediaCategory({ setShow, show, topMargin, setLoading }) {
                   setShow(false);
                   setTitle("");
                 }}
-                style={{ border: "1px solid #D10505" }}
+                style={{ border: "1px solid #6418C3" }}
                 className="px-3 py-1.5 rounded-3xl font-normal text-md text-black bg-gray-100 w-[120px]"
               >
                 Cancel
@@ -77,8 +77,8 @@ function CreateMediaCategory({ setShow, show, topMargin, setLoading }) {
                 onClick={() => {
                   createCategoryMedia();
                 }}
-                style={{ border: "1px solid #D10505" }}
-                className="px-3 py-1.5 rounded-3xl font-normal text-md text-white bg-[#D10505] w-[120px]"
+                style={{ border: "1px solid #6418C3" }}
+                className="px-3 py-1.5 rounded-3xl font-normal text-md text-white bg-[#6418C3] w-[120px]"
               >
                 Add
               </button>

@@ -135,9 +135,9 @@ function Category() {
                   }}
                   className={`${
                     location.pathname.includes("/Post/Post-List")
-                      ? "bg-[#D10505] text-white"
+                      ? "bg-[#6418C3] text-white"
                       : "buttonClass"
-                  } ${"w-28 text-sm rounded-md px-2 py-2 font-medium hover:border-[#D10505] relative"}`}
+                  } ${"w-28 text-sm rounded-md px-2 py-2 font-medium hover:border-[#6418C3] relative"}`}
                 >
                   Post
                 </button>
@@ -147,9 +147,9 @@ function Category() {
                   }}
                   className={`${
                     location.pathname.includes("/Category")
-                      ? "bg-[#D10505] text-white"
+                      ? "bg-[#6418C3] text-white"
                       : "buttonClass"
-                  } ${"w-28 text-sm rounded-md px-2 py-2 font-medium hover:border-[#D10505] relative"}`}
+                  } ${"w-28 text-sm rounded-md px-2 py-2 font-medium hover:border-[#6418C3] relative"}`}
                 >
                   Post Category
                 </button>
@@ -172,7 +172,7 @@ function Category() {
                 onClick={() => {
                   setCreateCategory(true);
                 }}
-                className="w-38 text-base rounded-md px-2 py-2 relative font-medium hover:border-none border-none flex items-center gap-2 hover:text-[#D10505] createBtn"
+                className="w-38 text-base rounded-md px-2 py-2 relative font-medium hover:border-none border-none flex items-center gap-2 hover:text-[#6418C3] createBtn"
               >
                 <Icon icon="ion:add-outline" width="30" height="27" />
                 Create Category
@@ -308,7 +308,7 @@ function StatusDropdown({ setStatusValue }) {
         onClick={() => {
           setStatusValue("Active");
         }}
-        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
       >
         Active
       </p>
@@ -316,7 +316,7 @@ function StatusDropdown({ setStatusValue }) {
         onClick={() => {
           setStatusValue("Inactive");
         }}
-        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
       >
         Inactive
       </p>

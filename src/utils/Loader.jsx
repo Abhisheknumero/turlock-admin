@@ -6,7 +6,7 @@ export function Loader() {
       <div className="flex items-center justify-center w-full h-full bg-[#ffffff8a]">
         <Icon
           icon="eos-icons:three-dots-loading"
-          style={{ color: "#D10505" }}
+          style={{ color: "#6418C3" }}
           width={100}
         />
       </div>

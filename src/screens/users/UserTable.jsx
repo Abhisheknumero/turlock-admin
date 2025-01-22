@@ -58,7 +58,7 @@ function UserTable({ list, deleteHandle, setShow, setUserValue }) {
                         setShow(true);
                         setUserValue(item);
                       }}
-                      className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal"
+                      className="text-[#6418C3] cursor-pointer bg-[#6418C333] text-sm px-2 rounded-sm font-normal"
                     >
                       View
                     </span>
@@ -66,7 +66,7 @@ function UserTable({ list, deleteHandle, setShow, setUserValue }) {
                       onClick={() => {
                         deleteHandle(item._id);
                       }}
-                      className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal"
+                      className="text-[#6418C3] cursor-pointer bg-[#6418C333] text-sm px-2 rounded-sm font-normal"
                     >
                       Delete
                     </span>

@@ -400,7 +400,7 @@ function CategoryType({ setShow, categoryList, setCategoryValue }) {
         onClick={() => {
           setShow(true);
         }}
-        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer flex items-center gap-2"
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer flex items-center gap-2"
       >
         <Icon icon="fluent:add-20-regular" width="22" height="22" />
         Add Category
@@ -411,7 +411,7 @@ function CategoryType({ setShow, categoryList, setCategoryValue }) {
             onClick={() => {
               setCategoryValue({ id: item._id, key: item?.categoryName });
             }}
-            className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+            className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
             key={index}
           >
             {item.categoryName}

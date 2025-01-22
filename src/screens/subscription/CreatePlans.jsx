@@ -313,8 +313,8 @@ function CreatePlans() {
                       onClick={() => {
                         updatePlanHandle();
                       }}
-                      style={{ border: "1px solid #D10505" }}
-                      className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#D10505] m-auto w-[40%] max-lg:w-full"
+                      style={{ border: "1px solid #6418C3" }}
+                      className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#6418C3] m-auto w-[40%] max-lg:w-full"
                     >
                       Update
                     </button>
@@ -323,8 +323,8 @@ function CreatePlans() {
                       onClick={() => {
                         createPlanHandle();
                       }}
-                      style={{ border: "1px solid #D10505" }}
-                      className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#D10505] m-auto w-[40%] max-lg:w-full"
+                      style={{ border: "1px solid #6418C3" }}
+                      className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#6418C3] m-auto w-[40%] max-lg:w-full"
                     >
                       Create
                     </button>
@@ -348,7 +348,7 @@ export function StatusDropdown({ setActive }) {
         onClick={() => {
           setActive({ name: "Active", key: "active" });
         }}
-        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
       >
         Active
       </p>
@@ -356,7 +356,7 @@ export function StatusDropdown({ setActive }) {
         onClick={() => {
           setActive({ name: "Inactive", key: "inactive" });
         }}
-        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
       >
         Inactive
       </p>
@@ -378,7 +378,7 @@ export function PlansTypeList({ setPlanValue }) {
           onClick={() => {
             setPlanValue({ name: item?.name, key: item?.key });
           }}
-          className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+          className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
         >
           {item?.name}
         </p>

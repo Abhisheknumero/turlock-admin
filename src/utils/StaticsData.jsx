@@ -33,7 +33,9 @@ export const categoryType = [
 ];
 
 export const postType = [
+  { id: "Local_News", key: "Local News" },
   { id: "Breaking", key: "Breaking" },
+  { id: "Financial", key: "Financial" },
   { id: "Investigative", key: "Investigative" },
   { id: "Crime", key: "Crime" },
   { id: "Politics", key: "Politics" },
@@ -42,4 +44,3 @@ export const postType = [
 // export const imgBaseURL = "http://3.19.221.85:3000/";
 // export const imgBaseURL = "http://192.168.29.221:3001/";
 export const imgBaseURL = "http://192.168.29.161:3001/";
-

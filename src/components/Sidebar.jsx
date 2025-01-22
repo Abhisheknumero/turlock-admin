@@ -36,7 +36,7 @@ function Sidebar() {
               onClick={() => {
                 setShow(true);
               }}
-              className="hover:text-[#D10505] cursor-pointer"
+              className="hover:text-[#6418C3] cursor-pointer"
             />
           </div>
           <div className="p-3 max-xl:bg-white max-xl:hidden">
@@ -52,8 +52,8 @@ function Sidebar() {
                 }}
                 className={`${
                   location.pathname.includes(item.location)
-                    ? "text-[#D10505] bg-[#ff6d6d33] rounded-full"
-                    : "hover:text-[#D10505] hover:bg-[#ff6d6d33] hover:rounded-full"
+                    ? "text-[#6418C3] bg-[#6418c330] rounded-full"
+                    : "hover:text-[#6418C3] hover:bg-[#6418c330] hover:rounded-full"
                 } ${"flex items-center justify-center p-3.5 cursor-pointer"}`}
               >
                 <Icon icon={item.icon} width="20" height="20" />
@@ -88,8 +88,8 @@ function Sidebar() {
               }}
               className={`${
                 location.pathname.includes(item.location)
-                  ? "text-[#D10505] bg-[#ff6d6d33] rounded-e-full"
-                  : "hover:text-[#D10505] hover:bg-[#ff6d6d33] hover:rounded-e-full"
+                  ? "text-[#6418C3] bg-[#6418c330] rounded-e-full"
+                  : "hover:text-[#6418C3] hover:bg-[#6418c330] hover:rounded-e-full"
               } ${"flex items-center gap-3 cursor-pointer px-3 py-2.5"}`}
             >
               <Icon icon={item.icon} width="20" height="20" />

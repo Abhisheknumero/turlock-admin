@@ -1,23 +1,21 @@
+import { Modal } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import Sidebar from "../../components/Sidebar";
-import { Loader } from "../../utils/Loader";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import SublyApi from "../../HelperApis";
-import $ from "jquery";
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
-import { Col, Row } from "react-bootstrap";
-import placeholder from "../../assets/video-placeholder.png";
-import { toast } from "react-toastify";
-import { categoryType, imgBaseURL } from "../../utils/StaticsData";
+import { useEffect, useState } from "react";
 import CreateCategory from "../../components/CreateCategory";
+import { Loader } from "../../utils/Loader";
+import SublyApi from "../../HelperApis";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import $ from "jquery";
+import { imgBaseURL, postType } from "../../utils/StaticsData";
 import ReactQuill from "react-quill";
 
-function CreateReels() {
+function CreatePostModal({ topMargin, show, setShow }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [loading, setLoading] = useState(false);
   const { token } = useSelector((state) => state.user.userdetail);
   const [showDropdown, setShowDropdown] = useState({
     type: false,
@@ -26,52 +24,41 @@ function CreateReels() {
   });
   const [fileValue, setFileValue] = useState("");
   const [mediaPreview, setMediaPreview] = useState("");
+  const [categoryModal, setCategoryModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [categoryList, setCategoryList] = useState("");
   const [description, setDescription] = useState("");
   const [categoryValue, setCategoryValue] = useState("");
   const [postTitle, setPostTitle] = useState("");
-  const [categoryList, setCategoryList] = useState("");
+  const [linkTitle, setLinkTitle] = useState("");
+  const [subValue, setSubValue] = useState("");
+  const [link, setlink] = useState("");
   const [postTag, setPostTag] = useState([]);
   const [postTagValue, setPostTagValue] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [isCategory, setIsCategory] = useState(false);
-  const [subValue, setSubValue] = useState("");
-  const [mediaObject, setMediaObject] = useState("");
-  const [thumbnail, setThumbnail] = useState("");
+  const [postType, setPostType] = useState("");
+  const [value, setValue] = useState("");
+
+  console.log("value", value);
 
   // =====================prefield data for edit post=======================
   useEffect(() => {
     if (location.state) {
       setDescription(location.state?.postContent);
-      setFileValue(`${imgBaseURL}${location.state?.postThumbnail}`);
-      setMediaPreview(`${imgBaseURL}${location.state?.postMedia}`);
-      setMediaObject(`${imgBaseURL}${location.state?.postMedia}`);
-      setThumbnail(`${imgBaseURL}${location.state?.postThumbnail}`);
+      setFileValue([`${imgBaseURL}${location.state?.postMedia}`]);
+      setMediaPreview([`${imgBaseURL}${location.state?.postMedia}`]);
       const tags = location.state?.postTag[0].split(",");
       setPostTag(tags);
+      setlink(location.state?.externalLink?.link);
+      setLinkTitle(location.state?.externalLink?.title);
       setSubValue({ subValue: location.state?.subscription });
+      setCategoryValue({
+        id: location?.state?.categories?._id,
+        key: location?.state?.categories?.categoryName,
+      });
       setPostTitle(location?.state?.postTitle);
+      setPostType(location.state?.postType);
     }
   }, [location.state]);
-
-  function base64ToFile(base64String, fileName) {
-    // Decode the Base64 string into binary data
-    const byteString = atob(base64String.split(",")[1]); // Get the data portion after 'base64,'
-    const mimeType = base64String.match(/data:(.*?);base64/)[1]; // Extract MIME type
-
-    // Convert binary data to an array of bytes
-    const byteArray = new Uint8Array(byteString.length);
-    for (let i = 0; i < byteString.length; i++) {
-      byteArray[i] = byteString.charCodeAt(i);
-    }
-
-    // Create a Blob from the byte array
-    const blob = new Blob([byteArray], { type: mimeType });
-
-    // Convert the Blob to a File
-    const file = new File([blob], fileName, { type: mimeType });
-    setThumbnail(file);
-    console.log("file", file);
-  }
 
   // ====function to hide dropdown on click outside====
   $(document).mouseup(function (e) {
@@ -83,17 +70,61 @@ function CreateReels() {
     }
   });
 
-  // console.log("fileValue");
-
   // =================================Media handler======================================\
 
-  const mediaHandler = (event) => {
-    const file = event.target.files[0];
-    setMediaObject(file);
-    const url = URL.createObjectURL(file);
-    setMediaPreview(url);
-    generateVideoThumbnails(file);
+  const mediaHandler = async (e) => {
+    let profileImageData = [...mediaPreview];
+    let profileViewData = [...fileValue];
+    let fileReader,
+      isCancel = false;
+    if (e.target.files && e.target.files.length > 0) {
+      if (e.target.files[0].type.includes("image")) {
+        const file = [e.target.files];
+        Object.values(file[0]).map((item, index) => {
+          profileImageData.push(item);
+        });
+        setMediaPreview(profileImageData);
+        await Object.values(file[0]).map(async (item, index) => {
+          if (e.target.files && e.target.files.length > 0) {
+            fileReader = new FileReader();
+            fileReader.onload = async (e) => {
+              const { result } = e.target;
+              if (item.type.includes("image")) {
+                if (result && !isCancel) {
+                  await profileViewData.push(result);
+                  await setFileValue(profileViewData);
+                }
+              } else {
+                if (result && !isCancel) {
+                  await profileViewData.push(result);
+                  await setFileValue(profileViewData);
+                }
+              }
+            };
+            fileReader.readAsDataURL(item);
+          }
+        });
+      } else {
+        const file = [e.target.files];
+        Object.values(file[0]).map((item, index) => {
+          profileImageData.push(item);
+        });
+        setMediaPreview(profileImageData);
+        // importFileandPreview(e.target.files);
+        generateVideoThumbnails(e.target.files[0], 1);
+      }
+    }
   };
+
+  // ==============================Function for handling removing image===================================
+  async function onImageRemove(index) {
+    let profileimages = [...fileValue];
+    profileimages.splice(index, 1);
+    setFileValue(profileimages);
+    let profileImageData = [...mediaPreview];
+    profileImageData.splice(index, 1);
+    setMediaPreview(profileImageData);
+  }
 
   // ======================================generating video thumbnail==========================================
   const importFileandPreview = (file, revoke) => {
@@ -111,6 +142,7 @@ function CreateReels() {
   };
 
   const generateVideoThumbnails = async (videoFile) => {
+    let thumbnail = [...fileValue];
     let fractions = [];
     return new Promise(async (resolve, reject) => {
       if (!videoFile.type?.includes("video")) reject("not a valid video file");
@@ -129,17 +161,17 @@ function CreateReels() {
         await Promise.all(promiseArray)
           .then((res) => {
             res.forEach((res) => {
-              base64ToFile(res, "image.png");
-              setFileValue(res);
+              thumbnail.push({ url: res, type: "video" });
+              setFileValue(thumbnail);
             });
-            resolve(fileValue);
+            resolve(thumbnail);
           })
           .catch((err) => {
             console.error(err);
           })
           .finally((res) => {
             console.log(res);
-            resolve(fileValue);
+            resolve(thumbnail);
           });
       });
       reject("something went wront");
@@ -218,10 +250,92 @@ function CreateReels() {
     });
   };
 
-  // ==============================Function for handling removing image===================================
-  async function onImageRemove() {
-    setFileValue("");
-    setMediaPreview("");
+  // =============================================================================================
+
+  useEffect(() => {
+    async function getCategory() {
+      await SublyApi.fetchCategory(token)
+        .then((response) => {
+          if (response.status == "success") {
+            setCategoryList(response.data);
+          } else {
+            toast.error(response.data.error);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+    getCategory();
+  }, [categoryModal]);
+
+  // =================================Create post API handler===================================
+  async function createPostHandle() {
+    const regExValue =
+      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+    if (link.match(regExValue)) {
+      setLoading(true);
+      const requestData = new FormData();
+      requestData.append("categories", categoryValue.id);
+      requestData.append("postType", postType);
+      requestData.append("postTitle", postTitle);
+      requestData.append("postContent", description);
+      requestData.append("commonUpload", mediaPreview[0]);
+      requestData.append("subscription", subValue.subValue);
+      requestData.append("postTag", postTag);
+      //   requestData.append("title", linkTitle);
+      //   requestData.append("link", link);
+      requestData.append("postCategory", categoryValue.key);
+      await SublyApi.createPost(token, requestData)
+        .then((response) => {
+          setLoading(false);
+          if (response.status == "success") {
+            navigate("/Post/Post-List");
+            toast.success(response.status);
+          } else {
+            toast.error(response.data.error);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      toast.error("Please enter the valid link");
+    }
+  }
+
+  // =================================Update post API handler===================================
+  async function updatePostHandle() {
+    const regExValue =
+      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+    if (link.match(regExValue)) {
+      setLoading(true);
+      const requestData = new FormData();
+      requestData.append("categories", categoryValue.id);
+      requestData.append("postType", postType);
+      requestData.append("postTitle", postTitle);
+      requestData.append("postContent", description);
+      requestData.append("commonUpload", mediaPreview[0]);
+      requestData.append("subscription", subValue.subValue);
+      requestData.append("postTag", postTag);
+      //   requestData.append("title", linkTitle);
+      //   requestData.append("link", link);
+      requestData.append("postCategory", categoryValue.key);
+      await SublyApi.updatePost(token, requestData, location.state?._id)
+        .then((response) => {
+          console.log("response", response);
+          setLoading(false);
+          if (response.status == "success") {
+            navigate("/Post/Post-List");
+            toast.success(response.status);
+          } else {
+            toast.error(response.data.error);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      toast.error("Please enter the valid link");
+    }
   }
 
   async function onTagRemove(index) {
@@ -230,131 +344,34 @@ function CreateReels() {
     setPostTag(tags);
   }
 
-  // =================================Create Reels API handler===================================
-  async function createReelsHandle() {
-    setLoading(true);
-    const requestData = new FormData();
-    requestData.append("categories", categoryList._id);
-    requestData.append("postType", categoryList.categoryType);
-    requestData.append("postTitle", postTitle);
-    requestData.append("postContent", description);
-    requestData.append("commonUpload", mediaObject);
-    requestData.append("subscription", subValue.subValue);
-    requestData.append("postTag", postTag);
-    requestData.append("postCategory", categoryList.categoryType);
-    requestData.append("uploadImage", thumbnail);
-    await SublyApi.createPost(token, requestData)
-      .then((response) => {
-        setLoading(false);
-        if (response.status == "success") {
-          navigate("/Reels");
-          toast.success(response.status);
-        } else {
-          toast.error(response.data.error);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  // =================================Update post API handler===================================
-  async function updatePostHandle() {
-    setLoading(true);
-    const requestData = new FormData();
-    requestData.append("categories", categoryList._id);
-    requestData.append("postType", categoryList.categoryType);
-    requestData.append("postTitle", postTitle);
-    requestData.append("postContent", description);
-    requestData.append("commonUpload", mediaObject);
-    requestData.append("subscription", subValue.subValue);
-    requestData.append("postTag", postTag);
-    requestData.append("postCategory", categoryList.categoryType);
-    requestData.append("uploadImage", thumbnail);
-    await SublyApi.updatePost(token, requestData, location.state?._id)
-      .then((response) => {
-        console.log("response", response);
-        setLoading(false);
-        if (response.status == "success") {
-          navigate("/Reels");
-          toast.success(response.status);
-        } else {
-          toast.error(response.data.error);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  useEffect(() => {
-    async function getCategory() {
-      await SublyApi.fetchCategory(token)
-        .then((response) => {
-          if (response.status == "success") {
-            setCategoryList;
-            const reelCheck = response.data.filter(
-              (ele) => ele.categoryName == "REELS"
-            );
-            setCategoryList(reelCheck[0]);
-            if (!reelCheck.length > 0) {
-              toast.dismiss();
-              toast.error("First need to create category for reels type.");
-              setShowModal(true);
-            }
-          } else {
-            toast.error(response.data.error);
-          }
-        })
-        .catch((err) => console.log(err));
-    }
-    getCategory();
-  }, [isCategory]);
-
-  function onCloseHandle() {
-    setShowModal(false);
-    navigate("/Reels");
-  }
-
   return (
-    <section className="overflow-auto">
-      {loading ? <Loader /> : ""}
-      <CreateCategory
-        setShow={setShowModal}
-        show={showModal}
-        topMargin={"marginClass"}
-        setLoading={setLoading}
-        isReels={onCloseHandle}
-        setIsCategory={setIsCategory}
-      />
-      <div className="xl:flex">
-        <Sidebar />
-        <div className="w-full z-0 h-screen overflow-auto">
-          <Header />
-          <div className="px-9 max-xl:px-2">
-            <div className="flex items-center justify-between pt-4 pb-4 flex-wrap border-b-2">
-              <h3 className="mb-0 text-lg font-semibold">Create Reels</h3>
-              <button
-                onClick={() => {
-                  navigate("/Reels");
-                }}
-                className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none"
-              >
-                Back
-              </button>
-            </div>
-            <Row className="mt-5">
-              <Col xl={6} lg={12} className="w-[40%] max-lg:w-full col-span-5">
+    <section>
+      <Modal
+        className={`${topMargin} widthClassMid`}
+        show={show}
+        onHide={() => {
+          setShow(false);
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title className="flex items-center gap-2">
+            Create Post
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="p-2 w-[90%] m-auto">
+            <div className="px-9 max-xl:px-2">
+              <div className="max-lg:w-full m-auto">
                 <div className="flex items-center gap-3 max-lg:flex-wrap">
                   <div className="w-full max-xl:w-full">
                     <label
                       htmlFor="title"
                       className="text-sm font-normal w-full"
                     >
-                      Reels Title
+                      Post Title
                       <input
                         type="text"
-                        placeholder="Reels Title"
+                        placeholder="Post Title"
                         id="title"
                         value={postTitle}
                         onChange={(e) => {
@@ -368,29 +385,50 @@ function CreateReels() {
                     onClick={() => {
                       setShowDropdown({
                         ...showDropdown,
-                        category: !showDropdown.category,
+                        postType: !showDropdown.postType,
                       });
                     }}
                     className="w-full max-xl:w-full relative notifyBlock"
                   >
                     <label
-                      htmlFor="category"
+                      htmlFor="posttype"
                       className="text-sm font-normal w-full"
                     >
-                      Category
+                      Post Type
                       <input
                         type="text"
-                        placeholder="Select Category"
-                        id="category"
-                        value={"Reels"}
+                        placeholder="Select Post Type"
+                        id="posttype"
+                        value={postType}
                         autoComplete="off"
-                        className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium caret-transparent"
+                        className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
                       />
                     </label>
+                    <Icon
+                      icon={`${
+                        showDropdown.postType
+                          ? "majesticons:chevron-up-line"
+                          : "majesticons:chevron-down-line"
+                      }`}
+                      width="30"
+                      height="30"
+                      style={{ color: "#4b5563" }}
+                      className="absolute right-1 top-6 cursor-pointer"
+                      onClick={() => {
+                        setShowDropdown({
+                          ...showDropdown,
+                          postType: !showDropdown.postType,
+                        });
+                      }}
+                    />
+                    {showDropdown.postType && (
+                      <PostType setCategoryValue={setPostType} />
+                    )}
                   </div>
                 </div>
+
                 <div className="flex items-start gap-3 max-lg:flex-wrap my-3">
-                  <div className="w-full max-xl:w-full">
+                  <div className="w-[100%] max-xl:w-full">
                     <label
                       htmlFor="post-tag"
                       className="text-sm font-normal w-full "
@@ -399,7 +437,7 @@ function CreateReels() {
                       <div className="flex items-center w-full gap-2">
                         <input
                           type="text"
-                          placeholder="Reels Tag"
+                          placeholder="Post Tag"
                           id="post-tag"
                           value={postTagValue}
                           onChange={(e) => {
@@ -424,7 +462,7 @@ function CreateReels() {
                         </button>
                       </div>
                     </label>
-                    <div className="flex items-center gap-2 ">
+                    <div className="flex items-center gap-2">
                       {postTag?.map((val, index) => (
                         <p
                           key={index}
@@ -444,6 +482,7 @@ function CreateReels() {
                       ))}
                     </div>
                   </div>
+
                   <div
                     onClick={() => {
                       setShowDropdown({
@@ -487,14 +526,6 @@ function CreateReels() {
                   </div>
                 </div>
                 <div className="w-full my-4">
-                  {/* <textarea
-                    value={description}
-                    onChange={(e) => {
-                      setDescription(e.target.value);
-                    }}
-                    placeholder="Write Content..."
-                    className="resize-none placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full h-[180px] rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
-                  /> */}
                   <ReactQuill
                     theme="snow"
                     value={description}
@@ -503,14 +534,14 @@ function CreateReels() {
                     placeholder="Write Content..."
                   />
                 </div>
-                {!fileValue && (
+                {!fileValue.length > 0 && (
                   <label
                     htmlFor="upload"
                     style={{
                       border: "1px solid #9ca3af",
                       borderStyle: "dotted",
                     }}
-                    className="rounded-md py-3 flex items-center justify-center m-auto w-[40%] max-lg:w-full bg-white text-gray-600 gap-3 cursor-pointer"
+                    className="rounded-md py-3 flex items-center justify-center m-auto w-[30%] max-lg:w-full bg-white text-gray-600 gap-3 cursor-pointer"
                   >
                     {" "}
                     <Icon
@@ -518,108 +549,98 @@ function CreateReels() {
                       width="40"
                       height="40"
                     />
-                    <p className="mb-0 text-xl font-medium ">Upload reels</p>
+                    <p className="mb-0 text-xl font-medium ">
+                      Upload media files
+                    </p>
                   </label>
                 )}
-                {fileValue && (
+                {fileValue.length > 0 && (
                   <div className="flex items-center gap-2">
-                    {fileValue && (
-                      <div className="border rounded-md flex items-center justify-center w-[140px] h-[140px] object-cover bg-white relative overflow-hidden">
-                        <img src={fileValue} alt="img" />
-                        <Icon
-                          icon="si:close-duotone"
-                          width="35"
-                          height="35"
-                          className="absolute top-0 right-0 cursor-pointer"
-                          onClick={() => {
-                            onImageRemove();
-                          }}
-                        />
-                      </div>
-                    )}
+                    {fileValue.length > 0 &&
+                      fileValue.map((item, index) => (
+                        <div
+                          key={index}
+                          className="border rounded-md flex items-center justify-center w-[140px] h-[140px] object-cover bg-white relative overflow-hidden"
+                        >
+                          <img src={item} alt="img" />
+                          <Icon
+                            icon="si:close-duotone"
+                            width="35"
+                            height="35"
+                            className="absolute top-0 right-0 cursor-pointer"
+                            onClick={() => {
+                              onImageRemove(index);
+                            }}
+                          />
+                        </div>
+                      ))}
                   </div>
                 )}
-                <div className="flex items-center justify-center mt-5">
+                <div className="flex items-center justify-center mt-5 mb-3 gap-3">
+                  <button
+                    onClick={() => {
+                      setShow(false);
+                    }}
+                    style={{ border: "1px solid #6418C3" }}
+                    className="px-3 py-2 rounded-3xl font-medium text-lg text-[#6418C3] w-[180px] max-lg:w-full"
+                  >
+                    Cancel
+                  </button>
                   {location.state ? (
                     <button
                       onClick={() => {
                         updatePostHandle();
                       }}
                       style={{ border: "1px solid #6418C3" }}
-                      className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#6418C3] m-auto w-[40%] max-lg:w-full"
+                      className="px-3 py-2 rounded-3xl font-medium text-lg text-white bg-[#6418C3]  w-[180px] max-lg:w-full"
                     >
                       Update
                     </button>
                   ) : (
                     <button
                       onClick={() => {
-                        createReelsHandle();
+                        createPostHandle();
                       }}
                       style={{ border: "1px solid #6418C3" }}
-                      className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#6418C3] m-auto w-[40%] max-lg:w-full"
+                      className="px-3 py-2 rounded-3xl font-semibold text-lg text-white bg-[#6418C3]  w-[180px] max-lg:w-full"
                     >
-                      Create
+                      Submit
                     </button>
                   )}
                 </div>
                 <input
                   type="file"
                   id="upload"
-                  accept=".mp4, .avi, .mov, .mkv"
+                  accept=".png, .jpg, .jpeg, .gif, .webp, .mp4, .avi, .mov, .mkv"
                   className="hidden"
                   onChange={(e) => {
                     mediaHandler(e);
                   }}
                 />
-              </Col>
-              <Col xl={6} lg={12} className=" flex items-center justify-center">
-                <div className="w-[700px] h-[500px] flex items-center justify-center">
-                  {mediaPreview ? (
-                    <video
-                      src={mediaPreview}
-                      controls={true}
-                      className="h-full w-full rounded-lg"
-                    />
-                  ) : (
-                    <label
-                      htmlFor="upload"
-                      className="w-full h-full relative cursor-pointer"
-                    >
-                      <p className="mb-0 absolute bottom-20 left-[40%] text-2xl font-semibold text-gray-400">
-                        Upload reels
-                      </p>
-                      <img
-                        src={placeholder}
-                        alt="placeholder"
-                        className="w-full h-full  rounded-lg"
-                      />
-                    </label>
-                  )}
-                </div>
-              </Col>
-            </Row>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </Modal.Body>
+      </Modal>
     </section>
   );
 }
 
-export default CreateReels;
+export default CreatePostModal;
 
-function CategoryType() {
+function PostType({ setCategoryValue }) {
   return (
     <div className="rounded-md shadow-2xl absolute w-full top-15 bg-white py-2 z-50 max-h-48 overflow-auto">
-      {categoryType &&
-        categoryType?.map((item, index) => (
+      {postType &&
+        postType?.map((item, index) => (
           <p
             onClick={() => {
-              setCategoryValue({ id: item.id, key: item?.key });
+              setCategoryValue(item?.id);
             }}
             className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
             key={index}
           >
-            {item.key}
+            {item.id}
           </p>
         ))}
     </div>

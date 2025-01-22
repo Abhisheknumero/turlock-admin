@@ -58,7 +58,7 @@ const HeadDropdown = ({ Logout }) => {
         onClick={() => {
           Logout();
         }}
-        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
       >
         Logout
       </p>

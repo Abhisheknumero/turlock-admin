@@ -385,9 +385,9 @@ function PostCreate() {
                   }}
                   className={`${
                     location.pathname.includes("/Post")
-                      ? "bg-[#D10505] text-white"
+                      ? "bg-[#6418C3] text-white"
                       : "buttonClass"
-                  } ${"w-28 text-sm rounded-md px-2 py-2 font-medium hover:border-[#D10505] relative"}`}
+                  } ${"w-28 text-sm rounded-md px-2 py-2 font-medium hover:border-[#6418C3] relative"}`}
                 >
                   Post
                 </button>
@@ -499,7 +499,61 @@ function PostCreate() {
               </div>
 
               <div className="flex items-start gap-3 max-lg:flex-wrap my-3">
-                <div
+                <div className="w-[100%] max-xl:w-full">
+                  <label
+                    htmlFor="post-tag"
+                    className="text-sm font-normal w-full "
+                  >
+                    Post Tag
+                    <div className="flex items-center w-full gap-2">
+                      <input
+                        type="text"
+                        placeholder="Post Tag"
+                        id="post-tag"
+                        value={postTagValue}
+                        onChange={(e) => {
+                          setPostTagValue(
+                            e.target.value.includes("#")
+                              ? e.target.value
+                              : `#${e.target.value}`
+                          );
+                        }}
+                        className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
+                      />
+                      <button
+                        onClick={() => {
+                          if (postTagValue) {
+                            setPostTagValue("");
+                            setPostTag([...postTag, postTagValue]);
+                          }
+                        }}
+                        className="w-24 text-sm rounded-md px-2 py-1.5 buttonClass relative font-medium hover:border-none"
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </label>
+                  <div className="flex items-center gap-2">
+                    {postTag?.map((val, index) => (
+                      <p
+                        key={index}
+                        className="flex items-center gap-1 justify-between mb-0 bg-[#6418C34b] pl-2 pr-0.5 font-medium text-gray-600 rounded-sm mt-2"
+                      >
+                        {val.includes("#") ? val : `#${val}`}{" "}
+                        <Icon
+                          icon="si:close-duotone"
+                          width="20"
+                          height="20"
+                          className="cursor-pointer mt-0.5"
+                          onClick={() => {
+                            onTagRemove(index);
+                          }}
+                        />
+                      </p>
+                    ))}
+                  </div>
+                </div>
+                {/* <div
                   onClick={() => {
                     setShowDropdown({
                       ...showDropdown,
@@ -546,7 +600,7 @@ function PostCreate() {
                       setCategoryValue={setCategoryValue}
                     />
                   )}
-                </div>
+                </div> */}
                 <div
                   onClick={() => {
                     setShowDropdown({
@@ -589,61 +643,8 @@ function PostCreate() {
                   )}
                 </div>
               </div>
-              <div className="w-[49%] max-xl:w-full">
-                <label
-                  htmlFor="post-tag"
-                  className="text-sm font-normal w-full "
-                >
-                  Post Tag
-                  <div className="flex items-center w-full gap-2">
-                    <input
-                      type="text"
-                      placeholder="Post Tag"
-                      id="post-tag"
-                      value={postTagValue}
-                      onChange={(e) => {
-                        setPostTagValue(
-                          e.target.value.includes("#")
-                            ? e.target.value
-                            : `#${e.target.value}`
-                        );
-                      }}
-                      className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
-                    />
-                    <button
-                      onClick={() => {
-                        if (postTagValue) {
-                          setPostTagValue("");
-                          setPostTag([...postTag, postTagValue]);
-                        }
-                      }}
-                      className="w-24 text-sm rounded-md px-2 py-1.5 buttonClass relative font-medium hover:border-none"
-                    >
-                      Add
-                    </button>
-                  </div>
-                </label>
-                <div className="flex items-center gap-2">
-                  {postTag?.map((val, index) => (
-                    <p
-                      key={index}
-                      className="flex items-center gap-1 justify-between mb-0 bg-[#d105054b] pl-2 pr-0.5 font-medium text-gray-600 rounded-sm mt-2"
-                    >
-                      {val.includes("#") ? val : `#${val}`}{" "}
-                      <Icon
-                        icon="si:close-duotone"
-                        width="20"
-                        height="20"
-                        className="cursor-pointer mt-0.5"
-                        onClick={() => {
-                          onTagRemove(index);
-                        }}
-                      />
-                    </p>
-                  ))}
-                </div>
-              </div>
-              <div className="flex items-center gap-3 max-lg:flex-wrap my-3">
+
+              {/* <div className="flex items-center gap-3 max-lg:flex-wrap my-3">
                 <div className="w-full max-xl:w-full relative">
                   <label
                     htmlFor="link-title"
@@ -677,16 +678,8 @@ function PostCreate() {
                     />
                   </label>
                 </div>
-              </div>
+              </div> */}
               <div className="w-full my-4">
-                {/* <textarea
-                  value={description}
-                  onChange={(e) => {
-                    setDescription(e.target.value);
-                  }}
-                  placeholder="Write Content..."
-                  className="resize-none placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full h-[180px] rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
-                /> */}
                 <ReactQuill
                   theme="snow"
                   value={description}
@@ -694,11 +687,6 @@ function PostCreate() {
                   className="bg-white h-[232px] editorClass "
                   placeholder="Write Content..."
                 />
-                {/* <RichTextEditor
-                  value={description}
-                  onChange={handleOnChange}
-                  className="resize-none placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full h-[200px] rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium overflow-auto"
-                /> */}
               </div>
               {!fileValue.length > 0 && (
                 <label
@@ -751,8 +739,8 @@ function PostCreate() {
                     onClick={() => {
                       updatePostHandle();
                     }}
-                    style={{ border: "1px solid #D10505" }}
-                    className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#D10505] m-auto w-[40%] max-lg:w-full"
+                    style={{ border: "1px solid #6418C3" }}
+                    className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#6418C3] m-auto w-[40%] max-lg:w-full"
                   >
                     Update
                   </button>
@@ -761,8 +749,8 @@ function PostCreate() {
                     onClick={() => {
                       createPostHandle();
                     }}
-                    style={{ border: "1px solid #D10505" }}
-                    className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#D10505] m-auto w-[40%] max-lg:w-full"
+                    style={{ border: "1px solid #6418C3" }}
+                    className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#6418C3] m-auto w-[40%] max-lg:w-full"
                   >
                     Create
                   </button>
@@ -794,7 +782,7 @@ function CategoryType({ setShow, categoryList, setCategoryValue }) {
         onClick={() => {
           setShow(true);
         }}
-        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer flex items-center gap-2"
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer flex items-center gap-2"
       >
         <Icon icon="fluent:add-20-regular" width="22" height="22" />
         Create Category
@@ -808,7 +796,7 @@ function CategoryType({ setShow, categoryList, setCategoryValue }) {
                 onClick={() => {
                   setCategoryValue({ id: item._id, key: item?.categoryName });
                 }}
-                className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+                className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
                 key={index}
               >
                 {item.categoryName}
@@ -828,7 +816,7 @@ function PostType({ setCategoryValue }) {
             onClick={() => {
               setCategoryValue(item?.id);
             }}
-            className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+            className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
             key={index}
           >
             {item.id}
@@ -845,7 +833,7 @@ function FilterDropdown({ setFilterValue, filterValue }) {
         onClick={() => {
           setFilterValue({ ...filterValue, subValue: "Free" });
         }}
-        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
       >
         Free
       </p>
@@ -853,7 +841,7 @@ function FilterDropdown({ setFilterValue, filterValue }) {
         onClick={() => {
           setFilterValue({ ...filterValue, subValue: "Paid" });
         }}
-        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#ff6d6d33] cursor-pointer"
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
       >
         Paid
       </p>

@@ -60,7 +60,7 @@ function PlansTable({ planList, deleteHandle, setShow, setPlanId }) {
                       setShow(true);
                       setPlanId(val?._id);
                     }}
-                    className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal"
+                    className="text-[#6418C3] cursor-pointer bg-[#6418C333] text-sm px-2 rounded-sm font-normal"
                   >
                     View
                   </span>
@@ -68,7 +68,7 @@ function PlansTable({ planList, deleteHandle, setShow, setPlanId }) {
                     onClick={() => {
                       navigate("/Subscription/Create", { state: val });
                     }}
-                    className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal"
+                    className="text-[#6418C3] cursor-pointer bg-[#6418C333] text-sm px-2 rounded-sm font-normal"
                   >
                     Edit
                   </span>
@@ -76,7 +76,7 @@ function PlansTable({ planList, deleteHandle, setShow, setPlanId }) {
                     onClick={() => {
                       deleteHandle(val?._id);
                     }}
-                    className="text-[#D10505] cursor-pointer bg-[#d1050533] text-sm px-2 rounded-sm font-normal"
+                    className="text-[#6418C3] cursor-pointer bg-[#6418C333] text-sm px-2 rounded-sm font-normal"
                   >
                     Delete
                   </span>

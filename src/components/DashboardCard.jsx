@@ -30,7 +30,7 @@ function DashboardCard({ dashboardData, heading }) {
           series={[
             {
               data: [2, 3, 5.5, 8.5, 1.5, 5, 1, 4, 3, 8],
-              color: "#D10505",
+              color: "#6418C3",
             },
           ]}
           width={500}

@@ -10,16 +10,20 @@ function PostTable({
   setPostDetail,
   deleteHandle,
   isReel,
+  setShow,
+  setItemValue,
 }) {
   const [actionId, setActionId] = useState("");
   return (
-    <div className="">
+    <div className="max-[1200px]:w-[1500px]">
       <div>
         <div className="bg-[#fff] rounded-t-xl px-4 py-3 flex items-center gap-2">
           <p className="text-base font-bold !text-black w-[5%]">#</p>
           <p className="text-sm font-bold !text-black w-[30%] pr-3">Title</p>
           <p className="text-sm font-bold !text-black w-[10%]">Date</p>
-          <p className="text-sm font-bold !text-black w-[10%]">Post Type</p>
+          {!isReel && (
+            <p className="text-sm font-bold !text-black w-[10%]">Post Type</p>
+          )}
           <p className="text-sm font-bold !text-black w-[17%]">Tags</p>
           <p className="text-sm font-bold !text-black w-[10%] text-center">
             Comment
@@ -27,10 +31,16 @@ function PostTable({
           <p className="text-sm font-bold !text-black w-[10%] text-center">
             Viwes
           </p>
-          <p className="text-sm font-bold !text-black w-[8%] text-center">Action</p>
+          <p
+            className={`${
+              isReel ? "w-[15%]" : "w-[8%]"
+            } ${"text-sm font-bold !text-black text-center"}`}
+          >
+            Action
+          </p>
         </div>
       </div>
-      <div className="h-[calc(100vh-400px)] overflow-auto pt-1">
+      <div className="h-[calc(100vh-360px)] overflow-auto pt-1">
         {postList?.map((val, index) => (
           <div
             key={index}
@@ -46,10 +56,12 @@ function PostTable({
               {" "}
               {moment(new Date(val?.updatedAt)).format("MMM DD, YYYY")}
             </p>
-            <p className="text-sm font-medium !text-black w-[10%] flex items-center gap-1">
-              <img src={val?.imgValue} className="w-7 h-7 rounded-md" />
-              {val?.postType}
-            </p>
+            {!isReel && (
+              <p className="text-sm font-medium !text-black w-[10%] flex items-center gap-1">
+                <img src={val?.imgValue} className="w-7 h-7 rounded-md" />
+                {val?.postType}
+              </p>
+            )}
             <p className="text-sm font-medium !text-black w-[17%]">
               {val?.postTag || "--"}
             </p>
@@ -59,7 +71,11 @@ function PostTable({
             <p className="text-sm font-medium !text-black w-[10%] text-center">
               {val?.views || "0"}
             </p>
-            <p className="text-sm font-medium !text-black w-[8%] text-center relative flex items-center justify-center gap-3">
+            <p
+              className={`${
+                isReel ? "w-[15%]" : "w-[8%]"
+              } ${"text-sm font-medium !text-black  text-center relative flex items-center justify-center gap-3"}`}
+            >
               {/* <Icon
                 icon="bi:three-dots-vertical"
                 width="22"
@@ -76,6 +92,10 @@ function PostTable({
                   width="28"
                   height="28"
                   className="cursor-pointer"
+                  onClick={() => {
+                    setPostId(val._id);
+                    setPostDetail(true);
+                  }}
                 />
               </p>
               <p className="mb-0 flex items-center justify-center rounded-md w-[30px] h-[30px] !text-[#6518c3]">
@@ -84,6 +104,15 @@ function PostTable({
                   width="23"
                   height="23"
                   className="cursor-pointer"
+                  onClick={() => {
+                    if (isReel) {
+                      setItemValue(val);
+                      setShow(true);
+                    } else {
+                      setShow(true);
+                      setItemValue(val);
+                    }
+                  }}
                 />
               </p>
               <p className="mb-0 flex items-center justify-center rounded-md w-[30px] h-[30px] !text-[#6518c3]">
@@ -92,6 +121,9 @@ function PostTable({
                   width="23"
                   height="23"
                   className="cursor-pointer"
+                  onClick={() => {
+                    deleteHandle(val._id);
+                  }}
                 />
               </p>
             </p>
@@ -196,34 +228,3 @@ function PostTable({
 }
 
 export default PostTable;
-
-function ActionModal() {
-  return (
-    <div className="rounded-md shadow-2xl absolute w-full top-6 bg-white py-2 px-3 z-50 flex items-center gap-2.5 justify-center">
-      <p className="mb-0 flex items-center justify-center text-gray-600 hover:!text-[#6418c3]">
-        <Icon
-          icon="flowbite:eye-outline"
-          width="28"
-          height="28"
-          className="cursor-pointer"
-        />
-      </p>
-      <p className="mb-0 flex items-center justify-center text-gray-600 hover:!text-[#6418c3]">
-        <Icon
-          icon="bx:edit"
-          width="23"
-          height="23"
-          className="cursor-pointer"
-        />
-      </p>
-      <p className="mb-0 flex items-center justify-center text-gray-600 hover:!text-[#6418c3]">
-        <Icon
-          icon="material-symbols:delete-outline-rounded"
-          width="23"
-          height="23"
-          className="cursor-pointer"
-        />
-      </p>
-    </div>
-  );
-}

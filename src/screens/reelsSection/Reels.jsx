@@ -12,6 +12,7 @@ import DatePicker from "react-datepicker";
 import { FilterDropdown } from "../postScreens/Post";
 import $ from "jquery";
 import ReelsDetail from "../../components/ReelsDetail";
+import CreateReelsModal from "./CreateReelsModal";
 
 function Reels() {
   const navigate = useNavigate();
@@ -28,10 +29,11 @@ function Reels() {
   });
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
-  const [categorytype, setCategoryType] = useState("");
   const [filterValue, setFilterValue] = useState("");
   const [title, setTitle] = useState("");
   const [reelCategory, setReelCategory] = useState();
+  const [show, setShow] = useState(false);
+  const [itemValue, setItemValue] = useState("");
 
   // ====function to hide dropdown on click outside====
   $(document).mouseup(function (e) {
@@ -63,7 +65,7 @@ function Reels() {
               } else {
                 toast.dismiss();
                 setReelList([]);
-                // toast.error(respo.data.error);
+                toast.error(respo.data.error);
               }
             })
             .catch((err) => {
@@ -96,26 +98,30 @@ function Reels() {
 
   // ====================Advance search API handler===================
   async function advanceSearch() {
-    setLoading(true);
-    const requestData = {
-      title: title,
-      category: reelCategory?.id,
-      subscriptionType: filterValue?.subscription?.subValue,
-      startDate: startDate,
-      endDate: endDate,
-    };
-    await SublyApi.searchPost(token, requestData)
-      .then((response) => {
-        setLoading(false);
-        if (response.status == "success") {
-          setReelList(response.data.posts);
-        } else {
-          toast.error(response.data.error);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (title) {
+      setLoading(true);
+      const requestData = {
+        title: title,
+        categoryId: reelCategory?._id,
+        subscriptionType: filterValue?.subscription?.subValue,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      await SublyApi.searchPost(token, requestData)
+        .then((response) => {
+          setLoading(false);
+          if (response.status == "success") {
+            setReelList(response.data.posts);
+          } else {
+            toast.error(response.data.error);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      getCategory();
+    }
   }
 
   return (
@@ -127,13 +133,58 @@ function Reels() {
         id={reelsId}
         setLoading={setLoading}
       />
+      <CreateReelsModal
+        topMargin={""}
+        setShow={setShow}
+        show={show}
+        setLoading={setLoading}
+        itemValue={itemValue}
+        setItemValue={setItemValue}
+      />
       {loading ? <Loader /> : ""}
       <div className="flex">
         <Sidebar />
         <div className="w-full">
           <Header />
           <div className="px-9 max-xl:px-2">
-            <div className="flex items-center justify-between pt-4 pb-3 flex-wrap gap-x-3 gap-y-1">
+            <div className="flex items-center justify-between pt-4 pb-4 flex-wrap border-b-2">
+              <h3 className="mb-0 text-lg font-semibold">Reels</h3>
+              <div className="flex items-center gap-x-3 gap-y-2 flex-wrap">
+                <div className="w-[300px]">
+                  <label className="bg-white w-full rounded-lg flex items-center gap-1 py-2 pr-2 pl-3 shadow-2xl">
+                    <input
+                      type="text"
+                      placeholder="Search Here"
+                      className="bg-transparent w-full h-full focus-visible:outline-none"
+                      value={title}
+                      onChange={(e) => {
+                        setTitle(e.target.value);
+                      }}
+                    />
+                    <Icon
+                      icon="stash:search"
+                      width="25"
+                      height="25"
+                      style={{ color: "#6418C3", cursor: "pointer" }}
+                      onClick={() => {
+                        advanceSearch();
+                      }}
+                    />
+                  </label>
+                </div>
+                <button
+                  onClick={() => {
+                    setShow(true);
+                  }}
+                  className={`${"bg-[#6418C3] text-white"} ${"w-[160px] text-base rounded-md px-2 py-2 font-medium hover:border-[#6418C3] flex items-center justify-center gap-2"}`}
+                >
+                  <Icon icon="ri:video-add-line" width="25" height="25" />
+                  Create Reels
+                </button>
+              </div>
+            </div>
+
+            {/* <div className="flex items-center justify-between pt-4 pb-3 flex-wrap gap-x-3 gap-y-1">
               <h3 className="mb-0 text-lg font-semibold">Reels</h3>
               <div className="flex items-center justify-end max-sm:w-full">
                 <button
@@ -246,19 +297,24 @@ function Reels() {
                   </button>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="mb-5">
               <h3 className="text-gray-600 font-bold text-base my-3">
                 Reels Count {`(${reelList?.length})`}
               </h3>
               {reelList?.length > 0 ? (
-                <PostTable
-                  postList={reelList}
-                  setPostId={setReelsId}
-                  setPostDetail={setReelDetail}
-                  deleteHandle={deleteHandle}
-                  isReel={true}
-                />
+                <div className="overflow-auto">
+                  {" "}
+                  <PostTable
+                    postList={reelList}
+                    setPostId={setReelsId}
+                    setPostDetail={setReelDetail}
+                    deleteHandle={deleteHandle}
+                    isReel={true}
+                    setItemValue={setItemValue}
+                    setShow={setShow}
+                  />
+                </div>
               ) : (
                 <p className="text-center text-lg font-semibold text-gray-500">
                   No Record Found

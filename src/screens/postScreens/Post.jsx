@@ -32,6 +32,7 @@ function Post() {
   const [filterValue, setFilterValue] = useState("");
   const [title, setTitle] = useState("");
   const [show, setShow] = useState(false);
+  const [itemValue, setItemValue] = useState("");
 
   const getInitials = (userName) => {
     const names = userName.split(" ");
@@ -44,15 +45,17 @@ function Post() {
 
   // ===================Calling API for fetch post list=====================
   useEffect(() => {
-    postListHandle();
-  }, []);
+    if (!show) {
+      postListHandle();
+    }
+  }, [show]);
   async function postListHandle() {
     setLoading(true);
     await SublyApi.fetchPostList(token)
       .then((response) => {
         setLoading(false);
         if (response.status == "success") {
-          const list = response.data.map((val, index) => {
+          response.data.map((val, index) => {
             const initials = getInitials(val?.postType || "Post");
             const imgvalue = `https://ui-avatars.com/api/?name=${initials}&background=6418c3b8&color=fff&bold=true`; // Set fallback image
             response.data[index] = {
@@ -68,7 +71,7 @@ function Post() {
       .catch((err) => console.log(err));
   }
 
-  console.log("postList", postList);
+  console.log("postList", categorytype);
 
   // ====================API for fetch category list=====================
   useEffect(() => {
@@ -77,9 +80,9 @@ function Post() {
         .then((response) => {
           if (response.status == "success") {
             setCategoryType(response.data);
-            if (!response.data.length > 0) {
-              setCategoryModal(true);
-            }
+            // if (!response.data.length > 0) {
+            //   setCategoryModal(true);
+            // }
           } else {
             toast.error(response.data.error);
           }
@@ -116,26 +119,43 @@ function Post() {
 
   // ====================Advance search API handler===================
   async function advanceSearch() {
-    setLoading(true);
-    const requestData = {
-      title: title,
-      category: filterValue?.category?.id,
-      subscriptionType: filterValue?.subscription?.subValue,
-      startDate: startDate,
-      endDate: endDate,
-    };
-    await SublyApi.searchPost(token, requestData)
-      .then((response) => {
-        setLoading(false);
-        if (response.status == "success") {
-          setPostList(response.data.posts);
-        } else {
-          toast.error(response.data.error);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (title) {
+      setLoading(true);
+      const filterItem = categorytype.filter(
+        (val) => val?.categoryName == "NEWS"
+      );
+      console.log(filterItem[0]?._id);
+
+      const requestData = {
+        title: title,
+        categoryId: filterItem[0]?._id,
+        subscriptionType: filterValue?.subscription?.subValue,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      await SublyApi.searchPost(token, requestData)
+        .then((response) => {
+          setLoading(false);
+          if (response.status == "success") {
+            response.data.posts.map((val, index) => {
+              const initials = getInitials(val?.postType || "Post");
+              const imgvalue = `https://ui-avatars.com/api/?name=${initials}&background=6418c3b8&color=fff&bold=true`; // Set fallback image
+              response.data.posts[index] = {
+                ...response.data.posts[index],
+                imgValue: imgvalue,
+              };
+            });
+            setPostList(response.data.posts);
+          } else {
+            toast.error(response.data.error);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      postListHandle();
+    }
   }
 
   return (
@@ -154,10 +174,12 @@ function Post() {
         setLoading={setLoading}
       />
       <CreatePostModal
-        topMargin={"marginClass"}
+        topMargin={""}
         setShow={setShow}
         show={show}
         setLoading={setLoading}
+        itemValue={itemValue}
+        setItemValue={setItemValue}
       />
       {loading ? <Loader /> : ""}
       <div className="xl:flex">
@@ -167,30 +189,45 @@ function Post() {
           <div className="px-9 max-xl:px-2">
             <div className="flex items-center justify-between pt-4 pb-4 flex-wrap border-b-2">
               <h3 className="mb-0 text-lg font-semibold">Post</h3>
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-x-3 gap-y-2 flex-wrap">
+                <div className="w-[300px]">
+                  <label className="bg-white w-full rounded-lg flex items-center gap-1 py-2 pr-2 pl-3 shadow-2xl">
+                    <input
+                      type="text"
+                      placeholder="Search Here"
+                      className="bg-transparent w-full h-full focus-visible:outline-none"
+                      value={title}
+                      onChange={(e) => {
+                        setTitle(e.target.value);
+                      }}
+                    />
+                    <Icon
+                      icon="stash:search"
+                      width="25"
+                      height="25"
+                      style={{ color: "#6418C3", cursor: "pointer" }}
+                      onClick={() => {
+                        advanceSearch();
+                      }}
+                    />
+                  </label>
+                </div>
                 <button
                   onClick={() => {
                     setShow(true);
                   }}
-                  className={`${"bg-[#6418C3] text-white"} ${"w-[160px] text-base rounded-md px-2 py-2 font-medium hover:border-[#6418C3] flex items-center justify-center gap-1"}`}
+                  className={`${"bg-[#6418C3] text-white"} ${"w-[160px] text-base rounded-md px-2 py-2 font-medium hover:border-[#6418C3] flex items-center justify-center gap-2"}`}
                 >
-                  <Icon icon="fluent:add-16-filled" width="25" height="25" />
+                  <Icon
+                    icon="mdi:post-it-note-add-outline"
+                    width="25"
+                    height="25"
+                  />
                   Create Post
                 </button>
               </div>
             </div>
-            <div className="flex items-center justify-end w-full my-2">
-              {/* <button
-                onClick={() => {
-                  // navigate("/Post/Create");
-                  setShow(true);
-                }}
-                className="w-38 text-base rounded-md px-2 py-2 relative font-medium hover:border-none border-none flex items-center gap-2 hover:text-[#6418C3] createBtn"
-              >
-                <Icon icon="ion:add-outline" width="30" height="27" />
-                Create Post
-              </button> */}
-            </div>
+
             {/* <div className="mb-3">
               <h3 className="text-gray-600 font-bold text-base my-3">
                 Advanced Search
@@ -331,12 +368,17 @@ function Post() {
                 Post Count {`(${postList?.length})`}
               </h3>
               {postList?.length > 0 ? (
-                <PostTable
-                  postList={postList}
-                  setPostId={setPostId}
-                  setPostDetail={setPostDetail}
-                  deleteHandle={deleteHandle}
-                />
+                <div className="overflow-auto">
+                  {" "}
+                  <PostTable
+                    postList={postList}
+                    setPostId={setPostId}
+                    setPostDetail={setPostDetail}
+                    deleteHandle={deleteHandle}
+                    setShow={setShow}
+                    setItemValue={setItemValue}
+                  />
+                </div>
               ) : (
                 <p className="text-center text-lg font-semibold text-gray-500">
                   No Record Found

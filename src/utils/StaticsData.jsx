@@ -41,6 +41,13 @@ export const postType = [
   { id: "Politics", key: "Politics" },
 ];
 
+export const postPosition = [1, 2, 3, 4, 5];
+
+export const postLocation = [
+  { name: "Carousel", key: 1 },
+  { name: "Near Carousel", key: 2 },
+];
+
 // export const imgBaseURL = "http://3.19.221.85:3000/";
 // export const imgBaseURL = "http://192.168.29.221:3001/";
 export const imgBaseURL = "http://192.168.29.161:3001/";

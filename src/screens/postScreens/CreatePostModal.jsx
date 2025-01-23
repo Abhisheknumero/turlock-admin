@@ -1,21 +1,26 @@
 import { Modal } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
-import Header from "../../components/Header";
-import Sidebar from "../../components/Sidebar";
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import { useEffect, useState } from "react";
-import CreateCategory from "../../components/CreateCategory";
-import { Loader } from "../../utils/Loader";
 import SublyApi from "../../HelperApis";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import $ from "jquery";
-import { imgBaseURL, postType } from "../../utils/StaticsData";
+import {
+  imgBaseURL,
+  postLocation,
+  postPosition,
+  postType,
+} from "../../utils/StaticsData";
 import ReactQuill from "react-quill";
 
-function CreatePostModal({ topMargin, show, setShow }) {
-  const navigate = useNavigate();
-  const location = useLocation();
+function CreatePostModal({
+  topMargin,
+  show,
+  setShow,
+  itemValue,
+  setItemValue,
+  setLoading,
+}) {
   const { token } = useSelector((state) => state.user.userdetail);
   const [showDropdown, setShowDropdown] = useState({
     type: false,
@@ -25,7 +30,6 @@ function CreatePostModal({ topMargin, show, setShow }) {
   const [fileValue, setFileValue] = useState("");
   const [mediaPreview, setMediaPreview] = useState("");
   const [categoryModal, setCategoryModal] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [categoryList, setCategoryList] = useState("");
   const [description, setDescription] = useState("");
   const [categoryValue, setCategoryValue] = useState("");
@@ -36,29 +40,35 @@ function CreatePostModal({ topMargin, show, setShow }) {
   const [postTag, setPostTag] = useState([]);
   const [postTagValue, setPostTagValue] = useState([]);
   const [postType, setPostType] = useState("");
-  const [value, setValue] = useState("");
-
-  console.log("value", value);
+  const [postLocation, setPostLocation] = useState({
+    location: false,
+    position: false,
+  });
+  const [locationValue, setLocationValue] = useState({
+    location: "",
+    position: "",
+    locationName: "",
+  });
 
   // =====================prefield data for edit post=======================
   useEffect(() => {
-    if (location.state) {
-      setDescription(location.state?.postContent);
-      setFileValue([`${imgBaseURL}${location.state?.postMedia}`]);
-      setMediaPreview([`${imgBaseURL}${location.state?.postMedia}`]);
-      const tags = location.state?.postTag[0].split(",");
+    if (itemValue) {
+      setDescription(itemValue?.postContent);
+      setFileValue([`${imgBaseURL}${itemValue?.postMedia}`]);
+      setMediaPreview([`${imgBaseURL}${itemValue?.postMedia}`]);
+      const tags = itemValue?.postTag[0].split(",");
       setPostTag(tags);
-      setlink(location.state?.externalLink?.link);
-      setLinkTitle(location.state?.externalLink?.title);
-      setSubValue({ subValue: location.state?.subscription });
+      setlink(itemValue?.externalLink?.link);
+      setLinkTitle(itemValue?.externalLink?.title);
+      setSubValue({ subValue: itemValue?.subscription });
       setCategoryValue({
-        id: location?.state?.categories?._id,
-        key: location?.state?.categories?.categoryName,
+        id: itemValue?.categories?._id,
+        key: itemValue?.categories?.categoryName,
       });
-      setPostTitle(location?.state?.postTitle);
-      setPostType(location.state?.postType);
+      setPostTitle(itemValue?.postTitle);
+      setPostType(itemValue?.postType);
     }
-  }, [location.state]);
+  }, [itemValue]);
 
   // ====function to hide dropdown on click outside====
   $(document).mouseup(function (e) {
@@ -269,73 +279,97 @@ function CreatePostModal({ topMargin, show, setShow }) {
 
   // =================================Create post API handler===================================
   async function createPostHandle() {
-    const regExValue =
-      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
-    if (link.match(regExValue)) {
-      setLoading(true);
-      const requestData = new FormData();
-      requestData.append("categories", categoryValue.id);
-      requestData.append("postType", postType);
-      requestData.append("postTitle", postTitle);
-      requestData.append("postContent", description);
-      requestData.append("commonUpload", mediaPreview[0]);
-      requestData.append("subscription", subValue.subValue);
-      requestData.append("postTag", postTag);
-      //   requestData.append("title", linkTitle);
-      //   requestData.append("link", link);
-      requestData.append("postCategory", categoryValue.key);
-      await SublyApi.createPost(token, requestData)
-        .then((response) => {
-          setLoading(false);
-          if (response.status == "success") {
-            navigate("/Post/Post-List");
-            toast.success(response.status);
-          } else {
-            toast.error(response.data.error);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      toast.error("Please enter the valid link");
-    }
+    // const regExValue =
+    //   /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+    // if (link.match(regExValue)) {
+    setLoading(true);
+    const filterItem = categoryList?.filter(
+      (item) => item.categoryName == "NEWS"
+    );
+
+    const requestData = new FormData();
+    requestData.append("categories", filterItem[0]?._id);
+    requestData.append("postType", postType);
+    requestData.append("postTitle", postTitle);
+    requestData.append("postContent", description);
+    requestData.append("commonUpload", mediaPreview[0]);
+    requestData.append("subscription", subValue.subValue);
+    requestData.append("postTag", postTag);
+    requestData.append("location", locationValue.location);
+    requestData.append("position", locationValue.position);
+    //   requestData.append("title", linkTitle);
+    //   requestData.append("link", link);
+    requestData.append("postCategory", filterItem[0]?.categoryName);
+    await SublyApi.createPost(token, requestData)
+      .then((response) => {
+        setLoading(false);
+        if (response.status == "success") {
+          setShow(false);
+          toast.success(response.status);
+          setDescription("");
+          setFileValue("");
+          setMediaPreview("");
+          setPostTag([]);
+          setSubValue("");
+          setCategoryValue("");
+          setPostTitle("");
+          setPostType("");
+          setItemValue("");
+          setPostLocation({ location: false, position: false });
+          setLocationValue({ location: "", position: "" });
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // } else {
+    //   toast.error("Please enter the valid link");
+    // }
   }
 
   // =================================Update post API handler===================================
   async function updatePostHandle() {
-    const regExValue =
-      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
-    if (link.match(regExValue)) {
-      setLoading(true);
-      const requestData = new FormData();
-      requestData.append("categories", categoryValue.id);
-      requestData.append("postType", postType);
-      requestData.append("postTitle", postTitle);
-      requestData.append("postContent", description);
-      requestData.append("commonUpload", mediaPreview[0]);
-      requestData.append("subscription", subValue.subValue);
-      requestData.append("postTag", postTag);
-      //   requestData.append("title", linkTitle);
-      //   requestData.append("link", link);
-      requestData.append("postCategory", categoryValue.key);
-      await SublyApi.updatePost(token, requestData, location.state?._id)
-        .then((response) => {
-          console.log("response", response);
-          setLoading(false);
-          if (response.status == "success") {
-            navigate("/Post/Post-List");
-            toast.success(response.status);
-          } else {
-            toast.error(response.data.error);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      toast.error("Please enter the valid link");
-    }
+    setLoading(true);
+    const requestData = new FormData();
+    requestData.append("categories", categoryValue.id);
+    requestData.append("postType", postType);
+    requestData.append("postTitle", postTitle);
+    requestData.append("postContent", description);
+    requestData.append("commonUpload", mediaPreview[0]);
+    requestData.append("subscription", subValue.subValue);
+    requestData.append("postTag", postTag);
+    requestData.append("location", locationValue.location);
+    requestData.append("position", locationValue.position);
+    //   requestData.append("title", linkTitle);
+    //   requestData.append("link", link);
+    requestData.append("postCategory", categoryValue.key);
+    await SublyApi.updatePost(token, requestData, itemValue?._id)
+      .then((response) => {
+        console.log("response", response);
+        setLoading(false);
+        if (response.status == "success") {
+          setShow(false);
+          toast.success(response.status);
+          setDescription("");
+          setFileValue("");
+          setMediaPreview("");
+          setPostTag([]);
+          setSubValue("");
+          setCategoryValue("");
+          setPostTitle("");
+          setPostType("");
+          setItemValue("");
+          setPostLocation({ location: false, position: false });
+          setLocationValue({ location: "", position: "" });
+        } else {
+          toast.error(response.data.error);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   async function onTagRemove(index) {
@@ -351,6 +385,17 @@ function CreatePostModal({ topMargin, show, setShow }) {
         show={show}
         onHide={() => {
           setShow(false);
+          setDescription("");
+          setFileValue("");
+          setMediaPreview("");
+          setPostTag([]);
+          setSubValue("");
+          setCategoryValue("");
+          setPostTitle("");
+          setPostType("");
+          setItemValue("");
+          setPostLocation({ location: false, position: false });
+          setLocationValue({ location: "", position: "" });
         }}
       >
         <Modal.Header closeButton>
@@ -426,7 +471,105 @@ function CreatePostModal({ topMargin, show, setShow }) {
                     )}
                   </div>
                 </div>
-
+                <div className="flex items-start gap-3 max-lg:flex-wrap my-3">
+                  <div
+                    onClick={() => {
+                      setPostLocation({
+                        ...postLocation,
+                        location: !postLocation.location,
+                      });
+                    }}
+                    className="w-full max-xl:w-full relative notifyBlock"
+                  >
+                    <label
+                      htmlFor="posttype"
+                      className="text-sm font-normal w-full"
+                    >
+                      Post Location
+                      <input
+                        type="text"
+                        placeholder="Select Post Location"
+                        id="posttype"
+                        value={locationValue?.locationName}
+                        autoComplete="off"
+                        className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
+                      />
+                    </label>
+                    <Icon
+                      icon={`${
+                        postLocation.location
+                          ? "majesticons:chevron-up-line"
+                          : "majesticons:chevron-down-line"
+                      }`}
+                      width="30"
+                      height="30"
+                      style={{ color: "#4b5563" }}
+                      className="absolute right-1 top-6 cursor-pointer"
+                      onClick={() => {
+                        setPostLocation({
+                          ...postLocation,
+                          location: !postLocation.location,
+                        });
+                      }}
+                    />
+                    {postLocation.location && (
+                      <PostLocation
+                        setLocationValue={setLocationValue}
+                        locationValue={locationValue}
+                      />
+                    )}
+                  </div>
+                  <div
+                    onClick={() => {
+                      setPostLocation({
+                        ...postLocation,
+                        position: !postLocation.position,
+                      });
+                    }}
+                    className={`${
+                      locationValue?.location ? "" : "!opacity-[0.3]"
+                    } ${"w-full max-xl:w-full relative notifyBlock"}`}
+                  >
+                    <label
+                      htmlFor="posttype"
+                      className="text-sm font-normal w-full "
+                    >
+                      Post Position
+                      <input
+                        type="text"
+                        placeholder="Select Post position"
+                        id="posttype"
+                        value={locationValue?.position}
+                        autoComplete="off"
+                        className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
+                      />
+                    </label>
+                    {console.log("locationValue", locationValue)}
+                    <Icon
+                      icon={`${
+                        postLocation.position
+                          ? "majesticons:chevron-up-line"
+                          : "majesticons:chevron-down-line"
+                      }`}
+                      width="30"
+                      height="30"
+                      style={{ color: "#4b5563" }}
+                      className="absolute right-1 top-6 cursor-pointer"
+                      onClick={() => {
+                        setPostLocation({
+                          ...postLocation,
+                          position: !postLocation.position,
+                        });
+                      }}
+                    />
+                    {postLocation.position && (
+                      <PostPosition
+                        setLocationValue={setLocationValue}
+                        locationValue={locationValue}
+                      />
+                    )}
+                  </div>
+                </div>
                 <div className="flex items-start gap-3 max-lg:flex-wrap my-3">
                   <div className="w-[100%] max-xl:w-full">
                     <label
@@ -580,13 +723,24 @@ function CreatePostModal({ topMargin, show, setShow }) {
                   <button
                     onClick={() => {
                       setShow(false);
+                      setDescription("");
+                      setFileValue("");
+                      setMediaPreview("");
+                      setPostTag([]);
+                      setSubValue("");
+                      setCategoryValue("");
+                      setPostTitle("");
+                      setPostType("");
+                      setItemValue("");
+                      setPostLocation({ location: false, position: false });
+                      setLocationValue({ location: "", position: "" });
                     }}
                     style={{ border: "1px solid #6418C3" }}
                     className="px-3 py-2 rounded-3xl font-medium text-lg text-[#6418C3] w-[180px] max-lg:w-full"
                   >
                     Cancel
                   </button>
-                  {location.state ? (
+                  {itemValue ? (
                     <button
                       onClick={() => {
                         updatePostHandle();
@@ -666,6 +820,59 @@ function FilterDropdown({ setFilterValue, filterValue }) {
       >
         Paid
       </p>
+    </div>
+  );
+}
+
+function PostPosition({ setLocationValue, locationValue }) {
+  return (
+    <div className="rounded-md shadow-2xl absolute w-full top-15 bg-white py-2 z-10">
+      {postPosition.map((item, index) =>
+        locationValue.location == 1 ? (
+          <p
+            onClick={() => {
+              setLocationValue({ ...locationValue, position: item });
+            }}
+            className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
+          >
+            {item}
+          </p>
+        ) : (
+          index < 3 && (
+            <p
+              onClick={() => {
+                setLocationValue({ ...locationValue, position: item });
+              }}
+              className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
+            >
+              {item}
+            </p>
+          )
+        )
+      )}
+    </div>
+  );
+}
+
+function PostLocation({ setLocationValue, locationValue }) {
+  return (
+    <div className="rounded-md shadow-2xl absolute w-full top-15 bg-white py-2 z-10">
+      {postLocation.map((item, index) => (
+        <p
+          key={index}
+          onClick={() => {
+            setLocationValue({
+              ...locationValue,
+              location: item?.key,
+              position: "",
+              locationName: item?.name,
+            });
+          }}
+          className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
+        >
+          {item.name}
+        </p>
+      ))}
     </div>
   );
 }

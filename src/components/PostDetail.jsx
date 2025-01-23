@@ -61,20 +61,27 @@ function PostDetail({ show, setShow, topMargin, id, setLoading }) {
                     {detailValue?.postTitle || "NA"}
                   </span>
                 </p>{" "}
-                <p className="mb-0 text-lg font-semibold">
+                {/* <p className="mb-0 text-lg font-semibold">
                   Post Type :
                   <span className="text-base font-semibold">
                     {" "}
                     {detailValue?.postType || "NA"}
                   </span>
-                </p>
+                </p> */}
               </div>
               <div className="flex items-center justify-between gap-2 flex-wrap">
-                <p className="mb-0 text-lg font-semibold">
+                {/* <p className="mb-0 text-lg font-semibold">
                   Post Category :
                   <span className="text-base font-semibold">
                     {" "}
                     {detailValue?.postCategory || "NA"}
+                  </span>
+                </p> */}
+                <p className="mb-0 text-lg font-semibold">
+                  Post Type :
+                  <span className="text-base font-semibold">
+                    {" "}
+                    {detailValue?.postType || "NA"}
                   </span>
                 </p>
                 <p className="mb-0 text-lg font-semibold">
@@ -110,7 +117,7 @@ function PostDetail({ show, setShow, topMargin, id, setLoading }) {
                 />{" "}
                 {/* { detailValue?.postContent || "NA"} */}
               </p>
-              <div className="my-2 bg-gray-200 rounded-md py-2 px-3">
+              {/* <div className="my-2 bg-gray-200 rounded-md py-2 px-3">
                 <p className="mb-0 text-xl font-semibold border-b border-gray-300 pb-2">
                   External Links
                 </p>
@@ -128,7 +135,7 @@ function PostDetail({ show, setShow, topMargin, id, setLoading }) {
                     {detailValue?.externalLink?.link || "NA"}
                   </span>
                 </p>
-              </div>
+              </div> */}
             </div>
             {detailValue.postMedia && (
               <div className="flex items-center gap-2 mt-7">

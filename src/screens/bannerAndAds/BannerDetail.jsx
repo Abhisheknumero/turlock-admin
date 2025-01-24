@@ -33,7 +33,7 @@ function BannerDetail({ show, setShow, topMargin, id, setLoading }) {
 
   return (
     <Modal
-      className={`${topMargin} widthClassMid`}
+      className={`${topMargin}`}
       show={show}
       onHide={() => {
         setShow(false);

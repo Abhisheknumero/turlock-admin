@@ -149,7 +149,7 @@ function LostPet() {
                       className="bg-transparent w-full h-full focus-visible:outline-none"
                       value={name}
                       onChange={(e) => {
-                        name(e.target.value);
+                        setName(e.target.value);
                       }}
                     />
                     <Icon

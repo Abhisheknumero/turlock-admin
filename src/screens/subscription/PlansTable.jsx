@@ -1,91 +1,108 @@
+import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import moment from "moment";
 import { Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-function PlansTable({ planList, deleteHandle, setShow, setPlanId }) {
-  const navigate = useNavigate();
+function PlansTable({
+  planList,
+  deleteHandle,
+  setShow,
+  setPlanId,
+  setCreateModal,
+  setPlanValue,
+}) {
   return (
-    <div className="h-[calc(100vh-450px)] overflow-auto">
-      <Table bordered responsive className="!border-gray-500">
-        <thead>
-          <tr>
-            <th className="text-sm font-bold !text-gray-600 !bg-gray-300 w-[12%]">
-              Plan Type
-            </th>
-            <th className="text-sm text-center font-bold !text-gray-600 !bg-gray-300 w-[10%]">
-              Date
-            </th>
-            <th className="text-sm font-bold !text-gray-600 !bg-gray-300 w-[30%]">
-              Features
-            </th>
-            <th className="text-sm text-center font-bold !text-gray-600 !bg-gray-300 w-[8%]">
-              Price
-            </th>
-            <th className="text-sm text-center font-bold !text-gray-600 !bg-gray-300 w-[8%]">
-              Monthly Price
-            </th>
-            <th className="text-sm font-bold text-center !text-gray-600 !bg-gray-300 w-[8%]">
-              Status
-            </th>
-            <th className="text-sm text-center font-bold !text-gray-600 !bg-gray-300 w-[15%]">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {planList?.map((val, index) => (
-            <tr key={index}>
-              <td className="text-sm font-medium !text-gray-700">
+    <div className="max-[1200px]:w-[1500px]">
+      <div>
+        <div className="bg-[#fff] rounded-t-xl px-4 py-3 flex items-center gap-2">
+          <p className="text-base font-bold !text-black w-[5%]">#</p>
+          <p className="text-sm font-bold !text-black w-[20%] pr-3">
+            {" "}
+            Plan Type
+          </p>
+          <p className="text-sm font-bold !text-black w-[20%] pl-3"> Price</p>
+          <p className="text-sm font-bold !text-black w-[20%]"> Date</p>
+          <p className="text-sm font-bold !text-black w-[20%] text-center">
+            Status{" "}
+          </p>
+          <p className="text-sm font-bold !text-black w-[20%] text-center">
+            Action{" "}
+          </p>
+        </div>
+      </div>
+      <div className="h-[calc(100vh-360px)] overflow-auto pt-1">
+        {planList.length > 0 &&
+          planList.map((val, index) => (
+            <div
+              key={index}
+              className="bg-[#fff] px-4 py-3 flex items-center gap-2 my-1"
+            >
+              <p className="text-base font-medium !text-black w-[5%]">
+                {index + 1}
+              </p>
+              <p className="text-sm font-medium !text-black w-[20%] pr-3 ">
+                {" "}
                 {val?.planType}
-              </td>
-              <td align="center" className="text-sm font-medium !text-gray-700">
-                {moment(new Date(val?.startDate)).format("MMM DD, YYYY")}
-              </td>
-              <td align="center" className="text-sm font-medium !text-gray-700">
-                {val?.features.map((item, index) =>  item + ", ") || "--"}
-              </td>
-              <td align="center" className="text-sm font-medium !text-gray-700">
+              </p>{" "}
+              <p className="text-sm font-medium !text-black w-[20%] pl-3">
                 {val?.price}
-              </td>
-              <td align="center" className="text-sm font-medium !text-gray-700">
-                {val?.monthlyPrice || "--"}
-              </td>
-              <td align="center" className="text-sm font-medium !text-gray-700">
-                {val?.status || "--"}
-              </td>
-              <td>
-                <div className="flex items-center justify-center gap-3">
-                  <span
+              </p>
+              <p className="text-sm font-medium !text-black w-[20%]">
+                {moment(new Date(val?.startDate)).format("MMM DD, YYYY")}
+              </p>
+              <p className="text-sm font-medium w-[20%] text-center flex items-center justify-center">
+                {val?.status == "active" ? (
+                  <p className="!text-[#30c550] bg-[#D8FFE0] py-1.5 px-4 rounded-full ">
+                    Active
+                  </p>
+                ) : (
+                  <p className="!text-[#FF4A55] bg-[#FFECED] py-1.5 px-4 rounded-full ">
+                    Inactive
+                  </p>
+                )}
+              </p>
+              <p
+                className={`${"text-sm font-medium !text-black  text-center relative flex items-center justify-center gap-3 w-[20%]"}`}
+              >
+                <p className="mb-0 flex items-center justify-center rounded-md w-[30px] h-[30px] !text-[#6518c3]">
+                  <Icon
+                    icon="flowbite:eye-outline"
+                    width="28"
+                    height="28"
+                    className="cursor-pointer"
                     onClick={() => {
                       setShow(true);
                       setPlanId(val?._id);
                     }}
-                    className="text-[#6418C3] cursor-pointer bg-[#6418C333] text-sm px-2 rounded-sm font-normal"
-                  >
-                    View
-                  </span>
-                  <span
+                  />
+                </p>
+                <p className="mb-0 flex items-center justify-center rounded-md w-[30px] h-[30px] !text-[#6518c3]">
+                  <Icon
+                    icon="bx:edit"
+                    width="23"
+                    height="23"
+                    className="cursor-pointer"
                     onClick={() => {
-                      navigate("/Subscription/Create", { state: val });
+                      setCreateModal(true);
+                      setPlanValue(val);
                     }}
-                    className="text-[#6418C3] cursor-pointer bg-[#6418C333] text-sm px-2 rounded-sm font-normal"
-                  >
-                    Edit
-                  </span>
-                  <span
+                  />
+                </p>
+                <p className="mb-0 flex items-center justify-center rounded-md w-[30px] h-[30px] !text-[#6518c3]">
+                  <Icon
+                    icon="material-symbols:delete-outline-rounded"
+                    width="23"
+                    height="23"
+                    className="cursor-pointer"
                     onClick={() => {
                       deleteHandle(val?._id);
                     }}
-                    className="text-[#6418C3] cursor-pointer bg-[#6418C333] text-sm px-2 rounded-sm font-normal"
-                  >
-                    Delete
-                  </span>
-                </div>
-              </td>
-            </tr>
+                  />
+                </p>
+              </p>
+            </div>
           ))}
-        </tbody>
-      </Table>
+      </div>
     </div>
   );
 }

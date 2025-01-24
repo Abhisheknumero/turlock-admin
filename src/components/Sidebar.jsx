@@ -26,9 +26,9 @@ function Sidebar() {
         <div
           className={`${
             ShowSidebar ? "" : "xl:bg-white max-xl:bg-transparent"
-          } ${" xl:h-screen z-50 max-xl:absolute max-xl:h-max"}`}
+          } ${" xl:h-screen z-50 max-xl:absolute max-xl:h-max w-[15%]"}`}
         >
-          <div className="p-4 border-b-2 flex items-center justify-center">
+          <div className="px-3 py-[18px] border-b-2 max-xl:border-0  max-xl:!pb-0 max-xl:!pt-6   flex items-center justify-start">
             <Icon
               icon="gg:menu"
               width="40"
@@ -36,8 +36,12 @@ function Sidebar() {
               onClick={() => {
                 setShow(true);
               }}
-              className="hover:text-[#6418C3] cursor-pointer"
+              className="hover:text-[#6418C3] cursor-pointer xl:hidden"
             />
+            <div className="flex items-center gap-1 max-xl:hidden">
+              <img src={logo} className="w-[60px] h-full" />{" "}
+              <strong>Turlock News</strong>
+            </div>
           </div>
           <div className="p-3 max-xl:bg-white max-xl:hidden">
             {SidebarData.map((item, index) => (
@@ -52,11 +56,12 @@ function Sidebar() {
                 }}
                 className={`${
                   location.pathname.includes(item.location)
-                    ? "text-[#6418C3] bg-[#6418c330] rounded-full"
-                    : "hover:text-[#6418C3] hover:bg-[#6418c330] hover:rounded-full"
-                } ${"flex items-center justify-center p-3.5 cursor-pointer"}`}
+                    ? "text-[#6418C3] border-r-[3px] border-[#6418C3] "
+                    : "hover:text-[#6418C3] hover:border-r-[3px] border-[#6418C3] "
+                } ${"flex items-center gap-3 cursor-pointer px-1 py-2 my-2"}`}
               >
                 <Icon icon={item.icon} width="20" height="20" />
+                <p className="mb-0 font-semibold">{item.key}</p>
               </div>
             ))}
           </div>
@@ -71,7 +76,8 @@ function Sidebar() {
         <Offcanvas.Header closeButton className="border-b-2 items-center">
           <Offcanvas.Title>
             <div className="flex items-center gap-3">
-              <img src={logo} className="w-[60px] h-full" /> TurloackCityNews
+              <img src={logo} className="w-[60px] h-full" />{" "}
+              <strong>Turlock News</strong>
             </div>
           </Offcanvas.Title>
         </Offcanvas.Header>
@@ -88,9 +94,9 @@ function Sidebar() {
               }}
               className={`${
                 location.pathname.includes(item.location)
-                  ? "text-[#6418C3] bg-[#6418c330] rounded-e-full"
-                  : "hover:text-[#6418C3] hover:bg-[#6418c330] hover:rounded-e-full"
-              } ${"flex items-center gap-3 cursor-pointer px-3 py-2.5"}`}
+                  ? "text-[#6418C3] border-r-[3px] border-[#6418C3] "
+                  : "hover:text-[#6418C3] hover:border-r-[3px] border-[#6418C3] "
+              } ${"flex items-center gap-3 cursor-pointer px-4 py-2 my-2"}`}
             >
               <Icon icon={item.icon} width="20" height="20" />
               <p className="mb-0 font-semibold">{item.key}</p>

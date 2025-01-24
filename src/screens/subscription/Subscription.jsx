@@ -12,6 +12,7 @@ import { PlansTypeList, StatusDropdown } from "./CreatePlans";
 import $ from "jquery";
 import PlansTable from "./PlansTable";
 import PlanDetail from "./PlanDetail";
+import CreatePlanModal from "./CreatePlanModal";
 
 function Subscription() {
   const navigate = useNavigate();
@@ -27,11 +28,14 @@ function Subscription() {
   const [showDropdown, setShowDropdown] = useState("");
   const [show, setShow] = useState(false);
   const [planId, setPlanId] = useState("");
+  const [createModal, setCreateModal] = useState(false);
 
   //   ======================================================================
   useEffect(() => {
-    getPlanList();
-  }, []);
+    if (!createModal) {
+      getPlanList();
+    }
+  }, [createModal]);
 
   async function getPlanList() {
     setLoading(true);
@@ -85,13 +89,20 @@ function Subscription() {
         setLoading={setLoading}
         planId={planId}
       />
+      <CreatePlanModal
+        show={createModal}
+        setShow={setCreateModal}
+        setLoading={setLoading}
+        itemValue={planValue}
+        setItemValue={setPlanValue}
+      />
       {loading ? <Loader /> : ""}
       <div className="xl:flex">
         <Sidebar />
         <div className="w-full z-0 h-screen overflow-auto">
           <Header />
           <div className="px-9 max-xl:px-2">
-            <div className="flex items-center justify-between pt-4 pb-4 flex-wrap border-b-2">
+            {/* <div className="flex items-center justify-between pt-4 pb-4 flex-wrap border-b-2">
               <h3 className="mb-0 text-lg font-semibold">Plans</h3>
               <div className="flex items-center justify-end">
                 <button
@@ -207,6 +218,42 @@ function Subscription() {
                   </button>
                 </div>
               </div>
+            </div> */}
+            <div className="flex items-center justify-between pt-4 pb-4 flex-wrap border-b-2">
+              <h3 className="mb-0 text-lg font-semibold">Plans</h3>
+              <div className="flex items-center gap-x-3 gap-y-2 flex-wrap">
+                <div className="w-[300px]">
+                  <label className="bg-white w-full rounded-lg flex items-center gap-1 py-2 pr-2 pl-3 shadow-2xl">
+                    <input
+                      type="text"
+                      placeholder="Search Here"
+                      className="bg-transparent w-full h-full focus-visible:outline-none"
+                      value={name}
+                      onChange={(e) => {
+                        setName(e.target.value);
+                      }}
+                    />
+                    <Icon
+                      icon="stash:search"
+                      width="25"
+                      height="25"
+                      style={{ color: "#6418C3", cursor: "pointer" }}
+                      onClick={() => {
+                        advanceSearch();
+                      }}
+                    />
+                  </label>
+                </div>
+                <button
+                  onClick={() => {
+                    setCreateModal(true);
+                  }}
+                  className={`${"bg-[#6418C3] text-white"} ${"w-[160px] text-base rounded-md px-2 py-2 font-medium hover:border-[#6418C3] flex items-center justify-center gap-2"}`}
+                >
+                  <Icon icon="mdi:wallet-add-outline" width="25" height="25" />
+                  Create Plan{" "}
+                </button>
+              </div>
             </div>
             <div className="mb-5">
               <h3 className="text-gray-600 font-bold text-base my-3">
@@ -218,6 +265,8 @@ function Subscription() {
                   deleteHandle={deleteHandle}
                   setShow={setShow}
                   setPlanId={setPlanId}
+                  setPlanValue={setPlanValue}
+                  setCreateModal={setCreateModal}
                 />
               ) : (
                 <p className="text-center text-lg font-semibold text-gray-500">

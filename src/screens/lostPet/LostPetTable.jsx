@@ -1,6 +1,6 @@
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import moment from "moment";
-import { Table } from "react-bootstrap";
+import "../../assets/CommonStyle.css";
 
 function LostPetTable({
   list,
@@ -14,13 +14,15 @@ function LostPetTable({
       <div>
         <div className="bg-[#fff] rounded-t-xl px-4 py-3 flex items-center gap-2">
           <p className="text-base font-bold !text-black w-[5%]">#</p>
-          <p className="text-sm font-bold !text-black w-[25%] pr-3">
+          <p className="text-sm font-bold !text-black w-[40%] pr-3">
+            {" "}
+            Content{" "}
+          </p>
+          <p className="text-sm font-bold !text-black w-[20%] pl-3">
             {" "}
             Applicant Name
           </p>
           <p className="text-sm font-bold !text-black w-[20%]">Date</p>
-          <p className="text-sm font-bold !text-black w-[20%]">Email</p>
-          <p className="text-sm font-bold !text-black w-[20%]">Phone</p>
           <p className="text-sm font-bold !text-black w-[20%] text-center">
             Action
           </p>
@@ -36,18 +38,18 @@ function LostPetTable({
               <p className="text-base font-medium !text-black w-[5%]">
                 {index + 1}
               </p>
-              <p className="text-sm font-medium !text-black w-[25%] pr-3">
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: item?.postContent?.replace(/<\/?[^>]+(>|$)/g, ""), // Strips all HTML tags
+                }}
+                className="text-sm font-medium !text-black w-[40%] pr-3 textOverflowClass"
+              ></p>{" "}
+              <p className="text-sm font-medium !text-black w-[20%] pl-3">
                 {item?.applicantName}
               </p>
               <p className="text-sm font-medium !text-black w-[20%]">
                 {" "}
                 {moment(new Date(item?.updatedAt)).format("MMM DD, YYYY")}
-              </p>
-              <p className="text-sm font-medium !text-black w-[20%] flex items-center gap-1">
-                {item?.email}
-              </p>
-              <p className="text-sm font-medium !text-black w-[20%]">
-                {item?.phoneNumber || "--"}
               </p>
               <p
                 className={`${"text-sm font-medium !text-black  text-center relative flex items-center justify-center gap-3 w-[20%]"}`}
@@ -83,7 +85,7 @@ function LostPetTable({
                     height="23"
                     className="cursor-pointer"
                     onClick={() => {
-                      deleteHandle(val._id);
+                      deleteHandle(item._id);
                     }}
                   />
                 </p>

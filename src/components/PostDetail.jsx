@@ -48,10 +48,22 @@ function PostDetail({ show, setShow, topMargin, id, setLoading }) {
         </Modal.Header>
         <Modal.Body>
           <div className="p-2 w-[90%] m-auto">
-            <div className="border-b pb-3">
-              <p className="mb-2 flex items-center gap-1 text-lg font-semibold justify-end">
-                <Icon icon="flowbite:eye-outline" width="25" height="25" /> 0
-              </p>
+            <div className="pb-3">
+              <div className="flex items-start justify-between mb-3">
+                {detailValue.postMedia && (
+                  <div className="flex items-center gap-2 mt-2">
+                    <div className="border rounded-md flex items-center justify-center w-[140px] h-[140px] object-cover bg-gray-100 relative overflow-hidden">
+                      <img
+                        src={`${imgBaseURL}${detailValue.postMedia}`}
+                        alt="img"
+                      />
+                    </div>
+                  </div>
+                )}
+                <p className="mb-2 flex items-center gap-1 text-lg font-semibold justify-end">
+                  <Icon icon="flowbite:eye-outline" width="25" height="25" /> 0
+                </p>
+              </div>
               <div className="mb-2 flex items-center justify-between gap-2 flex-wrap">
                 {" "}
                 <p className="mb-0 text-lg font-semibold">
@@ -137,16 +149,6 @@ function PostDetail({ show, setShow, topMargin, id, setLoading }) {
                 </p>
               </div> */}
             </div>
-            {detailValue.postMedia && (
-              <div className="flex items-center gap-2 mt-7">
-                <div className="border rounded-md flex items-center justify-center w-[140px] h-[140px] object-cover bg-gray-100 relative overflow-hidden">
-                  <img
-                    src={`${imgBaseURL}${detailValue.postMedia}`}
-                    alt="img"
-                  />
-                </div>
-              </div>
-            )}
           </div>
         </Modal.Body>
       </Modal>

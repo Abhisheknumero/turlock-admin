@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import CommentTable from "./CommentTable";
 import DatePicker from "react-datepicker";
 import CommentDetail from "./CommentDetail";
+import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 
 function CommentList() {
   const { token } = useSelector((state) => state.user.userdetail);
@@ -20,6 +21,15 @@ function CommentList() {
   const [detailValue, setDetailValue] = useState("");
   const [show, setShow] = useState(false);
 
+  const getInitials = (userName) => {
+    const names = userName.split(" ");
+    let initials = names[0].substring(0, 1).toUpperCase();
+    if (names.length > 1) {
+      initials += names[names.length - 1].substring(0, 1).toUpperCase();
+    }
+    return initials;
+  };
+
   //   =-====================Calling API for fetching comment list========================
   useEffect(() => {
     getComments();
@@ -30,6 +40,14 @@ function CommentList() {
       .then((response) => {
         setLoading(false);
         if (response.status == "success") {
+          response.data.map((val, index) => {
+            const initials = getInitials(val?.userId?.firstName);
+            const imgvalue = `https://ui-avatars.com/api/?name=${initials}&background=6418c3b8&color=fff&bold=true`; // Set fallback image
+            response.data[index] = {
+              ...response.data[index],
+              imgValue: imgvalue,
+            };
+          });
           setCommentList(response.data);
         } else {
           toast.error(response.data.error);
@@ -56,26 +74,40 @@ function CommentList() {
 
   // ====================Advance search API handler===================
   async function advanceSearch() {
-    setLoading(true);
-    const requestData = {
-      comment: comment,
-      userName: author,
-      startDate: startDate,
-      endDate: endDate,
-    };
-    await SublyApi.commentAdvanceSearch(token, requestData)
-      .then((response) => {
-        setLoading(false);
-        if (response.status == "success") {
-          setCommentList(response.data);
-        } else {
-          toast.error(response.data.error);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (comment) {
+      setLoading(true);
+      const requestData = {
+        comment: comment,
+        userName: author,
+        startDate: startDate,
+        endDate: endDate,
+      };
+      await SublyApi.commentAdvanceSearch(token, requestData)
+        .then((response) => {
+          setLoading(false);
+          if (response.status == "success") {
+            response.data.map((val, index) => {
+              const initials = getInitials(val?.userId?.firstName);
+              const imgvalue = `https://ui-avatars.com/api/?name=${initials}&background=6418c3b8&color=fff&bold=true`; // Set fallback image
+              response.data[index] = {
+                ...response.data[index],
+                imgValue: imgvalue,
+              };
+            });
+            setCommentList(response.data);
+          } else {
+            toast.error(response.data.error);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      getComments();
+    }
   }
+
+  console.log(commentList);
 
   return (
     <section className="h-screen ">
@@ -91,7 +123,43 @@ function CommentList() {
         <div className="w-full z-0 h-screen overflow-auto">
           <Header />
           <div className="px-9 max-xl:px-2">
-            <div className="flex items-center justify-between pt-4 pb-4 flex-wrap">
+            <div className="flex items-center justify-between pt-4 pb-4 flex-wrap border-b-2">
+              <h3 className="mb-0 text-lg font-semibold">Comments</h3>
+              <div className="flex items-center gap-x-3 gap-y-2 flex-wrap">
+                <div className="w-[300px]">
+                  <label className="bg-white w-full rounded-lg flex items-center gap-1 py-2 pr-2 pl-3 shadow-2xl">
+                    <input
+                      type="text"
+                      placeholder="Search Here"
+                      className="bg-transparent w-full h-full focus-visible:outline-none"
+                      value={comment}
+                      onChange={(e) => {
+                        setComment(e.target.value);
+                      }}
+                    />
+                    <Icon
+                      icon="stash:search"
+                      width="25"
+                      height="25"
+                      style={{ color: "#6418C3", cursor: "pointer" }}
+                      onClick={() => {
+                        advanceSearch();
+                      }}
+                    />
+                  </label>
+                </div>
+                {/* <button
+                  onClick={() => {
+                    setShow(true);
+                  }}
+                  className={`${"bg-[#6418C3] text-white"} ${"w-[160px] text-base rounded-md px-2 py-2 font-medium hover:border-[#6418C3] flex items-center justify-center gap-2"}`}
+                >
+                  <Icon icon="streamline:pet-paw" width="25" height="25" />
+                  Add Lost Pet
+                </button> */}
+              </div>
+            </div>
+            {/* <div className="flex items-center justify-between pt-4 pb-4 flex-wrap">
               <h3 className="mb-0 text-lg font-semibold">Comments</h3>
             </div>
             <div className="mb-3">
@@ -168,7 +236,7 @@ function CommentList() {
                   </button>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div>
               <h3 className="text-gray-600 font-bold text-base my-3">
                 Comment Count {`(${commentList?.length})`}

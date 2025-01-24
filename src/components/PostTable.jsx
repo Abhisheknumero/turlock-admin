@@ -1,8 +1,7 @@
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import moment from "moment";
 import { useState } from "react";
-import { Table } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import "../assets/CommonStyle.css";
 
 function PostTable({
   postList,
@@ -13,27 +12,32 @@ function PostTable({
   setShow,
   setItemValue,
 }) {
-  const [actionId, setActionId] = useState("");
   return (
     <div className="max-[1200px]:w-[1500px]">
       <div>
         <div className="bg-[#fff] rounded-t-xl px-4 py-3 flex items-center gap-2">
           <p className="text-base font-bold !text-black w-[5%]">#</p>
-          <p className="text-sm font-bold !text-black w-[30%] pr-3">Title</p>
-          <p className="text-sm font-bold !text-black w-[10%]">Date</p>
-          {!isReel && (
-            <p className="text-sm font-bold !text-black w-[10%]">Post Type</p>
+          <p
+            className={`${
+              isReel ? "w-[20%]" : "w-[45%]"
+            } ${"text-sm font-bold !text-black  pr-3"}`}
+          >
+            Title
+          </p>
+          {!isReel ? (
+            <p className="text-sm font-bold !text-black w-[15%]">Post Type</p>
+          ) : (
+            <p className="text-sm font-bold !text-black w-[40%]">Content</p>
           )}
-          <p className="text-sm font-bold !text-black w-[17%]">Tags</p>
-          <p className="text-sm font-bold !text-black w-[10%] text-center">
-            Comment
+          <p className="text-sm font-bold !text-black w-[15%] text-center">
+            Date
           </p>
           <p className="text-sm font-bold !text-black w-[10%] text-center">
             Viwes
           </p>
           <p
             className={`${
-              isReel ? "w-[15%]" : "w-[8%]"
+              isReel ? "w-[15%]" : "w-[10%]"
             } ${"text-sm font-bold !text-black text-center"}`}
           >
             Action
@@ -49,31 +53,39 @@ function PostTable({
             <p className="text-base font-medium !text-black w-[5%]">
               {index + 1}
             </p>
-            <p className="text-sm font-medium !text-black w-[30%] pr-3">
+            <p
+              className={`${
+                isReel ? "w-[20%]" : "w-[45%]"
+              } ${"text-sm font-medium !text-black pr-3"}`}
+            >
               {val?.postTitle}
             </p>
-            <p className="text-sm font-medium !text-black w-[10%]">
-              {" "}
-              {moment(new Date(val?.updatedAt)).format("MMM DD, YYYY")}
-            </p>
-            {!isReel && (
-              <p className="text-sm font-medium !text-black w-[10%] flex items-center gap-1">
+            {!isReel ? (
+              <p className="text-sm font-medium !text-black w-[15%] flex items-center gap-1">
                 <img src={val?.imgValue} className="w-7 h-7 rounded-md" />
                 {val?.postType}
               </p>
+            ) : (
+              <p
+                className="text-sm font-medium !text-black w-[40%] flex items-center gap-1 textOverflowClass"
+                dangerouslySetInnerHTML={{
+                  __html: val?.postContent?.replace(/<\/?[^>]+(>|$)/g, ""), // Strips all HTML tags
+                }}
+              ></p>
+              // <p className="text-sm font-medium !text-black w-[40%] flex items-center gap-1 textOverflowClass">
+              //   {val?.postType}
+              // </p>
             )}
-            <p className="text-sm font-medium !text-black w-[17%]">
-              {val?.postTag || "--"}
-            </p>
-            <p className="text-sm font-medium !text-black w-[10%] text-center">
-              {val?.comments || "0"}
+            <p className="text-sm font-medium !text-black w-[15%] text-center">
+              {" "}
+              {moment(new Date(val?.updatedAt)).format("MMM DD, YYYY")}
             </p>
             <p className="text-sm font-medium !text-black w-[10%] text-center">
               {val?.views || "0"}
             </p>
             <p
               className={`${
-                isReel ? "w-[15%]" : "w-[8%]"
+                isReel ? "w-[15%]" : "w-[10%]"
               } ${"text-sm font-medium !text-black  text-center relative flex items-center justify-center gap-3"}`}
             >
               {/* <Icon

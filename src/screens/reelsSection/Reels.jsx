@@ -46,8 +46,10 @@ function Reels() {
   });
 
   useEffect(() => {
-    getCategory();
-  }, []);
+    if (!show) {
+      getCategory();
+    }
+  }, [show]);
   async function getCategory() {
     setLoading(true);
     await SublyApi.fetchCategory(token)

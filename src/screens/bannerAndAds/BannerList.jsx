@@ -108,6 +108,46 @@ function BannerList() {
           <Header />
           <div className="px-9 max-xl:px-2">
             <div className="flex items-center justify-between pt-4 pb-4 flex-wrap border-b-2">
+              <h3 className="mb-0 text-lg font-semibold">Banner</h3>
+              <div className="flex items-center gap-x-3 gap-y-2 flex-wrap">
+                <div className="w-[300px]">
+                  <label className="bg-white w-full rounded-lg flex items-center gap-1 py-2 pr-2 pl-3 shadow-2xl">
+                    <input
+                      type="text"
+                      placeholder="Search Here"
+                      className="bg-transparent w-full h-full focus-visible:outline-none"
+                      value={title}
+                      onChange={(e) => {
+                        setTitle(e.target.value);
+                      }}
+                    />
+                    <Icon
+                      icon="stash:search"
+                      width="25"
+                      height="25"
+                      style={{ color: "#6418C3", cursor: "pointer" }}
+                      onClick={() => {
+                        advanceSearch();
+                      }}
+                    />
+                  </label>
+                </div>
+                <button
+                  onClick={() => {
+                    setShow(true);
+                  }}
+                  className={`${"bg-[#6418C3] text-white"} ${"w-[160px] text-base rounded-md px-2 py-2 font-medium hover:border-[#6418C3] flex items-center justify-center gap-2"}`}
+                >
+                  <Icon
+                    icon="icon-park-outline:add-pic"
+                    width="25"
+                    height="25"
+                  />
+                  Add Banner
+                </button>
+              </div>
+            </div>
+            {/* <div className="flex items-center justify-between pt-4 pb-4 flex-wrap border-b-2">
               <h3 className="mb-0 text-lg font-semibold"> Banners</h3>
             </div>
             <div className="flex items-center justify-end w-full mt-2">
@@ -120,8 +160,8 @@ function BannerList() {
                 <Icon icon="ion:add-outline" width="30" height="27" />
                 Create Banner
               </button>
-            </div>
-            <div className="mb-3">
+            </div> */}
+            {/* <div className="mb-3">
               <h3 className="text-gray-600 font-bold text-base mb-3">
                 Advanced Search
               </h3>
@@ -210,7 +250,7 @@ function BannerList() {
                   </button>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div>
               <h3 className="text-gray-600 font-bold text-base my-3">
                 Banner Count {`(${bannerList?.length})`}

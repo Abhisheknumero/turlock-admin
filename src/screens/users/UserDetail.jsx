@@ -74,7 +74,6 @@ function UserDetail({ topMargin, show, setShow, id, setLoading }) {
                   }
                   className="w-full h-full object-cover rounded-xl"
                   alt="profile"
-                  onError={(event) => handleImageError(event, contact)}
                 />
               </div>
               {/* )} */}

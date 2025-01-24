@@ -1,6 +1,6 @@
 export const SidebarData = [
   {
-    icon: "lucide:home",
+    icon: "akar-icons:dashboard",
     key: "Dashboard",
     path: "/Dashboard",
     location: "Dashboard",

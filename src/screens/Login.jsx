@@ -150,7 +150,7 @@ function Login() {
             </p> */}
             <button
               type="submit"
-              className="bg-[#6418C3] text-white text-lg font-semibold py-2 px-3 rounded-3xl my-3"
+              className="bg-[#D10505] text-white text-lg font-semibold py-2 px-3 rounded-3xl my-3"
             >
               Login
             </button>

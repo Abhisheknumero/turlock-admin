@@ -65,7 +65,7 @@ function ReelsDetail({ show, setShow, topMargin, id, setLoading }) {
               ref={videoRef}
               autoPlay={true}
               className="videoCard__player h-[80%] object-cover "
-              src={`${imgBaseURL}${detailValue.postMedia}`}
+              src={`${detailValue.postMedia}`}
               alt="IG reel video"
               loop
             />

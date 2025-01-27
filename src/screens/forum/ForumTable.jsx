@@ -1,22 +1,25 @@
-import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
-import moment from "moment";
-import "../../assets/CommonStyle.css";
-import { imgBaseURL } from "../../utils/StaticsData";
-
-function CommentTable({ list, deleteHandler, setDetailValue, setShow }) {
+function ForumTable({
+  list,
+  deleteHandle,
+  setShowDetail,
+  setShow,
+  setDataValue,
+}) {
   return (
     <div className="max-[1200px]:w-[1500px]">
       <div>
         <div className="bg-[#fff] rounded-t-xl px-4 py-3 flex items-center gap-2">
           <p className="text-base font-bold !text-black w-[5%]">#</p>
           <p className="text-sm font-bold !text-black w-[40%] pr-3">
-            Post Content
+            {" "}
+            Content{" "}
           </p>
-          <p className="text-sm font-bold !text-black w-[12%]">Post Type</p>
-          <p className="text-sm font-bold !text-black w-[20%] pr-3"> Comment</p>
-          <p className="text-sm font-bold !text-black w-[15%]">Author</p>
-          <p className="text-sm font-bold !text-black w-[10%]">Date</p>
-          <p className="text-sm font-bold !text-black w-[10%] text-center">
+          <p className="text-sm font-bold !text-black w-[20%] pl-3">
+            {" "}
+            Applicant Name
+          </p>
+          <p className="text-sm font-bold !text-black w-[20%]">Date</p>
+          <p className="text-sm font-bold !text-black w-[20%] text-center">
             Action
           </p>
         </div>
@@ -33,37 +36,19 @@ function CommentTable({ list, deleteHandler, setDetailValue, setShow }) {
               </p>
               <p
                 dangerouslySetInnerHTML={{
-                  __html: item?.postId?.postContent?.replace(
-                    /<\/?[^>]+(>|$)/g,
-                    ""
-                  ), // Strips all HTML tags
+                  __html: item?.postContent?.replace(/<\/?[^>]+(>|$)/g, ""), // Strips all HTML tags
                 }}
                 className="text-sm font-medium !text-black w-[40%] pr-3 textOverflowClass"
-              ></p>
-              <p className="text-sm font-medium !text-black w-[12%]">
+              ></p>{" "}
+              <p className="text-sm font-medium !text-black w-[20%] pl-3">
+                {item?.applicantName}
+              </p>
+              <p className="text-sm font-medium !text-black w-[20%]">
                 {" "}
-                {item?.postId?.postType}
-              </p>
-              <p className="text-sm font-medium !text-black w-[20%] pr-3">
-                {item?.commentText}
-              </p>
-              <p className="text-sm font-medium !text-black w-[15%] flex items-center gap-1">
-                {" "}
-                <img
-                  src={
-                    item?.userId?.profileImage
-                      ? `${item?.userId?.profileImage}`
-                      : item?.imgValue
-                  }
-                  className="w-7 h-7 rounded-md"
-                />{" "}
-                {item?.userId?.firstName} {item?.userId?.lastName}
-              </p>
-              <p className="text-sm font-medium !text-black w-[10%] flex items-center gap-1">
                 {moment(new Date(item?.updatedAt)).format("MMM DD, YYYY")}
               </p>
               <p
-                className={`${"text-sm font-medium !text-black  text-center relative flex items-center justify-center gap-3 w-[10%]"}`}
+                className={`${"text-sm font-medium !text-black  text-center relative flex items-center justify-center gap-3 w-[20%]"}`}
               >
                 <p className="mb-0 flex items-center justify-center rounded-md w-[30px] h-[30px] !text-[#6518c3]">
                   <Icon
@@ -72,8 +57,20 @@ function CommentTable({ list, deleteHandler, setDetailValue, setShow }) {
                     height="28"
                     className="cursor-pointer"
                     onClick={() => {
+                      setShowDetail(true);
+                      setDataValue(item);
+                    }}
+                  />
+                </p>
+                <p className="mb-0 flex items-center justify-center rounded-md w-[30px] h-[30px] !text-[#6518c3]">
+                  <Icon
+                    icon="bx:edit"
+                    width="23"
+                    height="23"
+                    className="cursor-pointer"
+                    onClick={() => {
                       setShow(true);
-                      setDetailValue(item);
+                      setDataValue(item);
                     }}
                   />
                 </p>
@@ -84,7 +81,7 @@ function CommentTable({ list, deleteHandler, setDetailValue, setShow }) {
                     height="23"
                     className="cursor-pointer"
                     onClick={() => {
-                      deleteHandler(item._id);
+                      deleteHandle(item._id);
                     }}
                   />
                 </p>
@@ -95,5 +92,3 @@ function CommentTable({ list, deleteHandler, setDetailValue, setShow }) {
     </div>
   );
 }
-
-export default CommentTable;

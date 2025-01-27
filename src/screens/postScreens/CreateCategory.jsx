@@ -38,8 +38,8 @@ function CreateCategory() {
         key: location.state.categoryType,
       });
       setDescription(location.state.categoryDescription);
-      setFileValue(`${imgBaseURL}${location.state.categoryThumbnail}`);
-      setMediaPreview(`${imgBaseURL}${location.state.categoryThumbnail}`);
+      setFileValue(`${location.state.categoryThumbnail}`);
+      setMediaPreview(`${location.state.categoryThumbnail}`);
     }
   }, []);
 

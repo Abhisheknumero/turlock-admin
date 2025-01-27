@@ -92,7 +92,7 @@ function BannerDetail({ show, setShow, topMargin, id, setLoading }) {
             <div className="flex items-center gap-2 mt-7">
               <div className="border rounded-md flex items-center justify-center w-[140px] h-[140px] object-cover bg-gray-100 relative overflow-hidden">
                 <img
-                  src={`${imgBaseURL}${detailValue.bannerImage}`}
+                  src={`${detailValue.bannerImage}`}
                   alt="img"
                 />
               </div>

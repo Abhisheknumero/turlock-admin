@@ -50,4 +50,4 @@ export const postLocation = [
 
 // export const imgBaseURL = "http://3.19.221.85:3000/";
 // export const imgBaseURL = "http://192.168.29.221:3001/";
-export const imgBaseURL = "http://192.168.29.161:3001/";
+export const imgBaseURL = "http://192.168.29.161:3000/";

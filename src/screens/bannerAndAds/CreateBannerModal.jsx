@@ -1,26 +1,24 @@
-import { useEffect, useRef, useState } from "react";
-import { Loader } from "../../utils/Loader";
-import Sidebar from "../../components/Sidebar";
-import Header from "../../components/Header";
+import { useEffect, useState } from "react";
+import { Modal } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { imgBaseURL } from "../../utils/StaticsData";
+import { toast } from "react-toastify";
+import SublyApi from "../../HelperApis";
+import $ from "jquery";
 import { Icon } from "@iconify-icon/react/dist/iconify.mjs";
 import DatePicker from "react-datepicker";
-import $ from "jquery";
-import SublyApi from "../../HelperApis";
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { useLocation, useNavigate } from "react-router-dom";
-import { imgBaseURL } from "../../utils/StaticsData";
 
-function CreateBannerAds() {
+function CreateBannerModal({
+  show,
+  setShow,
+  itemValue,
+  setItemValue,
+  setLoading,
+}) {
   const { userdetail } = useSelector((state) => state.user);
-  const navigate = useNavigate();
-  const location = useLocation();
   const [fileValue, setFileValue] = useState("");
   const [mediaPreview, setMediaPreview] = useState("");
-  const [loading, setLoading] = useState(false);
   const [bannerType, setBannerType] = useState("");
-  const [title, setTitle] = useState("");
-  const [link, setlink] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
@@ -32,40 +30,15 @@ function CreateBannerAds() {
 
   // =====================prefield data for edit post=======================
   useEffect(() => {
-    if (location.state) {
-      setTitle(location?.state?.title);
-      setFileValue(`${location.state?.bannerImage}`);
-      setMediaPreview(`${location.state?.bannerImage}`);
-      setlink(location?.state?.imageNavLink);
-      setBannerType(location?.state?.bannerType);
-      setStartDate(location?.state?.startDate);
-      setEndDate(location?.state?.endDate);
+    if (itemValue) {
+      setFileValue(`${itemValue?.bannerImage}`);
+      setMediaPreview(`${itemValue?.bannerImage}`);
+      setBannerType(itemValue?.bannerType);
+      setStartDate(itemValue?.startDate);
+      setEndDate(itemValue?.endDate);
     }
-  }, [location.state]);
-
-  console.log("location.state", location.state);
-
-  // =================================Media handler======================================\
-  // const mediaHandler = async (e) => {
-  //   let fileReader,
-  //     isCancel = false;
-  //   if (e.target.files && e.target.files.length > 0) {
-  //     const file = [e.target.files];
-  //     setMediaPreview(e.target.files[0]);
-  //     await Object.values(file[0]).map(async (item, index) => {
-  //       if (e.target.files && e.target.files.length > 0) {
-  //         fileReader = new FileReader();
-  //         fileReader.onload = async (e) => {
-  //           const { result } = e.target;
-  //           if (result && !isCancel) {
-  //             await setFileValue(result);
-  //           }
-  //         };
-  //         fileReader.readAsDataURL(item);
-  //       }
-  //     });
-  //   }
-  // };
+  }, [itemValue]);
+  console.log("itemValue", itemValue);
 
   const mediaHandler = (event) => {
     const file = event.target.files[0];
@@ -116,8 +89,6 @@ function CreateBannerAds() {
     }
   };
 
-  console.log("pixelData", mediaPreview);
-
   // ==============================Function for handling removing image===================================
   async function onImageRemove() {
     setFileValue("");
@@ -136,15 +107,15 @@ function CreateBannerAds() {
 
   //   =======================================Create Category API handling===========================================
   async function bannerHandler() {
-    if (title && bannerType && startDate && endDate && mediaPreview && link) {
+    if (bannerType && startDate && endDate && mediaPreview) {
       setLoading(true);
       const requestData = new FormData();
-      requestData.append("title", title);
+      //   requestData.append("title", title);
       requestData.append("bannerType", bannerType);
       requestData.append("startDate", startDate);
       requestData.append("endDate", endDate);
       requestData.append("commonUpload", mediaPreview);
-      requestData.append("imageNavLink", link);
+      //   requestData.append("imageNavLink", link);
       await SublyApi.createBanner(
         userdetail?.token,
         userdetail?.id,
@@ -153,14 +124,13 @@ function CreateBannerAds() {
         .then((response) => {
           if (response.status == "success") {
             toast.success(response.status);
-            setTitle("");
             setFileValue("");
             setMediaPreview("");
-            setlink("");
             setBannerType("");
             setStartDate("");
             setEndDate("");
-            navigate("/Banner");
+            setShow(false);
+            setItemValue("");
           } else {
             toast.error(response.data.error);
           }
@@ -174,31 +144,30 @@ function CreateBannerAds() {
 
   //   =======================================Update Category API handling===========================================
   async function bannerEditHandler() {
-    if (title && bannerType && startDate && endDate && mediaPreview && link) {
+    if (bannerType && startDate && endDate && mediaPreview) {
       setLoading(true);
       const requestData = new FormData();
-      requestData.append("title", title);
+      //   requestData.append("title", title);
       requestData.append("bannerType", bannerType);
       requestData.append("startDate", startDate);
       requestData.append("endDate", endDate);
       requestData.append("commonUpload", mediaPreview);
-      requestData.append("imageNavLink", link);
+      //   requestData.append("imageNavLink", link);
       await SublyApi.updateBanner(
         userdetail?.token,
         requestData,
-        location?.state?._id
+        itemValue?._id
       )
         .then((response) => {
           if (response.status == "success") {
             toast.success(response.status);
-            setTitle("");
             setFileValue("");
             setMediaPreview("");
-            setlink("");
             setBannerType("");
             setStartDate("");
             setEndDate("");
-            navigate("/Banner");
+            setShow(false);
+            setItemValue("");
           } else {
             toast.error(response.data.error);
           }
@@ -209,63 +178,45 @@ function CreateBannerAds() {
       toast.error("All fields are required");
     }
   }
-
   return (
-    <section className="h-screen ">
-      {loading ? <Loader /> : ""}
-      <div className="flex">
-        <Sidebar />
-        <div className="w-full h-screen overflow-auto">
-          <Header />
-          <div className="px-9 max-xl:px-2">
-            <div className="flex items-center justify-between pt-4 pb-5">
-              <h3 className="mb-0 text-2xl font-semibold">
-                Create Banner and Ads
-              </h3>
-              <button
-                onClick={() => {
-                  navigate("/Banner");
-                }}
-                className="w-28 text-sm rounded-md px-2 py-2 buttonClass relative font-medium hover:border-none"
-              >
-                Back
-              </button>
-            </div>
-            <div className="w-[50%] max-lg:w-full m-auto">
-              <div className="flex items-center gap-3 max-lg:flex-wrap">
-                <div className="w-full max-xl:w-full">
-                  <label htmlFor="title" className="text-sm font-normal w-full">
-                    Banner Title
-                    <input
-                      type="text"
-                      placeholder="Post Title"
-                      id="title"
-                      value={title}
-                      onChange={(e) => {
-                        setTitle(e.target.value);
-                      }}
-                      className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
-                    />
-                  </label>
-                </div>
+    <section>
+      <Modal
+        show={show}
+        onHide={() => {
+          setFileValue("");
+          setMediaPreview("");
+          setBannerType("");
+          setStartDate("");
+          setEndDate("");
+          setShow(false);
+          setItemValue("");
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Add Banner</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+            {" "}
+            <div className="w-[95%] max-lg:w-full m-auto">
+              <div className="flex items-center gap-3 max-lg:flex-wrap mt-2">
                 <div
                   onClick={() => {
                     setShowDropdown(!showDropdown);
                   }}
-                  className="w-full max-xl:w-full relative notifyBlock"
+                  className="w-full max-xl:w-full relative notifyBlock "
                 >
                   <label
                     htmlFor="category"
                     className="text-sm font-normal w-full"
                   >
-                    Banner Type
                     <input
                       type="text"
-                      placeholder="Select Category"
+                      placeholder="Select Banner Type"
                       id="category"
                       value={bannerType}
                       autoComplete="off"
-                      className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
+                      className="placeholder:text-gray-600 placeholder:font-medium py-2.5 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
                     />
                   </label>
                   <Icon
@@ -277,7 +228,118 @@ function CreateBannerAds() {
                     width="30"
                     height="30"
                     style={{ color: "#4b5563" }}
-                    className="absolute right-1 top-6 cursor-pointer"
+                    className="absolute right-1 top-1 cursor-pointer"
+                    onClick={() => {
+                      setShowDropdown(!showDropdown);
+                    }}
+                  />
+                  {showDropdown && <BannerType setBannerType={setBannerType} />}
+                </div>
+              </div>
+              <div className="flex items-center gap-3 max-lg:flex-wrap mt-4">
+                <div
+                  onClick={() => {
+                    setShowDropdown(!showDropdown);
+                  }}
+                  className="w-full max-xl:w-full relative notifyBlock "
+                >
+                  <label
+                    htmlFor="category"
+                    className="text-sm font-normal w-full"
+                  >
+                    <input
+                      type="text"
+                      placeholder="Select Screen"
+                      id="category"
+                      value={bannerType}
+                      autoComplete="off"
+                      className="placeholder:text-gray-600 placeholder:font-medium py-2.5 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
+                    />
+                  </label>
+                  <Icon
+                    icon={`${
+                      showDropdown
+                        ? "majesticons:chevron-up-line"
+                        : "majesticons:chevron-down-line"
+                    }`}
+                    width="30"
+                    height="30"
+                    style={{ color: "#4b5563" }}
+                    className="absolute right-1 top-1 cursor-pointer"
+                    onClick={() => {
+                      setShowDropdown(!showDropdown);
+                    }}
+                  />
+                  {showDropdown && <BannerType setBannerType={setBannerType} />}
+                </div>
+              </div>
+              <div className="flex items-center gap-3 max-lg:flex-wrap my-4">
+                <div
+                  onClick={() => {
+                    setShowDropdown(!showDropdown);
+                  }}
+                  className="w-full max-xl:w-full relative notifyBlock"
+                >
+                  <label
+                    htmlFor="category"
+                    className="text-sm font-normal w-full"
+                  >
+                    <input
+                      type="text"
+                      placeholder="Select Banner Location"
+                      id="category"
+                      value={bannerType}
+                      autoComplete="off"
+                      className="placeholder:text-gray-600 placeholder:font-medium py-2.5 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
+                    />
+                  </label>
+                  <Icon
+                    icon={`${
+                      showDropdown
+                        ? "majesticons:chevron-up-line"
+                        : "majesticons:chevron-down-line"
+                    }`}
+                    width="30"
+                    height="30"
+                    style={{ color: "#4b5563" }}
+                    className="absolute right-1 top-1 cursor-pointer"
+                    onClick={() => {
+                      setShowDropdown(!showDropdown);
+                    }}
+                  />
+                  {showDropdown && <BannerType setBannerType={setBannerType} />}
+                </div>
+              </div>
+              <div className="flex items-center gap-3 max-lg:flex-wrap">
+                <div
+                  onClick={() => {
+                    setShowDropdown(!showDropdown);
+                  }}
+                  className="w-full max-xl:w-full relative notifyBlock"
+                >
+                  <label
+                    htmlFor="category"
+                    className="text-sm font-normal w-full"
+                  >
+                    <input
+                      type="text"
+                      placeholder="Select Banner position"
+                      id="category"
+                      value={bannerType}
+                      autoComplete="off"
+                      className="placeholder:text-gray-600 placeholder:font-medium py-2.5 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium cursor-pointer caret-transparent"
+                    />
+                  </label>
+                  <Icon
+                    icon={`${
+                      showDropdown
+                        ? "majesticons:chevron-up-line"
+                        : "majesticons:chevron-down-line"
+                    }`}
+                    width="30"
+                    height="30"
+                    style={{ color: "#4b5563" }}
+                    className="absolute right-1 top-1 cursor-pointer"
                     onClick={() => {
                       setShowDropdown(!showDropdown);
                     }}
@@ -287,7 +349,7 @@ function CreateBannerAds() {
               </div>
               <div className="flex items-center gap-3 max-lg:flex-wrap mt-4 mb-4">
                 <div className="flex items-center gap-3 w-full ">
-                  <div className="placeholder:text-gray-600  text-sm placeholder:placeholder:font-medium  py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 placeholder:font-medium ">
+                  <div className="placeholder:text-gray-600  text-sm placeholder:placeholder:font-medium  py-2.5 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 placeholder:font-medium ">
                     <DatePicker
                       selected={startDate}
                       onChange={(date) => setStartDate(date)}
@@ -297,7 +359,7 @@ function CreateBannerAds() {
                       className=" focus-visible:outline-none text-gray-600 placeholder:font-medium overflow-hidden placeholder:text-gray-600 font-medium"
                     />
                   </div>
-                  <div className="placeholder:text-gray-600 text-sm placeholder:placeholder:font-medium py-2 px-3 border border-gray-400 !w-full rounded-md bg-white focus-visible:outline-none text-gray-600 placeholder:font-medium  overflow-hidden">
+                  <div className="placeholder:text-gray-600 text-sm placeholder:placeholder:font-medium py-2.5 px-3 border border-gray-400 !w-full rounded-md bg-white focus-visible:outline-none text-gray-600 placeholder:font-medium  overflow-hidden">
                     <DatePicker
                       selected={endDate}
                       onChange={(date) => setEndDate(date)}
@@ -308,20 +370,6 @@ function CreateBannerAds() {
                     />
                   </div>
                 </div>
-                <div className="w-full max-xl:w-full relative">
-                  <label htmlFor="link" className="text-sm font-normal w-full">
-                    <input
-                      type="text"
-                      placeholder="Navigation Link"
-                      id="link"
-                      value={link}
-                      onChange={(e) => {
-                        setlink(e.target.value);
-                      }}
-                      className="placeholder:text-gray-600 placeholder:font-medium py-2 px-3 border border-gray-400 w-full rounded-md bg-white focus-visible:outline-none text-gray-600 font-medium"
-                    />
-                  </label>
-                </div>
               </div>
               {!fileValue && (
                 <div className="flex items-center justify-center mt-4">
@@ -331,7 +379,7 @@ function CreateBannerAds() {
                       border: "1px solid #9ca3af",
                       borderStyle: "dotted",
                     }}
-                    className="rounded-md py-3 m-auto w-[30%] max-lg:w-full bg-gray-50 text-gray-600 cursor-pointer flex justify-center gap-2 items-center"
+                    className="rounded-md py-3 m-auto w-[50%] max-lg:w-full bg-gray-50 text-gray-600 cursor-pointer flex justify-center gap-2 items-center"
                   >
                     {" "}
                     <Icon
@@ -359,14 +407,29 @@ function CreateBannerAds() {
                   </div>
                 </div>
               )}
-              <div className="flex items-center justify-center mt-5">
-                {location.state ? (
+              <div className="flex items-center justify-center mt-5 mb-3 gap-3">
+                <button
+                  onClick={() => {
+                    setFileValue("");
+                    setMediaPreview("");
+                    setBannerType("");
+                    setStartDate("");
+                    setEndDate("");
+                    setShow(false);
+                    setItemValue("");
+                  }}
+                  style={{ border: "1px solid #6418C3" }}
+                  className="px-3 py-2.5 rounded-3xl text-base font-medium text-black bg-gray-100 w-[120px]"
+                >
+                  Cancel
+                </button>
+                {itemValue ? (
                   <button
                     onClick={() => {
                       bannerEditHandler();
                     }}
                     style={{ border: "1px solid #6418C3" }}
-                    className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#6418C3] m-auto w-[30%] max-lg:w-full"
+                    className="px-3 py-2.5 rounded-3xl text-base font-medium text-white bg-[#6418C3] w-[120px]"
                   >
                     Update
                   </button>
@@ -376,7 +439,7 @@ function CreateBannerAds() {
                       bannerHandler();
                     }}
                     style={{ border: "1px solid #6418C3" }}
-                    className="px-3 py-2.5 rounded-3xl font-semibold text-lg text-white bg-[#6418C3] m-auto w-[30%] max-lg:w-full"
+                    className="px-3 py-2.5 rounded-3xl text-base font-medium text-white bg-[#6418C3] w-[120px]"
                   >
                     Create
                   </button>
@@ -391,25 +454,24 @@ function CreateBannerAds() {
                   mediaHandler(e);
                 }}
               />
-              {/* <canvas ref={canvasRef} style={{ border: "1px solid black" }} /> */}
             </div>
           </div>
-        </div>
-      </div>
+        </Modal.Body>
+      </Modal>
     </section>
   );
 }
 
-export default CreateBannerAds;
+export default CreateBannerModal;
 
 function BannerType({ setBannerType }) {
   return (
-    <div className="rounded-md shadow-2xl absolute w-full top-15 bg-white py-2 z-10">
+    <div className="rounded-md shadow-2xl absolute w-full top-15 bg-white py-2.5 z-10">
       <p
         onClick={() => {
           setBannerType("Right Banner");
         }}
-        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2.5 px-3 hover:bg-[#6418c330] cursor-pointer"
       >
         Right Banner
       </p>
@@ -417,7 +479,7 @@ function BannerType({ setBannerType }) {
         onClick={() => {
           setBannerType("Left Banner");
         }}
-        className="text-[#4b5563] font-semibold text-sm mb-0 py-2 px-3 hover:bg-[#6418c330] cursor-pointer"
+        className="text-[#4b5563] font-semibold text-sm mb-0 py-2.5 px-3 hover:bg-[#6418c330] cursor-pointer"
       >
         Left Banner
       </p>

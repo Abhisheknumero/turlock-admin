@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import $ from "jquery";
 import BannerDetail from "./BannerDetail";
+import CreateBannerModal from "./CreateBannerModal";
 
 function BannerList() {
   const { userdetail } = useSelector((state) => state.user);
@@ -24,6 +25,8 @@ function BannerList() {
   const [bannerDetail, setBannerDetail] = useState(false);
   const [bannerId, setBannerId] = useState("");
   const [title, setTitle] = useState("");
+  const [show, setShow] = useState(false);
+  const [itemValue, setItemValue] = useState("");
 
   // ====function to hide dropdown on click outside====
   $(document).mouseup(function (e) {
@@ -100,6 +103,14 @@ function BannerList() {
         setShow={setBannerDetail}
         show={bannerDetail}
         id={bannerId}
+        setLoading={setLoading}
+      />
+
+      <CreateBannerModal
+        show={show}
+        setShow={setShow}
+        itemValue={itemValue}
+        setItemValue={setItemValue}
         setLoading={setLoading}
       />
       <div className="xl:flex">
@@ -262,6 +273,8 @@ function BannerList() {
                   deleteHandler={deleteHandler}
                   setCategoryId={setBannerId}
                   setCategoryDetail={setBannerDetail}
+                  setItemValue={setItemValue}
+                  setShow={setShow}
                   //   setEdit={setCreateCategory}
                   //   setPreFieldData={setPreFieldData}
                 />

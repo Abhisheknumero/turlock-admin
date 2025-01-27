@@ -42,8 +42,8 @@ function CreateCategory({
         key: preFieldData?.categoryName,
       });
       setDescription(preFieldData?.categoryDescription);
-      setFileValue(`${imgBaseURL}${preFieldData?.categoryThumbnail}`);
-      setMediaPreview(`${imgBaseURL}${preFieldData?.categoryThumbnail}`);
+      setFileValue(`${preFieldData?.categoryThumbnail}`);
+      setMediaPreview(`${preFieldData?.categoryThumbnail}`);
     }
   }, [preFieldData]);
 

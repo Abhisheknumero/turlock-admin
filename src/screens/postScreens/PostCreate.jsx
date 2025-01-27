@@ -44,8 +44,8 @@ function PostCreate() {
   useEffect(() => {
     if (location.state) {
       setDescription(location.state?.postContent);
-      setFileValue([`${imgBaseURL}${location.state?.postMedia}`]);
-      setMediaPreview([`${imgBaseURL}${location.state?.postMedia}`]);
+      setFileValue([`${location.state?.postMedia}`]);
+      setMediaPreview([`${location.state?.postMedia}`]);
       const tags = location.state?.postTag[0].split(",");
       setPostTag(tags);
       setlink(location.state?.externalLink?.link);

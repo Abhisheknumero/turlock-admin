@@ -69,7 +69,7 @@ function UserDetail({ topMargin, show, setShow, id, setLoading }) {
                 <img
                   src={
                     detailValue?.profileImage
-                      ? `${imgBaseURL}${detailValue?.profileImage}`
+                      ? `${detailValue?.profileImage}`
                       : imageValue
                   }
                   className="w-full h-full object-cover rounded-xl"

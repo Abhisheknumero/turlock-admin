@@ -40,7 +40,7 @@ function UserTable({ list, deleteHandle, setShow, setUserValue }) {
                 <img
                   src={
                     item?.profileImage
-                      ? `${imgBaseURL}${item?.profileImage}`
+                      ? `${item?.profileImage}`
                       : item?.imgValue
                   }
                   className="w-7 h-7 rounded-md"

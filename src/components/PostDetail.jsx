@@ -35,7 +35,7 @@ function PostDetail({ show, setShow, topMargin, id, setLoading }) {
   return (
     <section>
       <Modal
-        className={`${topMargin} widthClassMid`}
+        className={`${topMargin}`}
         show={show}
         onHide={() => {
           setShow(false);
@@ -46,81 +46,53 @@ function PostDetail({ show, setShow, topMargin, id, setLoading }) {
             Post Detail
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <div className="p-2 w-[90%] m-auto">
-            <div className="pb-3">
-              <div className="flex items-start justify-between mb-3">
-                {detailValue.postMedia && (
-                  <div className="flex items-center gap-2 mt-2">
-                    <div className="border rounded-md flex items-center justify-center w-[140px] h-[140px] object-cover bg-gray-100 relative overflow-hidden">
-                      <img
-                        src={`${imgBaseURL}${detailValue.postMedia}`}
-                        alt="img"
-                      />
-                    </div>
-                  </div>
-                )}
-                <p className="mb-2 flex items-center gap-1 text-lg font-semibold justify-end">
-                  <Icon icon="flowbite:eye-outline" width="25" height="25" /> 0
-                </p>
-              </div>
-              <div className="mb-2 flex items-center justify-between gap-2 flex-wrap">
-                {" "}
-                <p className="mb-0 text-lg font-semibold">
-                  Title :
-                  <span className="text-base font-semibold">
-                    {" "}
-                    {detailValue?.postTitle || "NA"}
-                  </span>
-                </p>{" "}
-                {/* <p className="mb-0 text-lg font-semibold">
-                  Post Type :
-                  <span className="text-base font-semibold">
-                    {" "}
-                    {detailValue?.postType || "NA"}
-                  </span>
-                </p> */}
-              </div>
-              <div className="flex items-center justify-between gap-2 flex-wrap">
-                {/* <p className="mb-0 text-lg font-semibold">
-                  Post Category :
-                  <span className="text-base font-semibold">
-                    {" "}
-                    {detailValue?.postCategory || "NA"}
-                  </span>
-                </p> */}
-                <p className="mb-0 text-lg font-semibold">
-                  Post Type :
-                  <span className="text-base font-semibold">
-                    {" "}
-                    {detailValue?.postType || "NA"}
-                  </span>
-                </p>
-                <p className="mb-0 text-lg font-semibold">
-                  Subscription :
-                  <span className="text-base font-semibold">
+        <Modal.Body className="!pt-2">
+          <div className="w-[95%] m-auto">
+            <div className="pb-0">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-base font-semibold">{`${moment(
+                  new Date(detailValue?.updatedAt)
+                ).format("MMM DD, YYYY")}`}</span>
+                <p className="rounded-full bg-[#6518c341] text-[#6418C3] px-3">
+                  <span className="text-sm font-semibold">
                     {" "}
                     {ToCapitalize(detailValue?.subscription) || "NA"}
                   </span>
                 </p>
               </div>
-              <div className="flex items-center justify-between gap-2 my-2 flex-wrap">
+              <div className="flex items-start justify-between mb-1">
+                {detailValue.postMedia && (
+                  <div className="flex items-center gap-2 mt-2 relative">
+                    <div className="border rounded-md flex items-center justify-center w-full h-[140px] object-cover bg-gray-100 relative overflow-hidden opacity-[0.8]">
+                      <img src={`${detailValue.postMedia}`} alt="img" />
+                    </div>
+                    <p className="mb-2 flex items-center gap-1 text-lg font-semibold justify-end absolute top-1 right-1 bg-[#ffffffc5] rounded-lg px-2">
+                      <Icon
+                        icon="flowbite:eye-outline"
+                        width="25"
+                        height="25"
+                      />{" "}
+                      0
+                    </p>
+                  </div>
+                )}
+              </div>
+              <div className="mb-2 flex items-center justify-between gap-2 flex-wrap">
+                {" "}
+                <p className="mb-0 text-base font-bold leading-6">
+                   {detailValue?.postTitle || "NA"}
+                </p>{" "}
+              </div>
+              <div className="flex items-center justify-between gap-2 flex-wrap">
                 <p className="mb-0 text-lg font-semibold">
-                  Post Tag :
+                  Post Type :
                   <span className="text-base font-semibold">
                     {" "}
-                    {detailValue?.postTag || "NA"}
+                    {detailValue?.postType || "NA"}
                   </span>
                 </p>
-                <p className="mb-0 text-lg font-semibold">
-                  Date :{" "}
-                  <span className="text-base font-semibold">{`${moment(
-                    new Date(detailValue?.updatedAt)
-                  ).format("MMM DD, YYYY")}`}</span>
-                </p>
               </div>
-              <p className="mt-2.5 mb-3 text-lg font-semibold flex items-start gap-2 text-nowrap">
-                Post Content :
+              <p className="mt-2.5 mb-3 text-lg font-semibold flex items-start gap-2 text-nowrap max-h-[300px] overflow-auto">
                 <span
                   dangerouslySetInnerHTML={{
                     __html: detailValue?.postContent,
@@ -129,6 +101,14 @@ function PostDetail({ show, setShow, topMargin, id, setLoading }) {
                 />{" "}
                 {/* { detailValue?.postContent || "NA"} */}
               </p>
+              <div className="flex items-center justify-between gap-2 my-2 flex-wrap">
+                <p className="mb-0 text-lg font-semibold">
+                  <span className="text-base font-semibold">
+                    {" "}
+                    {detailValue?.postTag || "NA"}
+                  </span>
+                </p>
+              </div>
               {/* <div className="my-2 bg-gray-200 rounded-md py-2 px-3">
                 <p className="mb-0 text-xl font-semibold border-b border-gray-300 pb-2">
                   External Links

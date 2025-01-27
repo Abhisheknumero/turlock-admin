@@ -42,10 +42,10 @@ function CreateReels() {
   useEffect(() => {
     if (location.state) {
       setDescription(location.state?.postContent);
-      setFileValue(`${imgBaseURL}${location.state?.postThumbnail}`);
-      setMediaPreview(`${imgBaseURL}${location.state?.postMedia}`);
-      setMediaObject(`${imgBaseURL}${location.state?.postMedia}`);
-      setThumbnail(`${imgBaseURL}${location.state?.postThumbnail}`);
+      setFileValue(`${location.state?.postThumbnail}`);
+      setMediaPreview(`${location.state?.postMedia}`);
+      setMediaObject(`${location.state?.postMedia}`);
+      setThumbnail(`${location.state?.postThumbnail}`);
       const tags = location.state?.postTag[0].split(",");
       setPostTag(tags);
       setSubValue({ subValue: location.state?.subscription });

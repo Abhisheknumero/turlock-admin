@@ -48,10 +48,10 @@ function CreateReelsModal({
   useEffect(() => {
     if (itemValue) {
       setDescription(itemValue?.postContent);
-      setFileValue(`${imgBaseURL}${itemValue?.postThumbnail}`);
-      setMediaPreview(`${imgBaseURL}${itemValue?.postMedia}`);
-      setMediaObject(`${imgBaseURL}${itemValue?.postMedia}`);
-      setThumbnail(`${imgBaseURL}${itemValue?.postThumbnail}`);
+      setFileValue(`${itemValue?.postThumbnail}`);
+      setMediaPreview(`${itemValue?.postMedia}`);
+      setMediaObject(`${itemValue?.postMedia}`);
+      setThumbnail(`${itemValue?.postThumbnail}`);
       const tags = itemValue?.postTag[0].split(",");
       setPostTag(tags);
       setSubValue({ subValue: itemValue?.subscription });

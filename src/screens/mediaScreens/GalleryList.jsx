@@ -66,7 +66,7 @@ function GalleryList() {
                 gallery.map((item, index) => (
                   <div key={index} className="w-[130px] h-[130px] rounded-md bg-white object-cover overflow-hidden flex items-center ">
                     <img
-                      src={`${imgBaseURL}${item?.mediaFile}`}
+                      src={`${item?.mediaFile}`}
                       alt="gallery"
                     />
                   </div>

@@ -81,7 +81,7 @@ function LostPetDetail({ topMargin, show, setShow, id, setLoading }) {
                 <div className="flex items-center gap-2 mt-4">
                   <div className="border rounded-md flex items-center justify-center w-[140px] h-[140px] object-cover bg-gray-100 relative overflow-hidden">
                     <img
-                      src={`${imgBaseURL}${detailValue.postMedia}`}
+                      src={`${detailValue.postMedia}`}
                       alt="img"
                     />
                   </div>

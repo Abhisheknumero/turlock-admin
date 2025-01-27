@@ -21,8 +21,8 @@ function AddObituaries({ topMargin, show, setShow, dataValue, setLoader }) {
   useEffect(() => {
     if (dataValue) {
       setContent(dataValue?.postContent);
-      setFileValue([`${imgBaseURL}${dataValue?.postMedia}`]);
-      setMediaPreview([`${imgBaseURL}${dataValue?.postMedia}`]);
+      setFileValue([`${dataValue?.postMedia}`]);
+      setMediaPreview([`${dataValue?.postMedia}`]);
       setName(dataValue?.applicantName);
       setEmail(dataValue?.email);
       setPhone(dataValue?.phoneNumber);
@@ -257,7 +257,7 @@ function AddObituaries({ topMargin, show, setShow, dataValue, setLoader }) {
                   setMediaPreview("");
                   setFileValue("");
                 }}
-                style={{ border: "1px solid #d01505" }}
+                style={{ border: "1px solid #6418C3" }}
                 className="px-3 py-2 rounded-3xl text-base font-medium text-black bg-gray-100 w-[120px]"
               >
                 Cancel
@@ -267,8 +267,8 @@ function AddObituaries({ topMargin, show, setShow, dataValue, setLoader }) {
                   onClick={() => {
                     editLostPetHandle();
                   }}
-                  style={{ border: "1px solid #d01505" }}
-                  className="px-3 py-2 rounded-3xl text-base font-medium text-white bg-[#d01505] w-[120px]"
+                  style={{ border: "1px solid #6418C3" }}
+                  className="px-3 py-2 rounded-3xl text-base font-medium text-white bg-[#6418C3] w-[120px]"
                 >
                   Update
                 </button>
@@ -277,8 +277,8 @@ function AddObituaries({ topMargin, show, setShow, dataValue, setLoader }) {
                   onClick={() => {
                     lostPetHandle();
                   }}
-                  style={{ border: "1px solid #d01505" }}
-                  className="px-3 py-2 rounded-3xl text-base font-medium text-white bg-[#d01505] w-[120px]"
+                  style={{ border: "1px solid #6418C3" }}
+                  className="px-3 py-2 rounded-3xl text-base font-medium text-white bg-[#6418C3] w-[120px]"
                 >
                   Create
                 </button>

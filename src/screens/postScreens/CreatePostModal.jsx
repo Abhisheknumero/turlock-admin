@@ -54,8 +54,8 @@ function CreatePostModal({
   useEffect(() => {
     if (itemValue) {
       setDescription(itemValue?.postContent);
-      setFileValue([`${imgBaseURL}${itemValue?.postMedia}`]);
-      setMediaPreview([`${imgBaseURL}${itemValue?.postMedia}`]);
+      setFileValue([`${itemValue?.postMedia}`]);
+      setMediaPreview([`${itemValue?.postMedia}`]);
       const tags = itemValue?.postTag[0].split(",");
       setPostTag(tags);
       setlink(itemValue?.externalLink?.link);

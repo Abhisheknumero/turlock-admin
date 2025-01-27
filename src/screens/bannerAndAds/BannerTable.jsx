@@ -8,6 +8,8 @@ function BannerTable({
   deleteHandler,
   setCategoryId,
   setCategoryDetail,
+  setItemValue,
+  setShow,
 }) {
   const navigate = useNavigate();
   return (
@@ -72,7 +74,7 @@ function BannerTable({
                     className="cursor-pointer"
                     onClick={() => {
                       setShow(true);
-                      setDataValue(item);
+                      setItemValue(item);
                     }}
                   />
                 </p>
